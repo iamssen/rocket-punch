@@ -14,7 +14,7 @@ export async function createPackageJson({ cwd, packageInfo, imports }: Params): 
   const sharedFile: string = path.join(cwd, 'package.shared.json');
   const rootFile: string = path.join(cwd, 'package.json');
 
-  const sharedConfig: PackageJson = fs.existsSync(sharedFile) ? await fs.readJsonSync(sharedFile) : {};
+  const sharedConfig: PackageJson = fs.existsSync(sharedFile) ? fs.readJsonSync(sharedFile) : {};
   const rootConfig: PackageJson = fs.readJsonSync(rootFile);
 
   const computedConfig: PackageJson = {
@@ -26,7 +26,7 @@ export async function createPackageJson({ cwd, packageInfo, imports }: Params): 
 
   const packageJsonContent: PackageJson = fs.existsSync(factoryFile)
     ? require(factoryFile)(computedConfig, rootConfig)
-    : { name: packageInfo.name, version: packageInfo.version, dependencies: imports };
+    : computedConfig;
 
   return packageJsonContent;
 }
