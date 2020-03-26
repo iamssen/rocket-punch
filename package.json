@@ -1,7 +1,7 @@
 {
   "name": "trism",
-  "version": "0.3.0",
-  "description": "Trism",
+  "version": "0.3.1",
+  "description": "TypeScript Multiple Package Builder (like Monorepo)",
   "author": "SSen <i@ssen.name>",
   "license": "MIT",
   "repository": "github:iamssen/trism",
