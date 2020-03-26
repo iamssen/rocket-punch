@@ -1,28 +1,24 @@
 import { PackageJson } from 'type-fest';
 import ts from 'typescript';
-import { TrismPackageInfo } from '../types';
+import { PackageInfo } from '../types';
+import { readDirectoryPatterns } from '../configs/readDirectoryPatterns';
 
-export async function findPackageImports({
-  dir,
+export async function collectPackageDependencies({
+  packageDir,
   internalPackages,
   externalPackages,
 }: {
-  dir: string;
-  internalPackages: TrismPackageInfo[];
+  packageDir: string;
+  internalPackages: Map<string, PackageInfo>;
   externalPackages: PackageJson.Dependency;
 }): Promise<PackageJson.Dependency> {
   const compilerOptions: ts.CompilerOptions = {
-    rootDir: dir,
+    rootDir: packageDir,
   };
 
   const host: ts.CompilerHost = ts.createCompilerHost(compilerOptions);
 
-  const files: string[] = host.readDirectory!(
-    dir,
-    ['.ts'],
-    ['**/*.spec.ts', '**/*.test.ts', '**/__tests__', '**/__test__', '**/*.js'],
-    ['**/*'],
-  );
+  const files: string[] = host.readDirectory!(packageDir, ...readDirectoryPatterns);
 
   const program: ts.Program = ts.createProgram(files, compilerOptions, host);
 
@@ -81,7 +77,7 @@ export async function findPackageImports({
       : importPath.split('/')[0];
 
     if (!imports[packageName]) {
-      const internalPackage: TrismPackageInfo | undefined = internalPackages.find(({ name }) => packageName === name);
+      const internalPackage: PackageInfo | undefined = internalPackages.get(packageName);
 
       if (internalPackage) {
         imports[packageName] = `^${internalPackage.version}`;

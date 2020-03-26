@@ -1,10 +1,6 @@
-import { PackageJson } from 'type-fest';
+import {PackageJson} from 'type-fest';
 
-export interface Trism {}
-
-export type TrismPackageJsonFactory = (computedPackageJson: PackageJson, sharedPackageJson: PackageJson) => PackageJson;
-
-export interface TrismPackageInfo {
+export interface PackageInfo {
   name: string;
   version: string;
   tag: string;

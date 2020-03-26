@@ -18,7 +18,8 @@
     "sourceMap": true,
     "declaration": true,
     
-    "outDir": "lib"
+    "outDir": "lib",
+    "sourceRoot": "src"
   },
   "include": [
     "./src/**/*"

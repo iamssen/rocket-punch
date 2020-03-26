@@ -1,12 +1,4 @@
-import fs from 'fs';
-import path from 'path';
-
-interface Params {
-  cwd?: string;
-  tsconfig?: object;
-}
-
-const defaultTsconfig: object = {
+export const initialTsconfig: object = {
   compilerOptions: {
     downlevelIteration: true,
     allowSyntheticDefaultImports: true,
@@ -32,8 +24,3 @@ const defaultTsconfig: object = {
     },
   },
 };
-
-export function init({ cwd = process.cwd(), tsconfig = defaultTsconfig }: Params) {
-  // tsconfig.json
-  fs.writeFileSync(path.join(cwd, 'tsconfig.json'), JSON.stringify(tsconfig, null, 2));
-}

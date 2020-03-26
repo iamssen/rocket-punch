@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import getPackageJson, { Options } from 'package-json';
 import path from 'path';
 import { PackageJson } from 'type-fest';
-import { PublishOption, TrismPackageInfo } from '../types';
+import { PackageInfo, PublishOption } from '../types';
 
 export type GetRemotePackageJson = (params: { name: string } & Options) => Promise<PackageJson | undefined>;
 
@@ -17,41 +17,52 @@ export async function getPublishOptions({
   packages,
   getRemotePackageJson = getNpmRemotePackageJson,
 }: {
-  packages: TrismPackageInfo[];
+  packages: Map<string, PackageInfo>;
   cwd: string;
   getRemotePackageJson?: GetRemotePackageJson;
-}): Promise<PublishOption[]> {
+}): Promise<Map<string, PublishOption>> {
   const distDirectory: string = path.join(cwd, 'dist');
 
-  if (!fs.pathExistsSync(distDirectory) || !fs.statSync(distDirectory).isDirectory()) {
+  if (!fs.existsSync(distDirectory) || !fs.statSync(distDirectory).isDirectory()) {
     throw new Error(`"${distDirectory}" directory is undefined`);
   }
 
-  const tags: Map<string, string> = packages.reduce((map, { name, tag }) => {
-    map.set(name, tag || 'latest');
-    return map;
-  }, new Map());
+  const tags: Map<string, string> = new Map();
+  for (const [name, { tag }] of packages) {
+    tags.set(name, tag || 'latest');
+  }
 
-  const currentPackageJsons: PackageJson[] = packages
+  const currentPackageJsons: PackageJson[] = Array.from(packages.values())
+    // PackageInfo => /path/to/dist/{name}/package.json
     .map(({ name: packageName }) => path.join(distDirectory, packageName, 'package.json'))
+    // /path/to/dist/{name}/package.json => boolean
     .filter((packageJsonFile) => fs.existsSync(packageJsonFile))
+    // /path/to/dist/{name}/package.json => PackageJson
     .map((packageJsonFile) => fs.readJsonSync(packageJsonFile))
+    // PackageJson => boolean
     .filter(({ name }) => typeof name === 'string');
 
   const remotePackageJsons: (PackageJson | undefined)[] = await Promise.all<PackageJson | undefined>(
     currentPackageJsons.map(({ name }) => {
+      if (!name) throw new Error(``);
+
       return getRemotePackageJson({
-        name: name!,
-        version: tags.get(name!),
+        name,
+        version: tags.get(name),
         fullMetadata: true,
       });
     }),
   );
 
-  return currentPackageJsons.map((current, i) => ({
-    name: current.name!,
-    tag: tags.get(current.name!)!,
-    current,
-    remote: remotePackageJsons[i],
-  }));
+  return Array.from(packages.values()).reduce((map, current, i) => {
+    if (!current.name) throw new Error(``);
+
+    map[current.name] = {
+      name: current.name,
+      tag: tags.get(current.name)!,
+      current,
+      remote: remotePackageJsons[i],
+    };
+    return map;
+  }, new Map());
 }

@@ -1,24 +1,25 @@
 import path from 'path';
-import { PublishOption, TrismPackageInfo } from '../types';
-import { exec } from '../utils/exec-promise';
-import { getInternalPackages } from '../utils/getInternalPackages';
-import { getPublishOptions } from '../utils/getPublishOptions';
-import { selectPublishOptions } from '../utils/selectPublishOptions';
+import { PackageInfo, PublishOption } from './types';
+import { getInternalPackages } from './packageJson/getInternalPackages';
+import { getPublishOptions } from './publish/getPublishOptions';
+import { exec } from './utils/promisify';
+import { selectPublishOptions } from './publish/selectPublishOptions';
 
 interface Params {
   cwd?: string;
+  force?: boolean;
 }
 
-export async function publish({ cwd = process.cwd() }: Params) {
+export async function publish({ cwd = process.cwd(), force = false }: Params) {
   try {
-    const internalPackages: TrismPackageInfo[] = await getInternalPackages({ cwd });
+    const internalPackages: Map<string, PackageInfo> = await getInternalPackages({ cwd });
 
-    const publishOptions: PublishOption[] = await getPublishOptions({
+    const publishOptions: Map<string, PublishOption> = await getPublishOptions({
       cwd,
       packages: internalPackages,
     });
 
-    const selectedPublishOptions: PublishOption[] = await selectPublishOptions({ publishOptions, choice: true });
+    const selectedPublishOptions: PublishOption[] = await selectPublishOptions({ publishOptions, force });
 
     for (const publishOption of selectedPublishOptions) {
       console.log(`npm publish ${publishOption.name} --tag ${publishOption.tag}`);

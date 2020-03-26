@@ -1,10 +1,10 @@
-import { PackageJson } from 'type-fest';
-import { getPackageJsonContentsOrderedNames } from './getPackageJsonContentsOrderedNames';
+import {PackageJson} from 'type-fest';
+import {getPackagesOrderedNames} from './getPackagesOrderedNames';
 
-describe('getPackageJsonContentsOrderedNames', () => {
+describe('getPackagesOrderedNames', () => {
   test('기본 package.json 정보 사용해서 ordered names를 얻음', () => {
     function test(packageJsonContents: PackageJson[], matchOrderedNames: string[]) {
-      const orderedNames: string[] = getPackageJsonContentsOrderedNames({ packageJsonContents });
+      const orderedNames: string[] = getPackagesOrderedNames({ packageJsonContents });
 
       expect(orderedNames).toEqual(matchOrderedNames);
 
@@ -139,7 +139,7 @@ describe('getPackageJsonContentsOrderedNames', () => {
       },
     ];
 
-    expect(() => getPackageJsonContentsOrderedNames({ packageJsonContents })).toThrow();
+    expect(() => getPackagesOrderedNames({ packageJsonContents })).toThrow();
   });
 
   test('package.json dependencies가 순환참조되면 Error가 발생한다', () => {
@@ -158,6 +158,6 @@ describe('getPackageJsonContentsOrderedNames', () => {
       },
     ];
 
-    expect(() => getPackageJsonContentsOrderedNames({ packageJsonContents })).toThrow();
+    expect(() => getPackagesOrderedNames({ packageJsonContents })).toThrow();
   });
 });

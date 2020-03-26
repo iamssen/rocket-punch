@@ -1,4 +1,4 @@
-import { PackageJson } from 'type-fest';
+import {PackageJson} from 'type-fest';
 
 interface PackageJsonSet {
   name: string;
@@ -42,11 +42,7 @@ function sort(array: PackageJsonSet[]): PackageJsonSet[] {
   return [...sort(a), chosen, ...sort(b)];
 }
 
-export function getPackageJsonContentsOrderedNames({
-  packageJsonContents,
-}: {
-  packageJsonContents: PackageJson[];
-}): string[] {
+export function getPackagesOrderedNames({ packageJsonContents }: { packageJsonContents: PackageJson[] }): string[] {
   function searchNestedDependencies(
     ownerName: string,
     dependencies: PackageJson.Dependency | undefined,
@@ -85,33 +81,4 @@ export function getPackageJsonContentsOrderedNames({
   });
 
   return sort(array).map(({ name }) => name);
-
-  //return packageJsonContents
-  //  .map<PackageJsonSet>(packageJson => {
-  //    if (!packageJson.name) throw new Error(`Undefined "name" field on ${packageJson}`);
-  //    return {
-  //      name: packageJson.name,
-  //      dependencies: searchNestedDependencies(packageJson.name, packageJson.dependencies, new Set()),
-  //    };
-  //  })
-  //  .sort((a, b) => {
-  //    const aIsHigher: number = 1;
-  //    const bIsHigher: number = -1;
-  //
-  //    const aHasB: boolean = a.dependencies.has(b.name);
-  //    const bHasA: boolean = b.dependencies.has(a.name);
-  //
-  //    if (!aHasB && !bHasA) {
-  //      console.log('getPackageJsonContentsOrderedNames.ts..() c1', a.name, b.name, a.name > b.name ? bIsHigher : aIsHigher);
-  //      return a.name > b.name ? bIsHigher : aIsHigher;
-  //    }
-  //
-  //    if (aHasB && bHasA) {
-  //      throw new Error(`"${a.name}" dependent "${b.name}" and "${b.name}" dependent "${a.name}". packages can't be interdependent.`);
-  //    }
-  //
-  //    console.log('getPackageJsonContentsOrderedNames.ts..() c2', a.name, b.name, aHasB, aHasB ? aIsHigher : bIsHigher);
-  //    return aHasB ? aIsHigher : bIsHigher;
-  //  })
-  //  .map(({name}) => name);
 }
