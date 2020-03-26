@@ -5,6 +5,8 @@ const cwd = process.cwd();
 const {
   _: [command],
   force,
+  tag,
+  registry,
 } = require('yargs')
   .usage('Usage: $0 <command> [options]')
   .command('init', 'Init your project', (yargs) => {
@@ -17,8 +19,12 @@ const {
     return yargs
       .example('$0 publish', 'Publish packages with your selection')
       .example('$0 publish --force', 'Publish packages without your selection for CI')
+      .example('$0 publish --force --tag', 'Publish packages with custom tag for E2E Test')
       .alias('f', 'force')
       .describe('f', 'Force publish packages')
+      .alias('t', 'tag')
+      .describe('t', 'Force change target tag')
+      .describe('registry', 'Force change target registry')
       .boolean(['f']);
   })
   .demandCommand()
@@ -34,7 +40,7 @@ switch (command) {
     build({ cwd });
     break;
   case 'publish':
-    publish({ cwd, force });
+    publish({ cwd, force, tag, registry });
     break;
   default:
     throw new Error(`Unknown command ${command}`);

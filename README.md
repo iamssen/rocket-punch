@@ -27,6 +27,14 @@ npx trism init # it will create files that tsconfig.json and packages.yaml
 }
 ```
 
+# Commands
+
+- `trism build` : Package들을 `dist/` 디렉토리로 Build 합니다.
+- `trism publish` : `dist/`에 빌드된 Package들을 Registry로 Publish 합니다.
+    - `--force` : CI와 같이 사용자 선택없이 Publish를 진행하고 싶을때 사용합니다.
+    - `--tag` : Tag를 강제로 변경합니다. packages.yaml에 선언된 tag가 무시됩니다. (E2E Test와 같은 상황에 사용합니다)
+    - `--registry` : 특정 Registry로 Publish 합니다. `.npmrc`의 Registry 선언이 무시됩니다. (E2E Test와 같은 상황에 사용합니다)
+
 # Directory Rules
 
 아래와 같이 `src/` 내의 파일들은 `dist/`로 빌드 됩니다.

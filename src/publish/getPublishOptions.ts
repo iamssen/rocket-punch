@@ -15,10 +15,14 @@ const getNpmRemotePackageJson: GetRemotePackageJson = ({ name, ...options }) => 
 export async function getPublishOptions({
   cwd,
   packages,
+  tag: forceTag,
+  registry: forceRegistry,
   getRemotePackageJson = getNpmRemotePackageJson,
 }: {
   packages: Map<string, PackageInfo>;
   cwd: string;
+  tag: string | undefined;
+  registry: string | undefined;
   getRemotePackageJson?: GetRemotePackageJson;
 }): Promise<Map<string, PublishOption>> {
   const distDirectory: string = path.join(cwd, 'dist');
@@ -48,7 +52,8 @@ export async function getPublishOptions({
 
       return getRemotePackageJson({
         name,
-        version: tags.get(name),
+        version: forceTag || tags.get(name),
+        registryUrl: forceRegistry,
         fullMetadata: true,
       });
     }),
@@ -57,12 +62,13 @@ export async function getPublishOptions({
   return Array.from(packages.values()).reduce((map, current, i) => {
     if (!current.name) throw new Error(``);
 
-    map[current.name] = {
+    map.set(current.name, {
       name: current.name,
       tag: tags.get(current.name)!,
       current,
       remote: remotePackageJsons[i],
-    };
+    });
+
     return map;
   }, new Map());
 }

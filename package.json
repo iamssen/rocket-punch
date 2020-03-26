@@ -1,6 +1,6 @@
 {
   "name": "trism",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Trism",
   "author": "SSen <i@ssen.name>",
   "license": "MIT",
@@ -35,8 +35,22 @@
     "build": "npm run clean && tsc --project tsconfig.build.json",
     "watch": "npm run clean && tsc --project tsconfig.build.json --watch",
     "prepublishOnly": "npm run test && npm run build",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "jest --colors",
     "coverage": "jest --coverage"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "packages/**/src/**/*.{ts,tsx}": [
+      "prettier --write",
+      "eslint",
+      "jest --colors --findRelatedTests"
+    ]
   },
   "dependencies": {
     "fs-extra": "^9.0.0",
@@ -67,9 +81,12 @@
     "@types/rimraf": "^3.0.0",
     "@types/semver": "^7.1.0",
     "@types/validate-npm-package-name": "^3.0.0",
+    "coveralls": "^3.0.11",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.1",
+    "husky": "^4.2.3",
     "jest": "^25.2.0",
+    "lint-staged": "^10.0.9",
     "prettier": "^2.0.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^25.2.1",

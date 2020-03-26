@@ -8,27 +8,34 @@ import { selectPublishOptions } from './publish/selectPublishOptions';
 interface Params {
   cwd?: string;
   force?: boolean;
+  tag?: string;
+  registry?: string;
 }
 
-export async function publish({ cwd = process.cwd(), force = false }: Params) {
+export async function publish({ cwd = process.cwd(), force = false, tag, registry }: Params) {
   try {
     const internalPackages: Map<string, PackageInfo> = await getInternalPackages({ cwd });
 
     const publishOptions: Map<string, PublishOption> = await getPublishOptions({
       cwd,
+      tag,
+      registry,
       packages: internalPackages,
     });
 
     const selectedPublishOptions: PublishOption[] = await selectPublishOptions({ publishOptions, force });
 
     for (const publishOption of selectedPublishOptions) {
-      console.log(`npm publish ${publishOption.name} --tag ${publishOption.tag}`);
+      const t: string = ` --tag ${tag || publishOption.tag}`;
+      const r: string = registry ? ` --registry "${registry}"` : '';
+
+      console.log(`npm publish ${publishOption.name}${t}${r}`);
       console.log('');
 
       const command: string =
         process.platform === 'win32'
-          ? `cd "${path.join(cwd, 'dist', publishOption.name)}" && npm publish --tag ${publishOption.tag}`
-          : `cd "${path.join(cwd, 'dist', publishOption.name)}"; npm publish --tag ${publishOption.tag};`;
+          ? `cd "${path.join(cwd, 'dist', publishOption.name)}" && npm publish${t}${r}`
+          : `cd "${path.join(cwd, 'dist', publishOption.name)}"; npm publish${t}${r};`;
 
       const { stderr, stdout } = await exec(command, { encoding: 'utf8' });
       console.log(stdout);
