@@ -13,6 +13,7 @@ install:
   - npm install
 script:
   - npm run lint
+  - npm run build
   - npm run coverage
   - if [[ $TRAVIS_PULL_REQUEST == "false" ]]; then cat ./coverage/lcov.info | ./node_modules/.bin/coveralls; fi
 #  - npm run e2e
