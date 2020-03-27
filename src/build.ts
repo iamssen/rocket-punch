@@ -1,18 +1,18 @@
 import fs from 'fs-extra';
 import path from 'path';
-import {PackageJson} from 'type-fest';
+import { PackageJson } from 'type-fest';
 import ts from 'typescript';
-import {PackageInfo} from './types';
-import {computePackageJson} from './packageJson/computePackageJson';
-import {collectPackageDependencies} from './packageJson/collectPackageDependencies';
-import {fsCopySourceFilter} from './configs/fsCopySourceFilter';
-import {getExternalPackages} from './packageJson/getExternalPackages';
-import {getInternalPackages} from './packageJson/getInternalPackages';
-import {getPackagesOrderedNames} from './packageJson/getPackagesOrderedNames';
-import {rimraf} from './utils/promisify';
-import {readDirectoryPatterns} from './configs/readDirectoryPatterns';
-import {getCompilerOptions} from './configs/getCompilerOptions';
-import {ignoreCodes} from './configs/ignoreCodes';
+import { PackageInfo } from './types';
+import { computePackageJson } from './packageJson/computePackageJson';
+import { collectPackageDependencies } from './packageJson/collectPackageDependencies';
+import { fsCopySourceFilter } from './configs/fsCopySourceFilter';
+import { getExternalPackages } from './packageJson/getExternalPackages';
+import { getInternalPackages } from './packageJson/getInternalPackages';
+import { getPackagesOrderedNames } from './packageJson/getPackagesOrderedNames';
+import { rimraf } from './utils/promisify';
+import { readDirectoryPatterns } from './configs/readDirectoryPatterns';
+import { getCompilerOptions } from './configs/getCompilerOptions';
+import { ignoreCodes } from './configs/ignoreCodes';
 
 interface Params {
   cwd?: string;
