@@ -1,4 +1,4 @@
-import {packageJsonFactoryFileNamePattern} from './packageJsonFactoryFileName';
+import { packageJsonFactoryFileNamePattern } from './packageJsonFactoryFileName';
 
 export function fsCopySourceFilter(src: string): boolean {
   // IGNORE : __tests__ , __fixtures__

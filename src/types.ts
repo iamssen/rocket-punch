@@ -1,4 +1,4 @@
-import {PackageJson} from 'type-fest';
+import { PackageJson } from 'type-fest';
 
 export interface PackageInfo {
   name: string;

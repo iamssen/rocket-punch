@@ -1,5 +1,5 @@
-import {PackageJson} from 'type-fest';
-import {getPackagesOrderedNames} from './getPackagesOrderedNames';
+import { PackageJson } from 'type-fest';
+import { getPackagesOrderedNames } from './getPackagesOrderedNames';
 
 describe('getPackagesOrderedNames', () => {
   test('기본 package.json 정보 사용해서 ordered names를 얻음', () => {
