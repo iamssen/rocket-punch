@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const { init, build, publish } = require('../lib');
+const { init, build, publish, view } = require('../lib');
 const cwd = process.cwd();
 
 const {
@@ -27,6 +27,9 @@ const {
       .describe('registry', 'Force change target registry')
       .boolean(['f']);
   })
+  .command('view', 'View packages remote information', (yargs) => {
+    return yargs.example('$0 view', 'View packages remote information');
+  })
   .demandCommand()
   .help('h')
   .alias('h', 'help')
@@ -41,6 +44,9 @@ switch (command) {
     break;
   case 'publish':
     publish({ cwd, force, tag, registry });
+    break;
+  case 'view':
+    view({ cwd });
     break;
   default:
     throw new Error(`Unknown command ${command}`);

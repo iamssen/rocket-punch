@@ -1,5 +1,10 @@
 import { PackageJson } from 'type-fest';
 
+export interface PackageConfig {
+  version: string;
+  tag?: string;
+}
+
 export interface PackageInfo {
   name: string;
   version: string;
