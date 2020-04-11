@@ -1,11 +1,13 @@
 import fs from 'fs-extra';
 import yaml from 'js-yaml';
 import path from 'path';
+import { packagesFileName, rootConfigDirectoryName } from '../configs/fileNames';
 import { PackageInfo } from '../types';
-import { packagesFileName } from '../configs/packagesFileName';
 
 export async function getInternalPackages({ cwd }: { cwd: string }): Promise<Map<string, PackageInfo>> {
-  const source: string = await fs.readFile(path.join(cwd, packagesFileName), { encoding: 'utf8' });
+  const source: string = await fs.readFile(path.join(cwd, rootConfigDirectoryName, packagesFileName), {
+    encoding: 'utf8',
+  });
   const packages: { [name: string]: string | { version: string; tag?: string } } = yaml.safeLoad(source);
 
   return Object.keys(packages).reduce((map, name) => {

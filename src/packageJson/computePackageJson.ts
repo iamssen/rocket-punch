@@ -1,8 +1,12 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { PackageJson } from 'type-fest';
-import { packageJsonFactoryFileName } from '../configs/packageJsonFactoryFileName';
-import { sharedConfigFileName } from '../configs/sharedConfigFileName';
+import {
+  packageConfigDirectoryName,
+  packageJsonFactoryFileName,
+  rootConfigDirectoryName,
+  sharedConfigFileName,
+} from '../configs/fileNames';
 import { PackageInfo } from '../types';
 
 interface Params {
@@ -12,13 +16,18 @@ interface Params {
 }
 
 export async function computePackageJson({ cwd, packageInfo, imports }: Params): Promise<PackageJson> {
-  const sharedConfigFile: string = path.join(cwd, sharedConfigFileName);
-  const rootConfigFile: string = path.join(cwd, 'package.json');
+  const sharedConfigFile: string = path.join(cwd, rootConfigDirectoryName, sharedConfigFileName);
   const indexFile: string = path.join(cwd, 'src/index.ts');
 
   const sharedConfig: PackageJson = fs.existsSync(sharedConfigFile) ? fs.readJsonSync(sharedConfigFile) : {};
-  const rootConfig: PackageJson = fs.readJsonSync(rootConfigFile);
   const main: object = fs.existsSync(indexFile) ? { main: 'index.js', typings: 'index.d.ts' } : {};
+
+  Object.keys(sharedConfig).forEach((key) => {
+    const value: unknown = sharedConfig[key];
+    if (typeof value === 'string') {
+      sharedConfig[key] = value.replace(/({name})/g, packageInfo.name).replace(/({version})/g, packageInfo.version);
+    }
+  });
 
   const computedConfig: PackageJson = {
     ...sharedConfig,
@@ -30,7 +39,13 @@ export async function computePackageJson({ cwd, packageInfo, imports }: Params):
     ...main,
   };
 
-  const factoryFile: string = path.join(cwd, 'src', packageInfo.name, packageJsonFactoryFileName);
+  const factoryFile: string = path.join(
+    cwd,
+    'src',
+    packageInfo.name,
+    packageConfigDirectoryName,
+    packageJsonFactoryFileName,
+  );
 
-  return fs.existsSync(factoryFile) ? require(factoryFile)(computedConfig, rootConfig) : computedConfig;
+  return fs.existsSync(factoryFile) ? require(factoryFile)(computedConfig) : computedConfig;
 }

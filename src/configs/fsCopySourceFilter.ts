@@ -1,18 +1,15 @@
-import { packageJsonFactoryFileNamePattern } from './packageJsonFactoryFileName';
+import { packageConfigDirectoryNamePattern } from './fileNames';
 
+// prettier-ignore
 export function fsCopySourceFilter(src: string): boolean {
-  // IGNORE : __tests__ , __fixtures__
-  // IGNORE : *.ts, *.tsx
-  //     OK : *.d.ts
-  // IGNORE : package.js
-  if (
-    (!/__(\w*)__/.test(src) && !/\.(ts|tsx)$/.test(src) && !packageJsonFactoryFileNamePattern.test(src)) ||
-    /\.d\.ts$/.test(src)
-  ) {
-    // if (!process.env.JEST_WORKER_ID && fs.statSync(src).isFile()) {
-    //   console.log(src);
-    // }
-    return true;
-  }
-  return false;
+  return (
+    (
+      // IGNORE PATTERNS
+      !/__(\w*)__/.test(src) &&                    // IGNORE : __tests__ , __fixtures__
+      !/\.(ts|tsx)$/.test(src) &&                  // IGNORE : *.ts, *.tsx
+      !packageConfigDirectoryNamePattern.test(src) // IGNORE : .package
+    ) ||
+      // OK PATTERNS
+      /\.d\.ts$/.test(src)                         // OK : *.d.ts
+  );
 }
