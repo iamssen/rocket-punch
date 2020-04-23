@@ -1,12 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { PackageJson } from 'type-fest';
-import {
-  packageConfigDirectoryName,
-  packageJsonFactoryFileName,
-  rootConfigDirectoryName,
-  sharedPackageJsonFileName,
-} from '../configs/fileNames';
+import { packageJsonFactoryFileName, sharedPackageJsonFileName } from '../configs/fileNames';
 import { PackageInfo } from '../types';
 
 interface Params {
@@ -16,7 +11,7 @@ interface Params {
 }
 
 export async function computePackageJson({ cwd, packageInfo, imports }: Params): Promise<PackageJson> {
-  const sharedConfigFile: string = path.join(cwd, rootConfigDirectoryName, sharedPackageJsonFileName);
+  const sharedConfigFile: string = path.join(cwd, sharedPackageJsonFileName);
   const indexFile: string = path.join(cwd, 'src/index.ts');
 
   const sharedConfig: PackageJson = fs.existsSync(sharedConfigFile) ? fs.readJsonSync(sharedConfigFile) : {};
@@ -39,13 +34,7 @@ export async function computePackageJson({ cwd, packageInfo, imports }: Params):
     ...main,
   };
 
-  const factoryFile: string = path.join(
-    cwd,
-    'src',
-    packageInfo.name,
-    packageConfigDirectoryName,
-    packageJsonFactoryFileName,
-  );
+  const factoryFile: string = path.join(cwd, 'src', packageInfo.name, packageJsonFactoryFileName);
 
   return fs.existsSync(factoryFile) ? require(factoryFile)(computedConfig) : computedConfig;
 }

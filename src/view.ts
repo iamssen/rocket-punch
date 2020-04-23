@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import yaml from 'js-yaml';
 import getPackageJson, { FullMetadata } from 'package-json';
 import path from 'path';
-import { packagesFileName, rootConfigDirectoryName } from './configs/fileNames';
+import { packagesFileName } from './configs/fileNames';
 import { PackageConfig } from './types';
 
 interface Params {
@@ -11,7 +11,7 @@ interface Params {
 }
 
 export async function view({ cwd = process.cwd() }: Params) {
-  const source: string = await fs.readFile(path.join(cwd, rootConfigDirectoryName, packagesFileName), {
+  const source: string = await fs.readFile(path.join(cwd, packagesFileName), {
     encoding: 'utf8',
   });
   const packages: { [name: string]: string | PackageConfig } = yaml.safeLoad(source);

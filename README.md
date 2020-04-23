@@ -40,8 +40,6 @@ npx trism init # it will create files that `tsconfig.json` and `.packages/packag
 아래와 같이 `src/` 내의 파일들은 `dist/`로 빌드 됩니다.
 
 ```
-.packages/
-  packages.yaml
 dist/
   package1/
     index.js
@@ -61,10 +59,11 @@ src/
         file.ts
       index.ts
 package.json
+trism.entry.yaml
 tsconfig.json
 ```
 
-위와 같은 경우 `.packages/packages.yaml`에는 아래와 같이 적혀있어야 합니다.
+위와 같은 경우 `.trism.entry.yaml`에는 아래와 같이 적혀있어야 합니다.
 
 ```yaml
 package1:
@@ -73,11 +72,11 @@ package1:
   version: 0.0.1
 ```
 
-새로운 Package를 추가하고 싶은 경우 `src/{name}` 또는 `src/@{group}/{name}` 형식의 디렉토리를 만들고, `.packages/packages.yaml`에 추가해줍니다.
+새로운 Package를 추가하고 싶은 경우 `src/{name}` 또는 `src/@{group}/{name}` 형식의 디렉토리를 만들고, `.trism.entry.yaml`에 추가해줍니다.
 
-# `.packages/package.json`
+# `.trism.package.json`
 
-모든 `package.json`에 공통적으로 적용되어야 하는 항목들이 있는 경우 `package.shared.json` 파일을 만듭니다.
+모든 `package.json`에 공통적으로 적용되어야 하는 항목들이 있는 경우 `.trism.package.json` 파일을 만듭니다.
 
 `author`, `license`, `repository`, `publishConfig` 같은 항목들을 입력하는데 사용합니다. (`dependencies`와 같은 항목들은 무시됩니다)
 
@@ -91,9 +90,9 @@ package1:
 
 위와 같이 `{name}` 또는 `{version}`을 사용할 수 있습니다.
 
-# `src/{package}/.package/package.json.js`
+# `src/{package}/.package.json.js`
 
-`package.json` 파일을 직접적으로 제어해야 하는 경우 아래와 같이 `src/{package}/.package/package.json.js` 파일을 만들어서 `package.json` 파일 생성에 직접 개입할 수 있습니다.
+`package.json` 파일을 직접적으로 제어해야 하는 경우 아래와 같이 `src/{package}/.package.json.js` 파일을 만들어서 `package.json` 파일 생성에 직접 개입할 수 있습니다.
 
 ```js
 module.exports = (computedPackageJson) => {
