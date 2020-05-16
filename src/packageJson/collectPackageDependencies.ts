@@ -3,15 +3,17 @@ import ts from 'typescript';
 import { PackageInfo } from '../types';
 import { readDirectoryPatterns } from '../configs/readDirectoryPatterns';
 
+interface CollectPackageDependenciesParams {
+  packageDir: string;
+  internalPackages: Map<string, PackageInfo>;
+  externalPackages: PackageJson.Dependency;
+}
+
 export async function collectPackageDependencies({
   packageDir,
   internalPackages,
   externalPackages,
-}: {
-  packageDir: string;
-  internalPackages: Map<string, PackageInfo>;
-  externalPackages: PackageJson.Dependency;
-}): Promise<PackageJson.Dependency> {
+}: CollectPackageDependenciesParams): Promise<PackageJson.Dependency> {
   const compilerOptions: ts.CompilerOptions = {
     rootDir: packageDir,
   };
