@@ -1,18 +1,29 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { PackageJson } from 'type-fest';
-import ts from 'typescript';
-import { PackageInfo } from './types';
-import { computePackageJson } from './packageJson/computePackageJson';
-import { collectPackageDependencies } from './packageJson/collectPackageDependencies';
+import ts, {
+  CompilerHost,
+  CompilerOptions,
+  createCompilerHost,
+  createProgram,
+  Diagnostic,
+  EmitResult,
+  flattenDiagnosticMessageText,
+  getPreEmitDiagnostics,
+  Program,
+} from 'typescript';
 import { fsCopySourceFilter } from './configs/fsCopySourceFilter';
+import { getCompilerOptions } from './configs/getCompilerOptions';
+import { ignoreCodes } from './configs/ignoreCodes';
+import { readDirectoryPatterns } from './configs/readDirectoryPatterns';
+import { collectPackageDependencies } from './packageJson/collectPackageDependencies';
+import { computePackageJson } from './packageJson/computePackageJson';
 import { getExternalPackages } from './packageJson/getExternalPackages';
 import { getInternalPackages } from './packageJson/getInternalPackages';
 import { getPackagesOrderedNames } from './packageJson/getPackagesOrderedNames';
+import { PackageInfo } from './types';
+import { flatPackageName } from './utils/flatPackageName';
 import { rimraf } from './utils/promisify';
-import { readDirectoryPatterns } from './configs/readDirectoryPatterns';
-import { getCompilerOptions } from './configs/getCompilerOptions';
-import { ignoreCodes } from './configs/ignoreCodes';
 
 interface Params {
   cwd?: string;
@@ -44,6 +55,8 @@ export async function build({ cwd = process.cwd() }: Params) {
     packageJsonContents,
   });
 
+  const symlinkDirs: string[] = [];
+
   for (const packageName of orderNames) {
     const packageInfo: PackageInfo | undefined = internalPackages.get(packageName);
 
@@ -51,8 +64,8 @@ export async function build({ cwd = process.cwd() }: Params) {
       throw new Error(`TODO`);
     }
 
-    const sourceDir: string = path.join(cwd, 'src', packageInfo.name);
-    const outDir: string = path.join(cwd, 'dist', packageInfo.name);
+    const sourceDir: string = path.join(cwd, 'src', packageName);
+    const outDir: string = path.join(cwd, 'dist', flatPackageName(packageName));
 
     const packageJsonContent: PackageJson | undefined = packageJsonContents.find(({ name }) => packageName === name);
 
@@ -64,27 +77,32 @@ export async function build({ cwd = process.cwd() }: Params) {
     await fs.mkdirp(outDir);
     await fs.writeJson(path.join(outDir, 'package.json'), packageJsonContent, { encoding: 'utf8', spaces: 2 });
 
-    const compilerOptions: ts.CompilerOptions = {
+    const compilerOptions: CompilerOptions = {
       ...getCompilerOptions(),
 
-      typeRoots: [path.join(cwd, 'node_modules/@types'), path.join(cwd, 'dist')],
+      // typeRoots: [path.join(cwd, 'node_modules/@types'), path.join(cwd, 'dist')],
       rootDir: sourceDir,
       outDir,
     };
 
-    const host: ts.CompilerHost = ts.createCompilerHost(compilerOptions);
+    const symlink: string = path.join(cwd, 'node_modules', packageName);
+    await fs.mkdirp(path.dirname(symlink));
+    await fs.symlink(outDir, symlink);
+    symlinkDirs.push(symlink);
+
+    const host: CompilerHost = createCompilerHost(compilerOptions);
 
     const files: string[] = host.readDirectory!(sourceDir, ...readDirectoryPatterns);
 
-    const program: ts.Program = ts.createProgram(files, compilerOptions, host);
+    const program: Program = createProgram(files, compilerOptions, host);
 
-    const emitResult: ts.EmitResult = program.emit();
-    const diagnostics: ts.Diagnostic[] = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
+    const emitResult: EmitResult = program.emit();
+    const diagnostics: Diagnostic[] = getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 
     for (const diagnostic of diagnostics) {
       if (diagnostic.file && diagnostic.start) {
         const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
-        const message: string = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+        const message: string = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
         if (!ignoreCodes.has(diagnostic.code)) {
           console.log(`TS${diagnostic.code} : ${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`);
         }
@@ -99,10 +117,14 @@ export async function build({ cwd = process.cwd() }: Params) {
       throw new Error(`Build the declaration files of "${packageName}" is failed`);
     }
 
-    await fs.copy(path.join(cwd, 'src', packageName), path.join(cwd, 'dist', packageName), {
+    await fs.copy(path.join(cwd, 'src', packageName), outDir, {
       filter: fsCopySourceFilter,
     });
 
-    console.log(`👍 ${packageName}@${packageInfo.version}`);
+    console.log(`👍 ${packageName}@${packageInfo.version} → ${outDir}`);
+  }
+
+  for (const symlink of symlinkDirs) {
+    fs.unlinkSync(symlink);
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "trism",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "TypeScript Multiple Package Builder (like Monorepo)",
   "author": "SSen <i@ssen.name>",
   "license": "MIT",
@@ -38,7 +38,8 @@
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "jest --colors",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "pack": "npm run prepublishOnly && npm pack"
   },
   "husky": {
     "hooks": {
@@ -53,7 +54,6 @@
     ]
   },
   "dependencies": {
-    "@ssen/require-typescript": "^0.1.0",
     "chalk": "^4.0.0",
     "fs-extra": "^9.0.0",
     "git-branch": "^2.0.1",

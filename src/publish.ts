@@ -1,9 +1,10 @@
 import path from 'path';
-import { PackageInfo, PublishOption } from './types';
 import { getInternalPackages } from './packageJson/getInternalPackages';
 import { getPublishOptions } from './publish/getPublishOptions';
-import { exec } from './utils/promisify';
 import { selectPublishOptions } from './publish/selectPublishOptions';
+import { PackageInfo, PublishOption } from './types';
+import { flatPackageName } from './utils/flatPackageName';
+import { exec } from './utils/promisify';
 
 interface Params {
   cwd?: string;
@@ -34,8 +35,8 @@ export async function publish({ cwd = process.cwd(), force = false, tag, registr
 
       const command: string =
         process.platform === 'win32'
-          ? `cd "${path.join(cwd, 'dist', publishOption.name)}" && npm publish${t}${r}`
-          : `cd "${path.join(cwd, 'dist', publishOption.name)}"; npm publish${t}${r};`;
+          ? `cd "${path.join(cwd, 'dist', flatPackageName(publishOption.name))}" && npm publish${t}${r}`
+          : `cd "${path.join(cwd, 'dist', flatPackageName(publishOption.name))}"; npm publish${t}${r};`;
 
       const { stderr, stdout } = await exec(command, { encoding: 'utf8' });
       console.log(stdout);

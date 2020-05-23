@@ -1,10 +1,11 @@
-import { requireTypescript } from '@ssen/require-typescript';
 import fs from 'fs-extra';
 import path from 'path';
 import { PackageJson } from 'type-fest';
 import { PackageJsonFactoryFunction } from '../';
 import { packageJsonFactoryFileName, sharedPackageJsonFileName } from '../configs/fileNames';
 import { PackageInfo } from '../types';
+import { glob } from '../utils/promisify';
+import { requireTypescript } from '../utils/requireTypescript';
 
 interface Params {
   cwd: string;
@@ -14,10 +15,10 @@ interface Params {
 
 export async function computePackageJson({ cwd, packageInfo, imports }: Params): Promise<PackageJson> {
   const sharedConfigFile: string = path.join(cwd, sharedPackageJsonFileName);
-  const indexFile: string = path.join(cwd, 'src/index.ts');
+  const indexFiles: string[] = await glob(`${cwd}/src/${packageInfo.name}/index.{ts,tsx}`);
 
   const sharedConfig: PackageJson = fs.existsSync(sharedConfigFile) ? fs.readJsonSync(sharedConfigFile) : {};
-  const main: object = fs.existsSync(indexFile) ? { main: 'index.js', typings: 'index.d.ts' } : {};
+  const main: object = indexFiles.length > 0 ? { main: 'index.js', typings: 'index.d.ts' } : {};
 
   Object.keys(sharedConfig).forEach((key) => {
     const value: unknown = sharedConfig[key];

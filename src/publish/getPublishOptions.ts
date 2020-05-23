@@ -3,6 +3,7 @@ import getPackageJson, { Options } from 'package-json';
 import path from 'path';
 import { PackageJson } from 'type-fest';
 import { PackageInfo, PublishOption } from '../types';
+import { flatPackageName } from '../utils/flatPackageName';
 
 export type GetRemotePackageJson = (params: { name: string } & Options) => Promise<PackageJson | undefined>;
 
@@ -38,7 +39,7 @@ export async function getPublishOptions({
 
   const currentPackageJsons: PackageJson[] = Array.from(packages.values())
     // PackageInfo => /path/to/dist/{name}/package.json
-    .map(({ name: packageName }) => path.join(distDirectory, packageName, 'package.json'))
+    .map(({ name: packageName }) => path.join(distDirectory, flatPackageName(packageName), 'package.json'))
     // /path/to/dist/{name}/package.json => boolean
     .filter((packageJsonFile) => fs.existsSync(packageJsonFile))
     // /path/to/dist/{name}/package.json => PackageJson
