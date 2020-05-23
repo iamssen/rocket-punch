@@ -74,6 +74,28 @@ package1:
 
 새로운 Package를 추가하고 싶은 경우 `src/{name}` 또는 `src/@{group}/{name}` 형식의 디렉토리를 만들고, `.trism.entry.yaml`에 추가해줍니다.
 
+# Package Group을 같은 정보로 입력하기
+
+```
+src/
+  @group/
+    package1/
+      index.ts
+    package2/
+      index.ts
+    package3/
+      index.ts
+```
+
+위와 같은 Package Group이 있을 경우
+
+```yaml
+'@group/*':
+  version: 0.0.1
+```
+
+이와 같이 같이 선언할 수 있습니다.
+
 # `.trism.package.json`
 
 모든 `package.json`에 공통적으로 적용되어야 하는 항목들이 있는 경우 `.trism.package.json` 파일을 만듭니다.
@@ -90,12 +112,14 @@ package1:
 
 위와 같이 `{name}` 또는 `{version}`을 사용할 수 있습니다.
 
-# `src/{package}/.package.json.js`
+# `src/{package}/.package.json.ts`
 
-`package.json` 파일을 직접적으로 제어해야 하는 경우 아래와 같이 `src/{package}/.package.json.js` 파일을 만들어서 `package.json` 파일 생성에 직접 개입할 수 있습니다.
+`package.json` 파일을 직접적으로 제어해야 하는 경우 아래와 같이 `src/{package}/.package.json.ts` 파일을 만들어서 `package.json` 파일 생성에 직접 개입할 수 있습니다.
 
-```js
-module.exports = (computedPackageJson) => {
+```ts
+import { PackageJson, PackageJsonFactoryFunction } from 'trism';
+
+export default ((computedPackageJson: PackageJson) => {
   return {
     ...computedPackageJson,
     dependencies: {
@@ -103,7 +127,7 @@ module.exports = (computedPackageJson) => {
       'some-dependency': '1.x',
     }
   }
-}
+}) as PackageJsonFactoryFunction;
 ```
 
 `computedPackageJson`은 기본적으로 `require()`, `require.resolve()`, `import ''` 구문을 분석해서 `dependencies`를 자동으로 입력하는데, 해당 분석으로는 입력할 수 없는 항목들을 입력할 필요가 있는 경우를 비롯해서 `package.json` 생성에 직접적으로 개입해야 하는 경우 사용할 수 있습니다. 

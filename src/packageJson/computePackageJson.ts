@@ -1,6 +1,8 @@
+import { requireTypescript } from '@ssen/require-typescript';
 import fs from 'fs-extra';
 import path from 'path';
 import { PackageJson } from 'type-fest';
+import { PackageJsonFactoryFunction } from '../';
 import { packageJsonFactoryFileName, sharedPackageJsonFileName } from '../configs/fileNames';
 import { PackageInfo } from '../types';
 
@@ -36,5 +38,7 @@ export async function computePackageJson({ cwd, packageInfo, imports }: Params):
 
   const factoryFile: string = path.join(cwd, 'src', packageInfo.name, packageJsonFactoryFileName);
 
-  return fs.existsSync(factoryFile) ? require(factoryFile)(computedConfig) : computedConfig;
+  return fs.existsSync(factoryFile)
+    ? requireTypescript<{ default: PackageJsonFactoryFunction }>(factoryFile).default(computedConfig)
+    : computedConfig;
 }

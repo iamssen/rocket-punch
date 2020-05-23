@@ -1,6 +1,6 @@
 {
   "name": "trism",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "TypeScript Multiple Package Builder (like Monorepo)",
   "author": "SSen <i@ssen.name>",
   "license": "MIT",
@@ -53,6 +53,7 @@
     ]
   },
   "dependencies": {
+    "@ssen/require-typescript": "^0.1.0",
     "chalk": "^4.0.0",
     "fs-extra": "^9.0.0",
     "git-branch": "^2.0.1",

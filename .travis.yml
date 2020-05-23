@@ -4,11 +4,8 @@ branches:
 language: node_js
 node_js: '10'
 cache: npm
-git:
-  submodules: false
 before_install:
   - npm install -g npm@latest
-  - git submodule sync && git submodule update --init # get fixtures
 install:
   - npm install
 script:
