@@ -6,7 +6,7 @@ export function fsCopySourceFilter(src: string): boolean {
     (
       // IGNORE PATTERNS
       !/__(\w*)__/.test(src) &&                    // IGNORE : __tests__ , __fixtures__
-      !/\.(ts|tsx)$/.test(src) &&                  // IGNORE : *.ts, *.tsx
+      !/\.(js|jsx|ts|tsx)$/.test(src) &&           // IGNORE : *.ts, *.tsx
       !packageJsonFactoryFileNamePattern.test(src) // IGNORE : .package.json.js
     ) ||
       // OK PATTERNS

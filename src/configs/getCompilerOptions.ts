@@ -14,6 +14,7 @@ export function getCompilerOptions(): ts.CompilerOptions {
     strictPropertyInitialization: true,
     resolveJsonModule: true,
 
+    allowJs: true,
     jsx: ts.JsxEmit.React,
 
     module: ts.ModuleKind.CommonJS,
