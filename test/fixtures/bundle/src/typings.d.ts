@@ -8,6 +8,18 @@ declare module '*.md' {
   export = content;
 }
 
+declare module '*.yml' {
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const content: any;
+  export = content;
+}
+
+declare module '*.yaml' {
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const content: any;
+  export = content;
+}
+
 declare module '*.jpg' {
   const content: string;
   export = content;

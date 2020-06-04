@@ -46,8 +46,8 @@ describe('build()', () => {
     const dist: string = await createTmpDirectory();
 
     await exec(`npm install`, { cwd });
-    //await exec(`open ${cwd}`);
-    //await exec(`open ${dist}`);
+    await exec(`open ${cwd}`);
+    await exec(`open ${dist}`);
 
     await build({
       cwd,
@@ -69,5 +69,8 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'c/image.jpg'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/image.jpg.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/image.jpg.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/data.yaml'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/data.yaml.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/data.yaml.d.ts'))).toBeTruthy();
   }, 100000);
 });

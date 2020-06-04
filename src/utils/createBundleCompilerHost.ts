@@ -1,5 +1,6 @@
 import svgr from '@svgr/core';
 import fs from 'fs-extra';
+import { safeLoad } from 'js-yaml';
 import path from 'path';
 import {
   CompilerHost,
@@ -32,9 +33,19 @@ const imageBundleConfig: BundleConfig = {
   },
 };
 
+const yamlBundleConfig: BundleConfig = {
+  getSourceText: (fileName: string) => {
+    const file: string = fileName.substr(0, fileName.length - 4);
+    const content: string = fs.readFileSync(file, 'utf8');
+    return `export default ${JSON.stringify(safeLoad(content))}`;
+  },
+};
+
 const bundleConfigs: Record<string, BundleConfig> = {
   txt: plainTextBundleConfig,
   md: plainTextBundleConfig,
+  yml: yamlBundleConfig,
+  yaml: yamlBundleConfig,
   jpg: imageBundleConfig,
   jpeg: imageBundleConfig,
   gif: imageBundleConfig,
