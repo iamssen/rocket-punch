@@ -46,8 +46,8 @@ describe('build()', () => {
     const dist: string = await createTmpDirectory();
 
     await exec(`npm install`, { cwd });
-    await exec(`open ${cwd}`);
-    await exec(`open ${dist}`);
+    //await exec(`open ${cwd}`);
+    //await exec(`open ${dist}`);
 
     await build({
       cwd,
