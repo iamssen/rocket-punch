@@ -1,10 +1,9 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { PackageJson } from 'type-fest';
-import ts, {
+import {
   CompilerHost,
   CompilerOptions,
-  createCompilerHost,
   createProgram,
   Diagnostic,
   EmitResult,
@@ -22,14 +21,16 @@ import { getExternalPackages } from './packageJson/getExternalPackages';
 import { getInternalPackages } from './packageJson/getInternalPackages';
 import { getPackagesOrderedNames } from './packageJson/getPackagesOrderedNames';
 import { PackageInfo } from './types';
+import { createBundleCompilerHost } from './utils/createBundleCompilerHost';
 import { flatPackageName } from './utils/flatPackageName';
 import { rimraf } from './utils/promisify';
 
 interface Params {
   cwd?: string;
+  dist?: string;
 }
 
-export async function build({ cwd = process.cwd() }: Params) {
+export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist') }: Params) {
   const externalPackages: PackageJson.Dependency = await getExternalPackages({ cwd });
   const internalPackages: Map<string, PackageInfo> = await getInternalPackages({ cwd });
 
@@ -65,7 +66,7 @@ export async function build({ cwd = process.cwd() }: Params) {
     }
 
     const sourceDir: string = path.join(cwd, 'src', packageName);
-    const outDir: string = path.join(cwd, 'dist', flatPackageName(packageName));
+    const outDir: string = path.join(dist, flatPackageName(packageName));
 
     const packageJsonContent: PackageJson | undefined = packageJsonContents.find(({ name }) => packageName === name);
 
@@ -90,7 +91,7 @@ export async function build({ cwd = process.cwd() }: Params) {
     await fs.symlink(outDir, symlink);
     symlinkDirs.push(symlink);
 
-    const host: CompilerHost = createCompilerHost(compilerOptions);
+    const host: CompilerHost = createBundleCompilerHost(compilerOptions);
 
     const files: string[] = host.readDirectory!(sourceDir, ...readDirectoryPatterns);
 
@@ -108,7 +109,7 @@ export async function build({ cwd = process.cwd() }: Params) {
         }
       } else {
         if (!ignoreCodes.has(diagnostic.code)) {
-          console.log(`TS${diagnostic.code} : ${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+          console.log(`TS${diagnostic.code} : ${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
         }
       }
     }

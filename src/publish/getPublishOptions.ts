@@ -15,6 +15,7 @@ const getNpmRemotePackageJson: GetRemotePackageJson = ({ name, ...options }) => 
 
 export async function getPublishOptions({
   cwd,
+  dist,
   packages,
   tag: forceTag,
   registry: forceRegistry,
@@ -22,14 +23,13 @@ export async function getPublishOptions({
 }: {
   packages: Map<string, PackageInfo>;
   cwd: string;
+  dist: string;
   tag: string | undefined;
   registry: string | undefined;
   getRemotePackageJson?: GetRemotePackageJson;
 }): Promise<Map<string, PublishOption>> {
-  const distDirectory: string = path.join(cwd, 'dist');
-
-  if (!fs.existsSync(distDirectory) || !fs.statSync(distDirectory).isDirectory()) {
-    throw new Error(`"${distDirectory}" directory is undefined`);
+  if (!fs.existsSync(dist) || !fs.statSync(dist).isDirectory()) {
+    throw new Error(`"${dist}" directory is undefined`);
   }
 
   const tags: Map<string, string> = new Map();
@@ -39,7 +39,7 @@ export async function getPublishOptions({
 
   const currentPackageJsons: PackageJson[] = Array.from(packages.values())
     // PackageInfo => /path/to/dist/{name}/package.json
-    .map(({ name: packageName }) => path.join(distDirectory, flatPackageName(packageName), 'package.json'))
+    .map(({ name: packageName }) => path.join(dist, flatPackageName(packageName), 'package.json'))
     // /path/to/dist/{name}/package.json => boolean
     .filter((packageJsonFile) => fs.existsSync(packageJsonFile))
     // /path/to/dist/{name}/package.json => PackageJson

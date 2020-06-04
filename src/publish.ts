@@ -8,17 +8,25 @@ import { exec } from './utils/promisify';
 
 interface Params {
   cwd?: string;
+  dist?: string;
   force?: boolean;
   tag?: string;
   registry?: string;
 }
 
-export async function publish({ cwd = process.cwd(), force = false, tag, registry }: Params) {
+export async function publish({
+  cwd = process.cwd(),
+  dist = path.join(cwd, 'dist'),
+  force = false,
+  tag,
+  registry,
+}: Params) {
   try {
     const internalPackages: Map<string, PackageInfo> = await getInternalPackages({ cwd });
 
     const publishOptions: Map<string, PublishOption> = await getPublishOptions({
       cwd,
+      dist,
       tag,
       registry,
       packages: internalPackages,
@@ -35,8 +43,8 @@ export async function publish({ cwd = process.cwd(), force = false, tag, registr
 
       const command: string =
         process.platform === 'win32'
-          ? `cd "${path.join(cwd, 'dist', flatPackageName(publishOption.name))}" && npm publish${t}${r}`
-          : `cd "${path.join(cwd, 'dist', flatPackageName(publishOption.name))}"; npm publish${t}${r};`;
+          ? `cd "${path.join(dist, flatPackageName(publishOption.name))}" && npm publish${t}${r}`
+          : `cd "${path.join(dist, flatPackageName(publishOption.name))}"; npm publish${t}${r};`;
 
       const { stderr, stdout } = await exec(command, { encoding: 'utf8' });
       console.log(stdout);
