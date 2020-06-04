@@ -1,25 +1,20 @@
 module.exports = {
-  roots: [
-    '<rootDir>/src'
-  ],
+  roots: ['<rootDir>/src'],
   transform: {
-    '.(ts|tsx)': 'ts-jest'
+    '.(ts|tsx)': 'ts-jest',
   },
-  testMatch: [
-    "**/__test?(s)__/**/*.ts?(x)",
-    "**/?(*.)(spec|test).ts?(x)"
-  ],
-  moduleFileExtensions: [
-    "ts",
-    "tsx",
-    "js"
-  ],
+  testMatch: ['**/__test?(s)__/**/*.ts?(x)', '**/?(*.)(spec|test).ts?(x)'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
   collectCoverageFrom: [
-    'src/**/*.ts'
+    'src/**/*.ts?(x)',
+    '!**/*.d.ts?(x)',
+    '!**/__*__/**',
+    '!src/@react-zeroconfig/*/commands.ts',
+    '!src/@react-zeroconfig/cli/**',
   ],
   globals: {
     'ts-jest': {
-      tsConfig: 'tsconfig.json'
-    }
-  }
-}
+      tsConfig: 'tsconfig.json',
+    },
+  },
+};
