@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { build } from 'rocket-pack';
+import { build } from 'rocket-punch';
 
 [path.join(process.cwd(), 'node_modules/@ssen'), path.join(process.cwd(), 'node_modules/rocket-punch')].forEach((p) => {
   if (fs.existsSync(p)) {
