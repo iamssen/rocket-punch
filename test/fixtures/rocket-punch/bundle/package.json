@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "build": "trism build"
+    "build": "rocket-punch build"
   },
   "dependencies": {
     "react": "^16.13.1"

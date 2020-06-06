@@ -9,6 +9,7 @@
     "publish": "ts-node -r tsconfig-paths/register src/publish-packages.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "e2e": "npm run build && bash test/e2e.sh",
     "test": "jest --colors",
     "coverage": "jest --coverage"
   },

@@ -1,6 +1,6 @@
 {
   "private": true,
   "scripts": {
-    "build": "trism build"
+    "build": "rocket-punch build"
   }
 }

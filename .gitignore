@@ -11,6 +11,6 @@ yarn-error.log*
 /.changelog
 /.npm
 /coverage
-package-lock.json
 /.history
 /dist
+/test/storage
