@@ -1,32 +1,33 @@
 {
   "compilerOptions": {
+    // lang
     "downlevelIteration": true,
+    "resolveJsonModule": true,
+    // import
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    
+    // strict
     "alwaysStrict": true,
     "strictNullChecks": true,
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
-    "resolveJsonModule": true,
-  
+    // build
     "module": "commonjs",
     "target": "esnext",
     "moduleResolution": "node",
     "skipLibCheck": true,
+    // export
     "sourceMap": true,
     "declaration": true,
-    
-    "outDir": "lib"
+    // output
+    "outDir": "lib",
+    // path
+    "baseUrl": "src",
+    "paths": {
+      "*": ["*"]
+    }
   },
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "./src/**/*.spec.ts",
-    "./src/**/*.test.ts",
-    "./src/**/__tests__",
-    "./src/**/__test__"
-  ]
+  "include": ["./src/**/*"],
+  "exclude": ["./src/**/*.spec.ts", "./src/**/*.test.ts", "./src/**/__tests__", "./src/**/__test__"]
 }
