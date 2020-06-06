@@ -1,35 +1,8 @@
 {
-  "name": "rocket-punch",
-  "version": "0.9.0-alpha.1",
-  "description": "Multiple Package Builder",
+  "private": true,
   "author": "SSen <i@ssen.name>",
   "license": "MIT",
   "repository": "github:rocket-hangar/rocket-punch",
-  "bugs": "https://github.com/rocket-hangar/rocket-punch/issues",
-  "homepage": "https://github.com/rocket-hangar/rocket-punch",
-  "keywords": [
-    "package",
-    "build",
-    "typescript"
-  ],
-  "engines": {
-    "node": ">=10"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
-  "files": [
-    "bin",
-    "lib",
-    "package.json",
-    "LICENSE",
-    "README.md"
-  ],
-  "bin": {
-    "rocket-punch": "./bin/rocket-punch.js"
-  },
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run clean && ts-node -r tsconfig-paths/register src/build-packages.ts",
@@ -51,7 +24,7 @@
       "jest --colors --findRelatedTests"
     ]
   },
-  "dependencies": {
+  "devDependencies": {
     "@svgr/core": "^5.4.0",
     "chalk": "^4.0.0",
     "fs-extra": "^9.0.1",
@@ -64,12 +37,7 @@
     "semver": "^7.3.2",
     "tmp": "^0.2.1",
     "validate-npm-package-name": "^3.0.0",
-    "yargs": "^15.3.1"
-  },
-  "peerDependencies": {
-    "typescript": ">=3.8.0"
-  },
-  "devDependencies": {
+    "yargs": "^15.3.1",
     "@lunit/eslint-config": "^0.5.0",
     "@lunit/prettier-config": "^0.1.1",
     "@types/eslint": "^6.8.1",

@@ -1,6 +1,6 @@
 import 'react';
 import rimraf from 'rimraf';
-import { copyTmpDirectory } from 'tmp-directory';
+import { copyTmpDirectory } from '@ssen/tmp-directory';
 
 const tmp = require('tmp');
 

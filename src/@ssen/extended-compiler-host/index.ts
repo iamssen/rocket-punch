@@ -36,7 +36,6 @@ const imageTransformConfig: TransformConfig = {
 const yamlTransformConfig: TransformConfig = {
   getSourceText: (fileName: string) => {
     const file: string = fileName.substr(0, fileName.length - 4);
-    console.log('index.ts..getSourceText()', fileName);
     const content: string = fs.readFileSync(file, 'utf8');
     return `export default ${JSON.stringify(safeLoad(content))}`;
   },
