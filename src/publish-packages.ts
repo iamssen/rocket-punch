@@ -1,5 +1,5 @@
 import path from 'path';
-import { publish } from 'rocket-punch';
+import { publish } from 'rocket-pack';
 
 publish({
   cwd: process.cwd(),
