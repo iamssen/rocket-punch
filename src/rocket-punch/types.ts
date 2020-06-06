@@ -19,4 +19,9 @@ export interface PublishOption {
 }
 
 export { PackageJson };
-export type PackageJsonFactoryFunction = (computedPackageJson: PackageJson) => PackageJson;
+
+export type PackageJsonTransformFunction = (computedPackageJson: PackageJson) => PackageJson;
+
+export interface PackageJsonTransformFile {
+  default: PackageJsonTransformFunction;
+}

@@ -7,7 +7,7 @@ const argv = yargs.argv;
 publish({
   cwd: process.cwd(),
   dist: path.join(process.cwd(), 'dist'),
-  force: true,
+  skipSelection: true,
   tag: argv.tag as string,
   registry: argv.registry as string,
 });

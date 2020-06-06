@@ -4,20 +4,12 @@ export const readDirectoryPatterns: [string[], string[], string[]] = [
   // excludes
   [
     // exclude tests
-    '**/*.spec.js',
-    '**/*.spec.jsx',
-    '**/*.spec.ts',
-    '**/*.spec.tsx',
-    '**/*.test.js',
-    '**/*.test.jsx',
-    '**/*.test.ts',
-    '**/*.test.tsx',
-    '**/__tests__',
-    '**/__test__',
+    '**/*.(spec|test).(js|jsx|ts|tsx)',
     '**/__*',
 
     // exclude public
     '**/public',
+    '**/bin',
   ],
   // includes
   ['**/*'],

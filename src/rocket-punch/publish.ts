@@ -1,15 +1,14 @@
 import { flatPackageName } from '@ssen/flat-package-name';
 import { exec } from '@ssen/promised';
+import { getPublishOptions, selectPublishOptions } from '@ssen/publish-packages';
 import path from 'path';
-import { getInternalPackages } from './packageJson/getInternalPackages';
-import { getPublishOptions } from './publish/getPublishOptions';
-import { selectPublishOptions } from './publish/selectPublishOptions';
+import { getPackagesEntry } from './entry/getPackagesEntry';
 import { PackageInfo, PublishOption } from './types';
 
 interface Params {
   cwd?: string;
   dist?: string;
-  force?: boolean;
+  skipSelection?: boolean;
   tag?: string;
   registry?: string;
 }
@@ -17,22 +16,24 @@ interface Params {
 export async function publish({
   cwd = process.cwd(),
   dist = path.join(cwd, 'dist'),
-  force = false,
+  skipSelection = false,
   tag,
   registry,
 }: Params) {
   try {
-    const internalPackages: Map<string, PackageInfo> = await getInternalPackages({ cwd });
+    const internalPackages: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
 
     const publishOptions: Map<string, PublishOption> = await getPublishOptions({
-      cwd,
-      dist,
+      entry: internalPackages,
+      outDir: dist,
       tag,
       registry,
-      packages: internalPackages,
     });
 
-    const selectedPublishOptions: PublishOption[] = await selectPublishOptions({ publishOptions, force });
+    const selectedPublishOptions: PublishOption[] = await selectPublishOptions({
+      publishOptions,
+      skipSelection,
+    });
 
     for (const publishOption of selectedPublishOptions) {
       const t: string = ` --tag ${tag || publishOption.tag}`;

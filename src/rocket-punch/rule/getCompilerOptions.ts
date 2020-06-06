@@ -1,4 +1,3 @@
-import path from 'path';
 import ts from 'typescript';
 
 // TODO use user tsconfig.json
@@ -24,10 +23,5 @@ export function getCompilerOptions(): ts.CompilerOptions {
     skipLibCheck: true,
     sourceMap: true,
     declaration: true,
-
-    //baseUrl: path.join(process.cwd(), 'src'),
-    //paths: {
-    //  '*': ['*'],
-    //},
   };
 }

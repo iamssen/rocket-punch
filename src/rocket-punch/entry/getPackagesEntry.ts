@@ -4,7 +4,11 @@ import path from 'path';
 import { packagesFileName } from '../rule/fileNames';
 import { PackageInfo } from '../types';
 
-export async function getInternalPackages({ cwd }: { cwd: string }): Promise<Map<string, PackageInfo>> {
+interface Params {
+  cwd: string;
+}
+
+export async function getPackagesEntry({ cwd }: Params): Promise<Map<string, PackageInfo>> {
   const source: string = await fs.readFile(path.join(cwd, packagesFileName), {
     encoding: 'utf8',
   });

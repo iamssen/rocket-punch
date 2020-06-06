@@ -52,7 +52,6 @@ grep -q 'http address' <(tail -f "$VERDACCIO_REGISTRY_LOG"); # wating verdaccio
 ## LOCAL PUBLISH
 ## ==================================================----------------------------------
 ts-node -r tsconfig-paths/register src/publish-packages-e2e.ts --tag e2e --registry "$LOCAL_REGISTRY_URL";
-#npx trism publish --force --tag e2e --registry "$LOCAL_REGISTRY_URL";
 
 # TEST
 # ==================================================----------------------------------
@@ -85,25 +84,39 @@ fileExists "$TEMP/dist/b/index.d.ts";
 fileExists "$TEMP/dist/c/index.js";
 fileExists "$TEMP/dist/c/index.d.ts";
 
-## should build packages normally
-#createTmpFixture packages/basic;
-#npm run package:build;
-#
-#fileExists "$TEMP/dist/packages/a/README.md";
-#fileExists "$TEMP/dist/packages/a/index.js";
-#fileExists "$TEMP/dist/packages/a/index.d.ts";
-#fileExists "$TEMP/dist/packages/a/package.json";
-#
-#fileExists "$TEMP/dist/packages/b/README.md";
-#fileExists "$TEMP/dist/packages/b/index.js";
-#fileExists "$TEMP/dist/packages/b/index.d.ts";
-#fileExists "$TEMP/dist/packages/b/package.json";
-#
-#fileExists "$TEMP/dist/packages/c/README.md";
-#fileExists "$TEMP/dist/packages/a/index.js";
-#fileExists "$TEMP/dist/packages/c/index.d.ts";
-#fileExists "$TEMP/dist/packages/c/package.json";
-#fileExists "$TEMP/dist/packages/c/public/test.txt";
+createTmpFixture rocket-punch/js;
+npm install rocket-punch@e2e --save-dev --registry "$LOCAL_REGISTRY_URL";
+npm install;
+npm run build;
+fileExists "$TEMP/dist/a/index.js";
+fileExists "$TEMP/dist/a/index.d.ts";
+fileExists "$TEMP/dist/b/index.js";
+fileExists "$TEMP/dist/b/index.d.ts";
+fileExists "$TEMP/dist/c/index.js";
+fileExists "$TEMP/dist/c/index.d.ts";
+
+createTmpFixture rocket-punch/bundle;
+npm install rocket-punch@e2e --save-dev --registry "$LOCAL_REGISTRY_URL";
+npm install;
+npm run build;
+fileExists "$TEMP/dist/a/index.js";
+fileExists "$TEMP/dist/a/index.d.ts";
+fileExists "$TEMP/dist/a/icon.svg";
+fileExists "$TEMP/dist/a/icon.svg.js";
+fileExists "$TEMP/dist/a/icon.svg.d.ts";
+fileExists "$TEMP/dist/b/index.js";
+fileExists "$TEMP/dist/b/index.d.ts";
+fileExists "$TEMP/dist/b/test.txt";
+fileExists "$TEMP/dist/b/test.txt.js";
+fileExists "$TEMP/dist/b/test.txt.d.ts";
+fileExists "$TEMP/dist/c/index.js";
+fileExists "$TEMP/dist/c/index.d.ts";
+fileExists "$TEMP/dist/c/image.jpg";
+fileExists "$TEMP/dist/c/image.jpg.js";
+fileExists "$TEMP/dist/c/image.jpg.d.ts";
+fileExists "$TEMP/dist/c/data.yaml";
+fileExists "$TEMP/dist/c/data.yaml.js";
+fileExists "$TEMP/dist/c/data.yaml.d.ts";
 
 # EXIT
 # ==================================================----------------------------------
