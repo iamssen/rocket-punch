@@ -1,4 +1,4 @@
-import { BuildMessages } from 'rocket-punch/build';
+import { BuildMessages } from '../build';
 import { flattenDiagnosticMessageText } from 'typescript';
 
 export async function buildMessageHandler(message: BuildMessages) {

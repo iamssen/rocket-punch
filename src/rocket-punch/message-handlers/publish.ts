@@ -1,5 +1,5 @@
 import { exec } from '@ssen/promised';
-import { PublishMessages } from 'rocket-punch/publish';
+import { PublishMessages } from '../publish';
 
 export async function publishMessageHandler(message: PublishMessages) {
   switch (message.type) {

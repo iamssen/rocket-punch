@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { ViewMessages } from 'rocket-punch/view';
+import { ViewMessages } from '../view';
 
 export async function viewMessageHandler(message: ViewMessages) {
   switch (message.type) {
