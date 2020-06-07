@@ -1,6 +1,6 @@
 '@ssen/*':
-  version: 0.2.4
+  version: 0.2.5
   tag: canary
 rocket-punch:
-  version: 0.9.0-alpha.4
+  version: 0.9.0-alpha.6
   tag: canary

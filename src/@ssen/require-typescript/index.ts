@@ -3,7 +3,7 @@ import Module from 'module';
 import path from 'path';
 import { ModuleKind, transpileModule, TranspileOutput } from 'typescript';
 
-export function requireTypescript<T>(file: string): T {
+export function requireTypescript<T>(file: string): T & TranspileOutput {
   const fileNames: string[] = [
     file,
     path.join(file + '.js'),
@@ -31,10 +31,6 @@ export function requireTypescript<T>(file: string): T {
     },
   });
 
-  if (result.diagnostics && result.diagnostics.length > 0) {
-    console.warn(result.diagnostics);
-  }
-
   //@ts-ignore hidden api
   const paths: string[] = Module._nodeModulePaths(path.dirname(existsFile));
   const parent: Module | null = module.parent;
@@ -46,5 +42,8 @@ export function requireTypescript<T>(file: string): T {
   //@ts-ignore hidden api
   m._compile(result.outputText, existsFile);
 
-  return m.exports;
+  return {
+    ...result,
+    ...m.exports,
+  };
 }
