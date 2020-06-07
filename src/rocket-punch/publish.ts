@@ -1,16 +1,24 @@
 import { flatPackageName } from '@ssen/flat-package-name';
-import { exec } from '@ssen/promised';
-import { getPublishOptions, selectPublishOptions } from '@ssen/publish-packages';
+import { AvailablePublishOption, getPublishOptions, selectPublishOptions } from '@ssen/publish-packages';
 import path from 'path';
 import { getPackagesEntry } from './entry/getPackagesEntry';
 import { PackageInfo, PublishOption } from './types';
 
+export type PublishMessages = {
+  type: 'exec';
+  command: string;
+  publishOption: AvailablePublishOption;
+};
+
 interface Params {
   cwd?: string;
   dist?: string;
+
   skipSelection?: boolean;
   tag?: string;
   registry?: string;
+
+  onMessage: (message: PublishMessages) => Promise<void>;
 }
 
 export async function publish({
@@ -19,39 +27,42 @@ export async function publish({
   skipSelection = false,
   tag,
   registry,
+  onMessage,
 }: Params) {
-  try {
-    const internalPackages: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
+  const internalPackages: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
 
-    const publishOptions: Map<string, PublishOption> = await getPublishOptions({
-      entry: internalPackages,
-      outDir: dist,
-      tag,
-      registry,
+  const publishOptions: Map<string, PublishOption> = await getPublishOptions({
+    entry: internalPackages,
+    outDir: dist,
+    tag,
+    registry,
+  });
+
+  const selectedPublishOptions: AvailablePublishOption[] = await selectPublishOptions({
+    publishOptions,
+    skipSelection,
+  });
+
+  for (const publishOption of selectedPublishOptions) {
+    const t: string = ` --tag ${tag || publishOption.tag}`;
+    const r: string = registry ? ` --registry "${registry}"` : '';
+
+    //console.log(`npm publish ${publishOption.name}${t}${r}`);
+    //console.log('');
+
+    const command: string =
+      process.platform === 'win32'
+        ? `cd "${path.join(dist, flatPackageName(publishOption.name))}" && npm publish${t}${r}`
+        : `cd "${path.join(dist, flatPackageName(publishOption.name))}"; npm publish${t}${r};`;
+
+    await onMessage({
+      type: 'exec',
+      command,
+      publishOption,
     });
 
-    const selectedPublishOptions: PublishOption[] = await selectPublishOptions({
-      publishOptions,
-      skipSelection,
-    });
-
-    for (const publishOption of selectedPublishOptions) {
-      const t: string = ` --tag ${tag || publishOption.tag}`;
-      const r: string = registry ? ` --registry "${registry}"` : '';
-
-      console.log(`npm publish ${publishOption.name}${t}${r}`);
-      console.log('');
-
-      const command: string =
-        process.platform === 'win32'
-          ? `cd "${path.join(dist, flatPackageName(publishOption.name))}" && npm publish${t}${r}`
-          : `cd "${path.join(dist, flatPackageName(publishOption.name))}"; npm publish${t}${r};`;
-
-      const { stderr, stdout } = await exec(command, { encoding: 'utf8' });
-      console.log(stdout);
-      console.error(stderr);
-    }
-  } catch (error) {
-    console.error(error);
+    //const { stderr, stdout } = await exec(command, { encoding: 'utf8' });
+    //console.log(stdout);
+    //console.error(stderr);
   }
 }

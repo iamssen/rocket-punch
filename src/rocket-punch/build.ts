@@ -11,7 +11,6 @@ import {
   createProgram,
   Diagnostic,
   EmitResult,
-  flattenDiagnosticMessageText,
   getPreEmitDiagnostics,
   Program,
 } from 'typescript';
@@ -19,17 +18,45 @@ import { getPackagesEntry } from './entry/getPackagesEntry';
 import { computePackageJson } from './package-json/computePackageJson';
 import { getRootDependencies } from './package-json/getRootDependencies';
 import { getSharedPackageJson } from './package-json/getSharedPackageJson';
-import { fsCopySourceFilter } from './rule/fsCopySourceFilter';
+import { fsCopyFilter } from './rule/fsCopyFilter';
 import { getCompilerOptions } from './rule/getCompilerOptions';
 import { readDirectoryPatterns } from './rule/readDirectoryPatterns';
 import { PackageInfo } from './types';
 
+export type BuildMessages =
+  | {
+      type: 'begin';
+      packageName: string;
+      sourceDir: string;
+      outDir: string;
+    }
+  | {
+      type: 'tsc';
+      packageName: string;
+      compilerOptions: CompilerOptions;
+      diagnostics: Diagnostic[];
+    }
+  | {
+      type: 'package-json';
+      packageName: string;
+      packageJson: PackageJson;
+    }
+  | {
+      type: 'success';
+      packageJson: PackageJson;
+      packageName: string;
+      sourceDir: string;
+      outDir: string;
+    };
+
 interface Params {
   cwd?: string;
   dist?: string;
+  
+  onMessage: (message: BuildMessages) => Promise<void>;
 }
 
-export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist') }: Params) {
+export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist'), onMessage }: Params) {
   // ---------------------------------------------
   // rule
   // collect information based on directory rules
@@ -99,19 +126,23 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
       throw new Error(`undefined packagejson content!`);
     }
 
+    await onMessage({
+      type: 'begin',
+      packageName,
+      sourceDir,
+      outDir,
+    });
+
+    // ---------------------------------------------
+    // clean
+    // ---------------------------------------------
     await rimraf(outDir);
 
     await fs.mkdirp(outDir);
-
-    await fs.writeJson(path.join(outDir, 'package.json'), packageJson, { encoding: 'utf8', spaces: 2 });
-
-    const compilerOptions: CompilerOptions = {
-      ...getCompilerOptions(),
-
-      rootDir: sourceDir,
-      outDir,
-    };
-
+    
+    // ---------------------------------------------
+    // symlink
+    // ---------------------------------------------
     const symlink: string = path.join(cwd, 'node_modules', packageName);
 
     await fs.mkdirp(path.dirname(symlink));
@@ -119,6 +150,16 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
     await fs.symlink(outDir, symlink);
 
     symlinkDirs.push(symlink);
+    
+    // ---------------------------------------------
+    // tsc
+    // ---------------------------------------------
+    const compilerOptions: CompilerOptions = {
+      ...getCompilerOptions(),
+
+      rootDir: sourceDir,
+      outDir,
+    };
 
     const host: CompilerHost = createExtendedCompilerHost(compilerOptions);
 
@@ -129,27 +170,56 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
     const emitResult: EmitResult = program.emit();
     const diagnostics: Diagnostic[] = getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 
-    for (const diagnostic of diagnostics) {
-      if (diagnostic.file && diagnostic.start) {
-        const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
-        const message: string = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-        console.log(`TS${diagnostic.code} : ${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`);
-      } else {
-        console.log(`TS${diagnostic.code} : ${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
-      }
-    }
-
-    if (emitResult.emitSkipped) {
-      throw new Error(`Build the declaration files of "${packageName}" is failed`);
-    }
-
-    await fs.copy(path.join(cwd, 'src', packageName), outDir, {
-      filter: fsCopySourceFilter,
+    await onMessage({
+      type: 'tsc',
+      packageName,
+      compilerOptions,
+      diagnostics,
     });
 
-    if (!process.env.JEST_WORKER_ID) {
-      console.log(`👍 ${packageName}@${packageInfo.version} → ${outDir}`);
+    if (emitResult.emitSkipped) {
+      throw new Error(`Build "${packageName}" is failed`);
     }
+
+    //for (const diagnostic of diagnostics) {
+    //  if (diagnostic.file && diagnostic.start) {
+    //    const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+    //    const message: string = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+    //    console.log(`TS${diagnostic.code} : ${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`);
+    //  } else {
+    //    console.log(`TS${diagnostic.code} : ${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+    //  }
+    //}
+
+    // ---------------------------------------------
+    // copy static files
+    // ---------------------------------------------
+    await fs.copy(path.join(cwd, 'src', packageName), outDir, {
+      filter: fsCopyFilter,
+    });
+
+    // ---------------------------------------------
+    // package.json
+    // ---------------------------------------------
+    await fs.writeJson(path.join(outDir, 'package.json'), packageJson, { encoding: 'utf8', spaces: 2 });
+
+    await onMessage({
+      type: 'package-json',
+      packageName,
+      packageJson,
+    });
+
+    //if (!process.env.JEST_WORKER_ID) {
+    //  console.log(`👍 ${packageName}@${packageInfo.version} → ${outDir}`);
+    //}
+
+    await onMessage({
+      type: 'success',
+      packageJson,
+      packageName,
+      sourceDir,
+      outDir,
+    });
   }
 
   for (const symlink of symlinkDirs) {

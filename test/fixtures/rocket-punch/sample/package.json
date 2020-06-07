@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "rocket-punch build",
+    "publish": "rocket-punch publish"
+  },
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-app-polyfill": "^1.0.1",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.17",
+    "@types/react-dom": "^16.8.4",
+    "@types/webpack-env": "^1.13.9"
+  }
+}

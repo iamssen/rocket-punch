@@ -1,8 +1,7 @@
-import fs from 'fs-extra';
 import { packageJsonFactoryFileNamePattern } from './fileNames';
 
 // prettier-ignore
-export function fsCopySourceFilter(src: string): boolean {
+export function fsCopyFilter(src: string): boolean {
   const s: string = src.replace(/\\/g, '/');
   
   const completelyIgnore: boolean =
@@ -21,9 +20,9 @@ export function fsCopySourceFilter(src: string): boolean {
       /\/public\//.test(s)                         // public/*
     );
   
-  if (pass && !process.env.JEST_WORKER_ID) {
-    if (fs.statSync(s).isFile()) console.log('COPY:', s);
-  }
+  //if (pass && !process.env.JEST_WORKER_ID) {
+  //  if (fs.statSync(s).isFile()) console.log('COPY:', s);
+  //}
   
   return pass;
 }

@@ -1,0 +1,31 @@
+# `@ssen/extended-compiler-host`
+
+Use `createCompilerHost()` instead.
+
+```ts
+import { CompilerHost, createCompilerHost } from 'typescript';
+import { createExtendedCompilerHost } from '@ssen/extended-compiler-host';
+
+// const compilerHost: CompilerHost = createCompilerHost(compilerOptions);
+const compilerHost: CompilerHost = createExtendedCompilerHost(compilerOptions);
+```
+
+# Support Files
+
+## Plain Text
+- `import string from './file.txt'`
+- `import string from './file.md'`
+
+## YAML
+- `import object from './file.yaml'`
+- `import object from './file.yml'`
+
+## Image
+- `import base64String from './file.jpg'`
+- `import base64String from './file.jpeg'`
+- `import base64String from './file.gif'`
+- `import base64String from './file.png'`
+- `import base64String from './file.webp'`
+
+## SVG
+- `import ReactComponent from './file.svg'`

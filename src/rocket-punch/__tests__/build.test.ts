@@ -12,6 +12,7 @@ describe('build()', () => {
     await build({
       cwd,
       dist,
+      onMessage: async () => {},
     });
 
     expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
@@ -31,6 +32,7 @@ describe('build()', () => {
     await build({
       cwd,
       dist,
+      onMessage: async () => {},
     });
 
     expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
@@ -52,6 +54,7 @@ describe('build()', () => {
     await build({
       cwd,
       dist,
+      onMessage: async () => {},
     });
 
     expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
@@ -73,4 +76,44 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'c/data.yaml.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/data.yaml.d.ts'))).toBeTruthy();
   }, 100000);
+
+  test.each(['sample', 'transform-package-json'])(
+    'should build packages normally with %s',
+    async (dir: string) => {
+      const cwd: string = await copyTmpDirectory(process.cwd(), `test/fixtures/rocket-punch/${dir}`);
+      const dist: string = path.join(cwd, 'dist');
+
+      await exec(`npm install`, { cwd });
+      //await exec(`open ${cwd}`);
+
+      await build({
+        cwd,
+        dist,
+        onMessage: async () => {},
+      });
+
+      expect(fs.existsSync(path.join(dist, 'a/README.md'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'a/package.json'))).toBeTruthy();
+
+      expect(fs.existsSync(path.join(dist, 'b/README.md'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'b/package.json'))).toBeTruthy();
+
+      expect(fs.existsSync(path.join(dist, 'c/README.md'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'c/package.json'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'c/public/test.txt'))).toBeTruthy();
+
+      switch (dir) {
+        case 'transform-package-json':
+          expect(fs.readJsonSync(path.join(dist, 'b/package.json')).keywords).toEqual(['hello']);
+          break;
+      }
+    },
+    100000,
+  );
 });

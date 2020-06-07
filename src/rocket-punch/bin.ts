@@ -1,3 +1,6 @@
+import { exec } from '@ssen/promised';
+import chalk from 'chalk';
+import { flattenDiagnosticMessageText } from 'typescript';
 import yargs from 'yargs';
 import { build } from './build';
 import { publish } from './publish';
@@ -46,6 +49,32 @@ switch (argv._[0]) {
     build({
       cwd,
       dist: argv['out-dir'],
+      onMessage: async (message) => {
+        switch (message.type) {
+          case 'begin':
+            console.log(`START BUILD: ${message.packageName}`);
+            break;
+          case 'tsc':
+            for (const diagnostic of message.diagnostics) {
+              if (diagnostic.file && diagnostic.start) {
+                const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+                const message: string = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+                console.log(
+                  `TS${diagnostic.code} : ${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`,
+                );
+              } else {
+                console.log(`TS${diagnostic.code} : ${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+              }
+            }
+            break;
+          case 'package-json':
+            console.log(JSON.stringify(message.packageJson, null, 2));
+            break;
+          case 'success':
+            console.log(`👍 ${message.packageName}@${message.packageJson.version} → ${message.outDir}`);
+            break;
+        }
+      },
     });
     break;
   case 'publish':
@@ -55,11 +84,42 @@ switch (argv._[0]) {
       skipSelection: argv['skip-selection'],
       tag: argv['tag'],
       registry: argv['registry'],
+      onMessage: async (message) => {
+        switch (message.type) {
+          case 'exec':
+            console.log(`npm publish ${message.command}`);
+            console.log('');
+            const { stderr, stdout } = await exec(message.command, { encoding: 'utf8' });
+            console.log(stdout);
+            console.error(stderr);
+            break;
+        }
+      },
     });
     break;
   case 'view':
     view({
       cwd,
+      onMessage: async (message) => {
+        switch (message.type) {
+          case 'view':
+            console.log(chalk.bold(`🧩 ${message.metadata.name}`));
+            const tagList: string[] = Object.keys(message.tags);
+            const maxLength: number = Math.max(...tagList.map((tag) => tag.length));
+
+            tagList.forEach((tag) => {
+              console.log(
+                chalk.dim(
+                  `${tag.padEnd(maxLength, ' ')} : ${message.tags[tag]} ${
+                    message.packageConfig.tag === tag ? '*' : ''
+                  }`,
+                ),
+              );
+            });
+            console.log('');
+            break;
+        }
+      },
     });
     break;
   default:
