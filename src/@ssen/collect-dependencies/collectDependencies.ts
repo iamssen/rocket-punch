@@ -52,6 +52,7 @@ interface CollectDependenciesParams {
   excludes?: string[];
   includes?: string[];
   compilerOptions?: ts.CompilerOptions;
+  selfNames?: Set<string>;
 }
 
 export async function collectDependencies({
@@ -62,6 +63,7 @@ export async function collectDependencies({
   excludes = collectTypeScript.excludes,
   includes = collectTypeScript.includes,
   compilerOptions = {},
+  selfNames = new Set(),
 }: CollectDependenciesParams): Promise<PackageJson.Dependency> {
   compilerOptions = {
     allowJs: extensions.some((ext) => /^.js/.test(ext)),
@@ -129,7 +131,7 @@ export async function collectDependencies({
       ? importPath.split('/').slice(0, 2).join('/')
       : importPath.split('/')[0];
 
-    if (!imports[packageName]) {
+    if (!imports[packageName] && !selfNames.has(packageName)) {
       const internalPackage: PackageInfo | undefined = internalPackages.get(packageName);
 
       if (internalPackage) {

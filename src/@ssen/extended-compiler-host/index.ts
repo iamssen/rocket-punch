@@ -55,6 +55,7 @@ const transformConfigs: Record<string, TransformConfig> = {
     getSourceText: (fileName: string) => {
       const file: string = fileName.substr(0, fileName.length - 4);
       const content: string = fs.readFileSync(file, 'utf8');
+      // TODO custom template https://react-svgr.com/docs/custom-templates/
       return svgr.sync(content, { typescript: true }, { componentName: 'MyComponent' });
     },
   },

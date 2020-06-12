@@ -22,6 +22,28 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
   }, 100000);
+  
+  test('should local-paths build normally', async () => {
+    const cwd: string = await copyTmpDirectory(path.join(process.cwd(), 'test/fixtures/rocket-punch/local-paths'));
+    const dist: string = await createTmpDirectory();
+    //await exec(`open ${cwd}`);
+    //await exec(`open ${dist}`);
+
+    await build({
+      cwd,
+      dist,
+      onMessage: async () => {},
+    });
+
+    expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/x/y/z.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/x/y/z.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+  }, 100000);
 
   test('should js build normally', async () => {
     const cwd: string = await copyTmpDirectory(path.join(process.cwd(), 'test/fixtures/rocket-punch/js'));

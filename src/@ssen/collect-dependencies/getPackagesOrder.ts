@@ -42,14 +42,20 @@ function sort(array: PackageJsonSet[]): PackageJsonSet[] {
   return [...sort(a), chosen, ...sort(b)];
 }
 
-export function getPackagesOrder({ packageJsonContents }: { packageJsonContents: PackageJson[] }): string[] {
+interface Params {
+  packageJsonContents: PackageJson[];
+}
+
+export function getPackagesOrder({ packageJsonContents }: Params): string[] {
   function searchNestedDependencies(
     ownerName: string,
     dependencies: PackageJson.Dependency | undefined,
     dependenciesSet: Set<string>,
   ): Set<string> {
     if (dependencies) {
-      Object.keys(dependencies).forEach((dependencyName) => {
+      const dependencyNames: string[] = Object.keys(dependencies);
+
+      for (const dependencyName of dependencyNames) {
         if (dependencyName === ownerName) {
           throw new Error(`package.json files have circularly referenced dependencies : "${ownerName}"`);
         }
@@ -65,7 +71,7 @@ export function getPackagesOrder({ packageJsonContents }: { packageJsonContents:
         if (childPackageJson && childPackageJson.dependencies) {
           searchNestedDependencies(ownerName, childPackageJson.dependencies, dependenciesSet);
         }
-      });
+      }
     }
 
     return dependenciesSet;

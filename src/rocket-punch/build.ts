@@ -76,6 +76,7 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
       rootDir: path.join(cwd, 'src', packageName),
       internalPackages: entry,
       externalPackages,
+      selfNames: new Set<string>([packageName]),
       ...collectScripts,
     });
 
@@ -154,8 +155,16 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
     // ---------------------------------------------
     // tsc
     // ---------------------------------------------
+    const computedCompilerOptions: CompilerOptions = getCompilerOptions();
+    
     const compilerOptions: CompilerOptions = {
-      ...getCompilerOptions(),
+      ...computedCompilerOptions,
+      
+      baseUrl: sourceDir,
+      paths: {
+        ...computedCompilerOptions.paths,
+        [packageName]: [sourceDir],
+      },
 
       rootDir: sourceDir,
       outDir,
