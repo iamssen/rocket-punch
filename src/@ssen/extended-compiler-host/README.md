@@ -28,4 +28,6 @@ const compilerHost: CompilerHost = createExtendedCompilerHost(compilerOptions);
 - `import base64String from './file.webp'`
 
 ## SVG
-- `import ReactComponent from './file.svg'`
+- `import base64String, { ReactComponent } from './file.svg'`
+
+> You can change export to `import ReactComponent from './file.svg'` with `process.env.TS_SVG_EXPORT === 'default'` 

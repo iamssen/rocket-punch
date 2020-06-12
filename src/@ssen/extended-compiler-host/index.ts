@@ -1,6 +1,7 @@
-import svgr from '@svgr/core';
+import svgToJsx from '@svgr/plugin-jsx';
 import fs from 'fs-extra';
 import { safeLoad } from 'js-yaml';
+import svgToMiniDataURI from 'mini-svg-data-uri';
 import path from 'path';
 import {
   CompilerHost,
@@ -54,9 +55,20 @@ const transformConfigs: Record<string, TransformConfig> = {
   svg: {
     getSourceText: (fileName: string) => {
       const file: string = fileName.substr(0, fileName.length - 4);
-      const content: string = fs.readFileSync(file, 'utf8');
-      // TODO custom template https://react-svgr.com/docs/custom-templates/
-      return svgr.sync(content, { typescript: true }, { componentName: 'MyComponent' });
+      const svgCode: string = fs.readFileSync(file, 'utf8').replace(/[\r\n]+/gm, '');
+      const componentName: string = 'ReactComponent';
+      const reactCode: string = svgToJsx(svgCode, {}, { componentName });
+
+      if (process.env.TS_SVG_EXPORT === 'default') {
+        return reactCode;
+      }
+
+      const lines: string[] = reactCode.split('\n');
+      return [
+        ...lines.slice(0, lines.length - 1),
+        `export default \`${svgToMiniDataURI(svgCode)}\`;`,
+        `export {${componentName}};`,
+      ].join('\n');
     },
   },
 };
