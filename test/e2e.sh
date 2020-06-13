@@ -101,22 +101,22 @@ npm install;
 npm run build;
 fileExists "$TEMP/dist/a/index.js";
 fileExists "$TEMP/dist/a/index.d.ts";
-fileExists "$TEMP/dist/a/icon.svg";
 fileExists "$TEMP/dist/a/icon.svg.js";
 fileExists "$TEMP/dist/a/icon.svg.d.ts";
+fileExists "$TEMP/dist/a/icon-not-bundle.svg";
 fileExists "$TEMP/dist/b/index.js";
 fileExists "$TEMP/dist/b/index.d.ts";
-fileExists "$TEMP/dist/b/test.txt";
 fileExists "$TEMP/dist/b/test.txt.js";
 fileExists "$TEMP/dist/b/test.txt.d.ts";
+fileExists "$TEMP/dist/b/test-not-bundle.txt";
 fileExists "$TEMP/dist/c/index.js";
 fileExists "$TEMP/dist/c/index.d.ts";
-fileExists "$TEMP/dist/c/image.jpg";
 fileExists "$TEMP/dist/c/image.jpg.js";
 fileExists "$TEMP/dist/c/image.jpg.d.ts";
-fileExists "$TEMP/dist/c/data.yaml";
+fileExists "$TEMP/dist/c/image-not-bundle.jpg";
 fileExists "$TEMP/dist/c/data.yaml.js";
 fileExists "$TEMP/dist/c/data.yaml.d.ts";
+fileExists "$TEMP/dist/c/data-not-bundle.yaml";
 
 # EXIT
 # ==================================================----------------------------------
