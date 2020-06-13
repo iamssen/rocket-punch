@@ -52,7 +52,7 @@ export type BuildMessages =
 interface Params {
   cwd?: string;
   dist?: string;
-  
+
   onMessage: (message: BuildMessages) => Promise<void>;
 }
 
@@ -140,7 +140,7 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
     await rimraf(outDir);
 
     await fs.mkdirp(outDir);
-    
+
     // ---------------------------------------------
     // symlink
     // ---------------------------------------------
@@ -151,15 +151,15 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
     await fs.symlink(outDir, symlink);
 
     symlinkDirs.push(symlink);
-    
+
     // ---------------------------------------------
     // tsc
     // ---------------------------------------------
     const computedCompilerOptions: CompilerOptions = getCompilerOptions();
-    
+
     const compilerOptions: CompilerOptions = {
       ...computedCompilerOptions,
-      
+
       baseUrl: sourceDir,
       paths: {
         ...computedCompilerOptions.paths,

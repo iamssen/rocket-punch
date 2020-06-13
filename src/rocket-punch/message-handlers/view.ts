@@ -11,7 +11,9 @@ export async function viewMessageHandler(message: ViewMessages) {
       tagList.forEach((tag) => {
         console.log(
           chalk.dim(
-            `${tag.padEnd(maxLength, ' ')} : ${message.tags[tag]} ${message.packageConfig.tag === tag ? '*' : ''}`,
+            `${tag.padEnd(maxLength, ' ')} : ${message.tags[tag]} ${
+              message.packageConfig.tag === tag ? '*' : ''
+            }`,
           ),
         );
       });

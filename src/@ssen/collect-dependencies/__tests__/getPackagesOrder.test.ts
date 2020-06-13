@@ -606,7 +606,7 @@ describe('getPackagesOrder()', () => {
         typings: 'index.d.ts',
       },
     ];
-    
+
     // it error throwed by not filtered dependencies
     // and it solved by fix collectTypeScript() and collectScript()
     expect(() => getPackagesOrder({ packageJsonContents })).toThrow();

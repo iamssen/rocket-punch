@@ -11,7 +11,8 @@ export type AvailablePublishOption = PublishOption & VersionInfo;
 
 export function getVersions({ current, remote }: PublishOption): VersionInfo {
   const currentVersion: string = current.version!;
-  const remoteVersion: string | undefined = remote && typeof remote.version === 'string' ? remote.version : undefined;
+  const remoteVersion: string | undefined =
+    remote && typeof remote.version === 'string' ? remote.version : undefined;
   return { currentVersion, remoteVersion };
 }
 
@@ -26,7 +27,9 @@ export async function selectPublishOptions({
 }: Params): Promise<AvailablePublishOption[]> {
   const availablePublishOptions: (PublishOption & VersionInfo)[] = Array.from(publishOptions.values())
     .map((publishOption) => ({ ...publishOption, ...getVersions(publishOption) }))
-    .filter(({ currentVersion, remoteVersion }) => !remoteVersion || semver.gt(currentVersion, remoteVersion));
+    .filter(
+      ({ currentVersion, remoteVersion }) => !remoteVersion || semver.gt(currentVersion, remoteVersion),
+    );
 
   if (skipSelection) {
     // no remote package
@@ -64,6 +67,8 @@ export async function selectPublishOptions({
 
     const filter: Set<string> = new Set(answer.publishOptions);
 
-    return Array.from(availablePublishOptions.values()).filter((publishOption) => filter.has(publishOption.name));
+    return Array.from(availablePublishOptions.values()).filter((publishOption) =>
+      filter.has(publishOption.name),
+    );
   }
 }

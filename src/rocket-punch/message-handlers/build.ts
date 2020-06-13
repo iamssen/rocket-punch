@@ -11,7 +11,9 @@ export async function buildMessageHandler(message: BuildMessages) {
         if (diagnostic.file && diagnostic.start) {
           const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
           const message: string = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-          console.log(`TS${diagnostic.code} : ${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`);
+          console.log(
+            `TS${diagnostic.code} : ${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`,
+          );
         } else {
           console.log(`TS${diagnostic.code} : ${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
         }

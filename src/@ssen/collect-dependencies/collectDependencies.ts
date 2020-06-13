@@ -79,7 +79,11 @@ export async function collectDependencies({
 
     function search(node: ts.Node) {
       // import from '?'
-      if (ts.isImportDeclaration(node) && ts.isStringLiteralLike(node.moduleSpecifier) && node.moduleSpecifier.text) {
+      if (
+        ts.isImportDeclaration(node) &&
+        ts.isStringLiteralLike(node.moduleSpecifier) &&
+        node.moduleSpecifier.text
+      ) {
         importPaths.add(node.moduleSpecifier.text);
       }
       // import('?')
