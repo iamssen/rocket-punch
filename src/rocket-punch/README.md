@@ -1,32 +1,59 @@
 # `rocket-punch`
 
-TODO: 당신의 Directory를 Package로 내보내줍니다... 어쩌구 저쩌구...
-
-# Quick Start
-
-# Install
-
-TODO: Templates
-
-TODO: 설치
-
-```bash
-npm install rocket-punch --save
-```
-
-TODO: 초기 설정
-
-- package.json 에 scripts 추가
-- .packages.yaml 추가
+[User Guide](https://www.notion.so/ssen/Rocket-Punch-7db34cad1cb444bb945f1a4b9bc3cc8a)
 
 # Commands
 
-- `rocket-punch build`
-- `rocket-punch publish`
-- `rocket-punch publish --skip-selection`
+- `npx rocket-punch --help` Help
+- `rocket-punch build` Build Packages
+- `rocket-punch publish` Publish Packages
 
-# `.packages.yaml`
+# Configuration
 
-# `.package.json`
+## `.packages.yaml`
 
-# `.package.json.ts`
+packages list
+
+```yaml
+package1:
+  version: 0.0.1
+package2:
+  version: 0.1.0
+  tag: alpha
+'@group1/package3':
+  version: 0.0.1
+'@group2/*':
+  version: 0.1.1
+```
+
+## `.package.json`
+
+common package.json configuration
+
+```json
+{
+  "author": "Seoyeon <i@ssen.name>",
+  "license": "MIT",
+  "repository": "github:iamssen/hello-packages",
+  "bugs": "https://github.com/iamssen/hello-packages/issues",
+  "homepage": "https://github.com/iamssen/hello-packages/tree/master/src/{name}",
+  "publishConfig": {
+    "access": "public"
+  }
+}
+```
+
+## `src/{package}/.package.json.ts`
+
+package.json transform
+
+```ts
+import { PackageJsonTransformFunction } from 'rocket-punch';
+
+export default ((computedPackageJson) => ({
+  ...computedPackageJson,
+  bin: {
+    'your-bin-name': './bin/file.js',
+  },
+})) as PackageJsonTransformFunction;
+```
