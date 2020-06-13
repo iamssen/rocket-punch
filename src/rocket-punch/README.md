@@ -32,7 +32,7 @@ common package.json configuration
 
 ```json
 {
-  "author": "Seoyeon <i@ssen.name>",
+  "author": "Name <mail@mail.com>",
   "license": "MIT",
   "repository": "github:iamssen/hello-packages",
   "bugs": "https://github.com/iamssen/hello-packages/issues",
