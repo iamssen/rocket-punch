@@ -6,15 +6,12 @@ export const collectTypeScript: { extensions: string[]; excludes: string[]; incl
   extensions: ['.ts', '.tsx'],
   excludes: [
     // exclude tests
-    '**/*.spec.ts',
-    '**/*.spec.tsx',
-    '**/*.test.ts',
-    '**/*.test.tsx',
-    '**/__tests__',
-    '**/__test__',
+    '**/*.(spec|test).(js|jsx|ts|tsx)',
+    '**/__*',
 
     // exclude public
     '**/public',
+    '**/bin',
 
     // exclude javascript
     '**/*.js',
@@ -27,16 +24,12 @@ export const collectScripts: { extensions: string[]; excludes: string[]; include
   extensions: ['.js', '.jsx', '.ts', '.tsx'],
   excludes: [
     // exclude tests
-    '**/*.spec.js',
-    '**/*.spec.jsx',
-    '**/*.spec.ts',
-    '**/*.spec.tsx',
-    '**/*.test.js',
-    '**/*.test.jsx',
-    '**/*.test.ts',
-    '**/*.test.tsx',
-    '**/__tests__',
-    '**/__test__',
+    '**/*.(spec|test).(js|jsx|ts|tsx)',
+    '**/__*',
+
+    // exclude public
+    '**/public',
+    '**/bin',
 
     // exclude public
     '**/public',

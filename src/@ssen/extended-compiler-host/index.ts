@@ -73,10 +73,10 @@ const transformConfigs: Record<string, TransformConfig> = {
   },
 };
 
-const extensions: string[] = Object.keys(transformConfigs);
+export const targetExtensions: string[] = Object.keys(transformConfigs);
 
 function findConfig(fileName: string): TransformConfig | undefined {
-  for (const ext of extensions) {
+  for (const ext of targetExtensions) {
     if (new RegExp(`\\.${ext}\\.tsx$`).test(fileName)) {
       return transformConfigs[ext];
     }

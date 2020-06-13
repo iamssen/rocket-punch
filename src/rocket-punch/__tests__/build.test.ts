@@ -81,22 +81,26 @@ describe('build()', () => {
 
     expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'a/icon.svg'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/icon.svg'))).toBeFalsy();
     expect(fs.existsSync(path.join(dist, 'a/icon.svg.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'a/icon.svg.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/icon-not-bundle.svg'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'b/test.txt'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/test.txt'))).toBeFalsy();
     expect(fs.existsSync(path.join(dist, 'b/test.txt.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'b/test.txt.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/test-not-bundle.txt'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'c/image.jpg'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/image.jpg'))).toBeFalsy();
     expect(fs.existsSync(path.join(dist, 'c/image.jpg.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/image.jpg.d.ts'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'c/data.yaml'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/image-not-bundle.jpg'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/data.yaml'))).toBeFalsy();
     expect(fs.existsSync(path.join(dist, 'c/data.yaml.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/data.yaml.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/data-not-bundle.yaml'))).toBeTruthy();
   }, 100000);
 
   test.each(['sample', 'transform-package-json'])(

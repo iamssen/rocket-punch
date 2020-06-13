@@ -18,7 +18,7 @@ export function getCompilerOptions(): ts.CompilerOptions {
     jsx: ts.JsxEmit.React,
 
     module: ts.ModuleKind.CommonJS,
-    target: ts.ScriptTarget.Latest,
+    target: ts.ScriptTarget.ES2016,
     moduleResolution: ts.ModuleResolutionKind.NodeJs,
     skipLibCheck: true,
     sourceMap: true,

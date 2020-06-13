@@ -5,6 +5,8 @@ import { publishMessageHandler } from './message-handlers/publish';
 import { viewMessageHandler } from './message-handlers/view';
 import { publish } from './publish';
 import { view } from './view';
+import fs from 'fs-extra';
+import path from 'path';
 
 const cwd: string = process.cwd();
 
@@ -44,18 +46,28 @@ const argv = yargs
   .alias('h', 'help')
   .epilog('🚀 Rocket Punch!').argv;
 
+function toAbsolutePath(dir: string | undefined): string | undefined {
+  if (typeof dir !== 'string') {
+    return undefined;
+  } else if (path.isAbsolute(dir)) {
+    return dir;
+  } else {
+    return path.join(cwd, dir);
+  }
+}
+
 switch (argv._[0]) {
   case 'build':
     build({
       cwd,
-      dist: argv['out-dir'],
+      dist: toAbsolutePath(argv['out-dir']),
       onMessage: buildMessageHandler,
     });
     break;
   case 'publish':
     publish({
       cwd,
-      dist: argv['out-dir'],
+      dist: toAbsolutePath(argv['out-dir']),
       skipSelection: argv['skip-selection'],
       tag: argv['tag'],
       registry: argv['registry'],
