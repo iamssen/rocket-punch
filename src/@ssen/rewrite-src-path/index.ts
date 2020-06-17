@@ -22,9 +22,14 @@ function toPackageName(fullPath: string): string {
   }
 }
 
-export function rewriteSrcPath({ importPath, filePath, rootDir }: Params) {
+export function rewriteSrcPath(params: Params) {
+  const importPath: string = params.importPath;
+  const filePath: string = params.filePath.replace(/\\/g, '/');
+  const rootDir: string = params.rootDir.replace(/\\/g, '/');
+
   if (/^\.\./.test(importPath)) {
-    const targetFilePath: string = path.join(path.dirname(filePath), importPath);
+    const dir: string = path.dirname(filePath);
+    const targetFilePath: string = path.join(dir, importPath);
     const packageName: string = toPackageName(path.relative(rootDir, filePath));
     const targetPackageName: string = toPackageName(path.relative(rootDir, targetFilePath));
 
