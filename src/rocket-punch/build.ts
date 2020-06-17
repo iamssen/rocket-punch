@@ -186,24 +186,30 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
 
     const files: string[] = host.readDirectory!(sourceDir, ...readDirectoryPatterns);
 
-    const program: Program = createProgram(files, compilerOptions, host);
-
-    //const emitResult: EmitResult = program.emit(undefined, undefined, undefined, undefined, {
-    //  before: [importPathRewrite({ src: path.join(cwd, 'src') })],
-    //});
-    const emitResult: EmitResult = program.emit();
-    const diagnostics: Diagnostic[] = getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
-
-    await onMessage({
-      type: 'tsc',
-      packageName,
-      compilerOptions,
-      diagnostics,
-    });
-
-    if (emitResult.emitSkipped) {
-      throw new Error(`Build "${packageName}" is failed`);
+    try {
+      const program: Program = createProgram(files, compilerOptions, host);
+  
+      //const emitResult: EmitResult = program.emit(undefined, undefined, undefined, undefined, {
+      //  before: [importPathRewrite({ src: path.join(cwd, 'src') })],
+      //});
+      const emitResult: EmitResult = program.emit();
+      const diagnostics: Diagnostic[] = getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
+  
+      await onMessage({
+        type: 'tsc',
+        packageName,
+        compilerOptions,
+        diagnostics,
+      });
+      
+      if (emitResult.emitSkipped) {
+        throw new Error(`Build "${packageName}" is failed`);
+      }
+    } catch (e) {
+      console.error(e);
+      throw e;
     }
+
 
     //for (const diagnostic of diagnostics) {
     //  if (diagnostic.file && diagnostic.start) {
