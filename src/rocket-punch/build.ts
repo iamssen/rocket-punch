@@ -1,7 +1,9 @@
 import { collectDependencies, collectScripts, getPackagesOrder } from '@ssen/collect-dependencies';
 import { createExtendedCompilerHost } from '@ssen/extended-compiler-host';
 import { flatPackageName } from '@ssen/flat-package-name';
+import { createImportPathRewriteCompilerHost } from '@ssen/import-path-rewrite-compiler-host';
 import { rimraf } from '@ssen/promised';
+import { rewriteSrcPath } from '@ssen/rewrite-src-path';
 import fs from 'fs-extra';
 import path from 'path';
 import { PackageJson } from 'type-fest';
@@ -77,6 +79,12 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
       internalPackages: entry,
       externalPackages,
       selfNames: new Set<string>([packageName]),
+      fixImportPath: ({ importPath, filePath }) =>
+        rewriteSrcPath({
+          rootDir: path.join(cwd, 'src'),
+          importPath,
+          filePath,
+        }),
       ...collectScripts,
     });
 
@@ -170,12 +178,19 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
       outDir,
     };
 
-    const host: CompilerHost = createExtendedCompilerHost(compilerOptions);
+    const extendedHost: CompilerHost = createExtendedCompilerHost(compilerOptions);
+    const host: CompilerHost = createImportPathRewriteCompilerHost({
+      src: path.join(cwd, 'src'),
+      rootDir: sourceDir,
+    })(compilerOptions, undefined, extendedHost);
 
     const files: string[] = host.readDirectory!(sourceDir, ...readDirectoryPatterns);
 
     const program: Program = createProgram(files, compilerOptions, host);
 
+    //const emitResult: EmitResult = program.emit(undefined, undefined, undefined, undefined, {
+    //  before: [importPathRewrite({ src: path.join(cwd, 'src') })],
+    //});
     const emitResult: EmitResult = program.emit();
     const diagnostics: Diagnostic[] = getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 

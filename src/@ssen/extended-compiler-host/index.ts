@@ -85,13 +85,40 @@ function findConfig(fileName: string): TransformConfig | undefined {
   return undefined;
 }
 
-export function createExtendedCompilerHost(options: CompilerOptions, setParentNodes?: boolean): CompilerHost {
-  const compilerHost: CompilerHost = createCompilerHost(options, setParentNodes);
+export function createExtendedCompilerHost(
+  options: CompilerOptions,
+  setParentNodes?: boolean,
+  compilerHost: CompilerHost = createCompilerHost(options, setParentNodes),
+): CompilerHost {
+  //const compilerHost: CompilerHost = createCompilerHost(options, setParentNodes);
 
   function fileExists(fileName: string): boolean {
     const transformConfig: TransformConfig | undefined = findConfig(fileName);
     return !!transformConfig || compilerHost.fileExists(fileName);
   }
+
+  //function resolveModuleNames(
+  //  moduleNames: string[],
+  //  containingFile: string,
+  //  reusedNames: string[] | undefined,
+  //  redirectedReference: ResolvedProjectReference | undefined,
+  //  options: CompilerOptions,
+  //): (ResolvedModule | undefined)[] {
+  //  if (moduleNames.some(moduleName => /(a|b|c)$/.test(moduleName))) {
+  //    console.log('index.ts..resolveModuleNames()', moduleNames, containingFile, reusedNames, redirectedReference, options);
+  //  }
+  //  //if (compilerHost.resolveModuleNames) {
+  //  //  const returnValue: (ResolvedModule | undefined)[] = compilerHost.resolveModuleNames(
+  //  //    moduleNames,
+  //  //    containingFile,
+  //  //    reusedNames,
+  //  //    redirectedReference,
+  //  //    options,
+  //  //  );
+  //  //  return returnValue;
+  //  //}
+  //  return moduleNames.map(() => undefined);
+  //}
 
   function getSourceFile(
     fileName: string,
@@ -117,6 +144,7 @@ export function createExtendedCompilerHost(options: CompilerOptions, setParentNo
 
   return {
     ...compilerHost,
+    //resolveModuleNames,
     fileExists,
     getSourceFile,
   };

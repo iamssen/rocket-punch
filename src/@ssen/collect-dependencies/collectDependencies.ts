@@ -46,6 +46,7 @@ interface CollectDependenciesParams {
   includes?: string[];
   compilerOptions?: ts.CompilerOptions;
   selfNames?: Set<string>;
+  fixImportPath?: (args: { importPath: string; filePath: string }) => string;
 }
 
 export async function collectDependencies({
@@ -57,6 +58,7 @@ export async function collectDependencies({
   includes = collectTypeScript.includes,
   compilerOptions = {},
   selfNames = new Set(),
+  fixImportPath,
 }: CollectDependenciesParams): Promise<PackageJson.Dependency> {
   compilerOptions = {
     allowJs: extensions.some((ext) => /^.js/.test(ext)),
@@ -84,7 +86,15 @@ export async function collectDependencies({
         ts.isStringLiteralLike(node.moduleSpecifier) &&
         node.moduleSpecifier.text
       ) {
-        importPaths.add(node.moduleSpecifier.text);
+        const importPath: string = node.moduleSpecifier.text;
+        importPaths.add(
+          typeof fixImportPath === 'function'
+            ? fixImportPath({
+                importPath,
+                filePath: file,
+              })
+            : importPath,
+        );
       }
       // import('?')
       else if (
@@ -92,7 +102,15 @@ export async function collectDependencies({
         node.expression.kind === ts.SyntaxKind.ImportKeyword &&
         ts.isStringLiteralLike(node.arguments[0])
       ) {
-        importPaths.add((node.arguments[0] as ts.StringLiteralLike).text);
+        const importPath: string = (node.arguments[0] as ts.StringLiteralLike).text;
+        importPaths.add(
+          typeof fixImportPath === 'function'
+            ? fixImportPath({
+                importPath,
+                filePath: file,
+              })
+            : importPath,
+        );
       }
       // require.resolve('?')
       else if (
@@ -103,7 +121,15 @@ export async function collectDependencies({
         node.expression.name.escapedText === 'resolve' &&
         ts.isStringLiteralLike(node.arguments[0])
       ) {
-        importPaths.add((node.arguments[0] as ts.StringLiteralLike).text);
+        const importPath: string = (node.arguments[0] as ts.StringLiteralLike).text;
+        importPaths.add(
+          typeof fixImportPath === 'function'
+            ? fixImportPath({
+                importPath,
+                filePath: file,
+              })
+            : importPath,
+        );
       }
       // require('?')
       else if (
@@ -112,7 +138,15 @@ export async function collectDependencies({
         node.expression.escapedText === 'require' &&
         ts.isStringLiteralLike(node.arguments[0])
       ) {
-        importPaths.add((node.arguments[0] as ts.StringLiteralLike).text);
+        const importPath: string = (node.arguments[0] as ts.StringLiteralLike).text;
+        importPaths.add(
+          typeof fixImportPath === 'function'
+            ? fixImportPath({
+                importPath,
+                filePath: file,
+              })
+            : importPath,
+        );
       }
 
       ts.forEachChild(node, search);

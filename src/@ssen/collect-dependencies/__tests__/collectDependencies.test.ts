@@ -111,4 +111,6 @@ describe('collectDependencies()', () => {
 
     expect('@ssen/tmp-directory' in dependencies).toBeFalsy();
   });
+  
+  test.todo('should fix import paths');
 });

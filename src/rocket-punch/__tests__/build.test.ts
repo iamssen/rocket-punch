@@ -2,13 +2,35 @@ import { exec } from '@ssen/promised';
 import { copyTmpDirectory, createTmpDirectory } from '@ssen/tmp-directory';
 import fs from 'fs-extra';
 import path from 'path';
-import { build } from '../build';
+import { build } from 'rocket-punch/build';
 
 describe('build()', () => {
   test('should basic build normally', async () => {
     const cwd: string = await copyTmpDirectory(path.join(process.cwd(), 'test/fixtures/rocket-punch/basic'));
     const dist: string = await createTmpDirectory();
 
+    await build({
+      cwd,
+      dist,
+      onMessage: async () => {},
+    });
+
+    expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+  }, 100000);
+  
+  test('should transform import paths', async () => {
+    const cwd: string = await copyTmpDirectory(
+      path.join(process.cwd(), 'test/fixtures/rocket-punch/import-path-rewrite'),
+    );
+    const dist: string = await createTmpDirectory();
+    
+    await exec(`open ${dist}`);
+    
     await build({
       cwd,
       dist,
