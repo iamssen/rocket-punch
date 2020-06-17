@@ -1,70 +1,37 @@
 import { rewriteSrcPath } from '@ssen/rewrite-src-path';
+import path from 'path';
 
 describe('rewritePath()', () => {
   test('should rewrite paths', () => {
     expect(
       rewriteSrcPath({
         importPath: './a',
-        filePath: '/foo/bar/src/b/index.ts',
-        rootDir: '/foo/bar/src',
+        filePath: path.join(__dirname, 'src/b/index.ts'),
+        rootDir: path.join(__dirname, 'src'),
       }),
     ).toBe('./a');
 
     expect(
       rewriteSrcPath({
         importPath: '../a',
-        filePath: '/foo/bar/src/b/index.ts',
-        rootDir: '/foo/bar/src',
+        filePath: path.join(__dirname, 'src/b/index.ts'),
+        rootDir: path.join(__dirname, 'src'),
       }),
     ).toBe('a');
 
     expect(
       rewriteSrcPath({
         importPath: '../a',
-        filePath: '/foo/bar/src/@group/b/index.ts',
-        rootDir: '/foo/bar/src',
+        filePath: path.join(__dirname, 'src/@group/b/index.ts'),
+        rootDir: path.join(__dirname, 'src'),
       }),
     ).toBe('@group/a');
 
     expect(
       rewriteSrcPath({
         importPath: '../../a',
-        filePath: '/foo/bar/src/@group/b/index.ts',
-        rootDir: '/foo/bar/src',
-      }),
-    ).toBe('a');
-  });
-
-  test('should rewrite paths on windows', () => {
-    expect(
-      rewriteSrcPath({
-        importPath: './a',
-        filePath: 'c:\\foo\\bar\\src\\b\\index.ts',
-        rootDir: 'c:\\foo\\bar\\src',
-      }),
-    ).toBe('./a');
-
-    expect(
-      rewriteSrcPath({
-        importPath: '../a',
-        filePath: 'c:\\foo\\bar\\src\\b\\index.ts',
-        rootDir: 'c:\\foo\\bar\\src',
-      }),
-    ).toBe('a');
-
-    expect(
-      rewriteSrcPath({
-        importPath: '../a',
-        filePath: 'c:\\foo\\bar\\src\\@group\\b\\index.ts',
-        rootDir: 'c:\\foo\\bar\\src',
-      }),
-    ).toBe('@group/a');
-
-    expect(
-      rewriteSrcPath({
-        importPath: '../../a',
-        filePath: 'c:\\foo\\bar\\src\\@group\\b\\index.ts',
-        rootDir: 'c:\\foo\\bar\\src',
+        filePath: path.join(__dirname, 'src/@group/b/index.ts'),
+        rootDir: path.join(__dirname, 'src'),
       }),
     ).toBe('a');
   });
