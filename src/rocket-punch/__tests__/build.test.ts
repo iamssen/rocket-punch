@@ -29,7 +29,7 @@ describe('build()', () => {
     );
     const dist: string = await createTmpDirectory();
     
-    await exec(`open ${dist}`);
+    //await exec(`open ${dist}`);
     
     await build({
       cwd,
