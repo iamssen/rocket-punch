@@ -8,11 +8,25 @@ interface Params {
   cwd: string;
 }
 
+interface Entry {
+  version: string;
+  tag?: string;
+  module?: string;
+  compilerOptions?: object;
+  packageJson?: object;
+}
+
 export async function getPackagesEntry({ cwd }: Params): Promise<Map<string, PackageInfo>> {
   const source: string = await fs.readFile(path.join(cwd, packagesFileName), {
     encoding: 'utf8',
   });
-  const entry: { [name: string]: string | { version: string; tag?: string } } = yaml.safeLoad(source);
+
+  const content: object | string | undefined = yaml.safeLoad(source);
+  if (!content || typeof content === 'string') {
+    throw new Error(`yaml.safeLoad does not return an object`);
+  }
+
+  const entry: Record<string, string | Entry> = content as Record<string, string | Entry>;
   const packages: { [name: string]: string | { version: string; tag?: string } } = {};
 
   for (const name of Object.keys(entry)) {
@@ -33,10 +47,7 @@ export async function getPackagesEntry({ cwd }: Params): Promise<Map<string, Pac
   }
 
   return Object.keys(packages).reduce((map, name) => {
-    const versionOrInfo:
-      | string
-      | { version: string; tag?: string; module?: string; compilerOptions?: object; packageJson?: object } =
-      packages[name];
+    const versionOrInfo: string | Entry = packages[name];
 
     if (typeof versionOrInfo === 'string') {
       map.set(name, {
