@@ -27,7 +27,7 @@
     ]
   },
   "devDependencies": {
-    "@ssen/eslint-config": "^1.0.0",
+    "@ssen/eslint-config": "^1.1.0",
     "@ssen/prettier-config": "^1.0.0",
     "@svgr/core": "^5.4.0",
     "@svgr/plugin-jsx": "^5.4.0",
