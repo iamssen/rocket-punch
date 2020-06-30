@@ -13,14 +13,15 @@ function compare(a: PackageJsonSet, b: PackageJsonSet): number {
   const bHasA: boolean = b.dependencies.has(a.name);
 
   if (!aHasB && !bHasA) {
-    return a.name > b.name ? bIsHigher : aIsHigher;
+    return a.name > b.name ? aIsHigher : bIsHigher;
   }
 
-  if (aHasB && bHasA) {
-    throw new Error(
-      `"${a.name}" dependent "${b.name}" and "${b.name}" dependent "${a.name}". packages can't be interdependent.`,
-    );
-  }
+  // FIXME useless interdependent check. the circularly dependencies already checked in searchNestedDependencies()
+  //if (aHasB && bHasA) {
+  //  throw new Error(
+  //    `"${a.name}" dependent "${b.name}" and "${b.name}" dependent "${a.name}". packages can't be interdependent.`,
+  //  );
+  //}
 
   return aHasB ? aIsHigher : bIsHigher;
 }

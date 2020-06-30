@@ -80,7 +80,7 @@ describe('getPackagesOrder()', () => {
           name: 'e',
         },
       ],
-      ['e', 'c', 'a', 'b', 'd'],
+      ['c', 'a', 'b', 'e', 'd'],
     );
 
     test(
@@ -120,7 +120,7 @@ describe('getPackagesOrder()', () => {
           },
         },
       ],
-      ['use-react-intl', '@ssen/test-module1', 'test-module3', 'router-store', '@ssen/test-module2'],
+      ['@ssen/test-module1', 'router-store', 'test-module3', '@ssen/test-module2', 'use-react-intl'],
     );
   });
 
@@ -159,6 +159,19 @@ describe('getPackagesOrder()', () => {
     ];
 
     expect(() => getPackagesOrder({ packageJsonContents })).toThrow();
+  });
+
+  test('should sort by names if they have not some dependencies each other', () => {
+    const packageJsonContents: PackageJson[] = [
+      {
+        name: '@ssen/test-module1',
+      },
+      {
+        name: '@ssen/test-module2',
+      },
+    ];
+
+    expect(getPackagesOrder({ packageJsonContents })).toEqual(['@ssen/test-module1', '@ssen/test-module2']);
   });
 
   // ---------------------------------------------
