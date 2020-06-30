@@ -24,7 +24,7 @@ describe('readTSConfig()', () => {
     expect(options.skipLibCheck).toBeTruthy();
     expect(options.sourceMap).toBeTruthy();
     expect(options.declaration).toBeTruthy();
-    expect(options.baseUrl).toBe(path.join(cwd, 'src'));
+    expect(options.baseUrl).toBe(path.join(cwd, 'src').replace(/\\/g, '/'));
     expect(JSON.stringify(options.paths)).toBe(JSON.stringify({ '*': ['*'] }));
 
     expect(options.allowJs).toBeUndefined();
@@ -77,7 +77,7 @@ describe('readTSConfig()', () => {
     expect(options.skipLibCheck).toBeTruthy();
     expect(options.sourceMap).toBeTruthy();
     expect(options.declaration).toBeTruthy();
-    expect(options.baseUrl).toBe(path.join(cwd, 'src'));
+    expect(options.baseUrl).toBe(path.join(cwd, 'src').replace(/\\/g, '/'));
     expect(JSON.stringify(options.paths)).toBe(JSON.stringify({ '*': ['*'] }));
 
     expect(options.allowJs).toBeUndefined();
