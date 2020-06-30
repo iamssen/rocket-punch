@@ -31,13 +31,21 @@ export async function computePackageJson({
   const computedConfig: PackageJson = {
     ...shared,
 
+    main: 'index.js',
+    typings: 'index.d.ts',
+
+    ...packageInfo.packageJson,
+
     name: packageInfo.name,
     version: packageInfo.version,
     dependencies: dependencies,
-
-    main: 'index.js',
-    typings: 'index.d.ts',
   };
+
+  if (packageInfo.module === 'esm') {
+    computedConfig.type = 'module';
+    computedConfig.engines = computedConfig.engines ?? {};
+    computedConfig.engines.node = computedConfig.engines.node ?? '>=14';
+  }
 
   const factoryFile: string = path.join(packageDir, packageJsonFactoryFileName);
 

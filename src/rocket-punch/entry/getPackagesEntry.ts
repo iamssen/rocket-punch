@@ -33,15 +33,30 @@ export async function getPackagesEntry({ cwd }: Params): Promise<Map<string, Pac
   }
 
   return Object.keys(packages).reduce((map, name) => {
-    const versionOrInfo: string | { version: string; tag?: string } = packages[name];
-    const version: string = typeof versionOrInfo === 'string' ? versionOrInfo : versionOrInfo.version;
-    const tag: string = typeof versionOrInfo === 'string' ? 'latest' : versionOrInfo.tag || 'latest';
+    const versionOrInfo:
+      | string
+      | { version: string; tag?: string; module?: string; compilerOptions?: object; packageJson?: object } =
+      packages[name];
 
-    map.set(name, {
-      name,
-      version,
-      tag,
-    });
+    if (typeof versionOrInfo === 'string') {
+      map.set(name, {
+        name,
+        version: versionOrInfo,
+        tag: 'latest',
+        module: 'esm',
+        compilerOptions: {},
+        packageJson: {},
+      });
+    } else {
+      map.set(name, {
+        name,
+        version: versionOrInfo.version,
+        tag: versionOrInfo.tag ?? 'latest',
+        module: versionOrInfo.module === 'esm' ? 'esm' : 'commonjs',
+        compilerOptions: versionOrInfo.compilerOptions ?? {},
+        packageJson: versionOrInfo.packageJson ?? {},
+      });
+    }
 
     return map;
   }, new Map<string, PackageInfo>());

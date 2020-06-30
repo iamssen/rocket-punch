@@ -3,6 +3,8 @@ import { copyTmpDirectory, createTmpDirectory } from '@ssen/tmp-directory';
 import fs from 'fs-extra';
 import path from 'path';
 import { build } from 'rocket-punch/build';
+import { getPackagesEntry } from 'rocket-punch/entry/getPackagesEntry';
+import { PackageInfo } from 'rocket-punch/types';
 
 describe('build()', () => {
   test('should basic build normally', async () => {
@@ -22,15 +24,15 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
   }, 100000);
-  
+
   test('should transform import paths', async () => {
     const cwd: string = await copyTmpDirectory(
       path.join(process.cwd(), 'test/fixtures/rocket-punch/import-path-rewrite'),
     );
     const dist: string = await createTmpDirectory();
-    
+
     //await exec(`open ${dist}`);
-    
+
     await build({
       cwd,
       dist,
@@ -43,6 +45,34 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+  }, 100000);
+
+  test('should build with module types', async () => {
+    const cwd: string = await copyTmpDirectory(path.join(process.cwd(), 'test/fixtures/rocket-punch/module'));
+    const entry: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
+
+    expect(entry.get('a')?.module).toBe('commonjs');
+    expect(entry.get('b')?.module).toBe('commonjs');
+    expect(entry.get('c')?.module).toBe('esm');
+
+    const dist: string = await createTmpDirectory();
+
+    await build({
+      cwd,
+      dist,
+      onMessage: async () => {},
+    });
+
+    expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+
+    expect(/exports.a/g.test(fs.readFileSync(path.join(dist, 'a/index.js'), 'utf8'))).toBeTruthy();
+    expect(/exports.b/g.test(fs.readFileSync(path.join(dist, 'b/index.js'), 'utf8'))).toBeTruthy();
+    expect(/export function c/g.test(fs.readFileSync(path.join(dist, 'c/index.js'), 'utf8'))).toBeTruthy();
   }, 100000);
 
   test('should local-paths build normally', async () => {

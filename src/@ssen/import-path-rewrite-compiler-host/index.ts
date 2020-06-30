@@ -1,5 +1,5 @@
 import { importPathRewrite } from '@ssen/import-path-rewrite';
-import { CompilerHost, CompilerOptions, createCompilerHost, ScriptTarget, SourceFile, transform } from 'typescript';
+import ts from 'typescript';
 
 interface Configuration {
   src: string;
@@ -7,17 +7,17 @@ interface Configuration {
 }
 
 export const createImportPathRewriteCompilerHost = ({ src, rootDir }: Configuration) => (
-  options: CompilerOptions,
+  options: ts.CompilerOptions,
   setParentNodes?: boolean,
-  compilerHost: CompilerHost = createCompilerHost(options, setParentNodes),
-): CompilerHost => {
+  compilerHost: ts.CompilerHost = ts.createCompilerHost(options, setParentNodes),
+): ts.CompilerHost => {
   function getSourceFile(
     fileName: string,
-    languageVersion: ScriptTarget,
+    languageVersion: ts.ScriptTarget,
     onError?: (message: string) => void,
     shouldCreateNewSourceFile?: boolean,
-  ): SourceFile | undefined {
-    const sourceFile: SourceFile | undefined = compilerHost.getSourceFile(
+  ): ts.SourceFile | undefined {
+    const sourceFile: ts.SourceFile | undefined = compilerHost.getSourceFile(
       fileName,
       languageVersion,
       onError,
@@ -26,7 +26,7 @@ export const createImportPathRewriteCompilerHost = ({ src, rootDir }: Configurat
 
     return sourceFile
       ? fileName.replace(/\\/g, '/').indexOf(rootDir.replace(/\\/g, '/')) > -1
-        ? transform(sourceFile, [importPathRewrite({ src, fileName })], options).transformed[0]
+        ? ts.transform(sourceFile, [importPathRewrite({ src, fileName })], options).transformed[0]
         : sourceFile
       : undefined;
   }

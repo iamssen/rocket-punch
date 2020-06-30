@@ -1,8 +1,17 @@
+import { parseTSConfig, readTSConfig } from '@ssen/read-tsconfig';
 import ts from 'typescript';
+import { PackageInfo } from '../types';
 
-// TODO use user tsconfig.json
-export function getCompilerOptions(): ts.CompilerOptions {
-  return {
+interface Params {
+  searchPath: string;
+  configName: string;
+  packageInfo: PackageInfo;
+}
+
+export function getCompilerOptions({ searchPath, configName, packageInfo }: Params): ts.CompilerOptions {
+  const { options: tsconfig } = readTSConfig(searchPath, configName);
+  const { options: info } = parseTSConfig(searchPath, { compilerOptions: packageInfo.compilerOptions });
+  const defaultValues: Partial<ts.CompilerOptions> = {
     downlevelIteration: true,
     allowSyntheticDefaultImports: true,
     esModuleInterop: true,
@@ -17,8 +26,17 @@ export function getCompilerOptions(): ts.CompilerOptions {
     allowJs: true,
     jsx: ts.JsxEmit.React,
 
-    module: ts.ModuleKind.CommonJS,
     target: ts.ScriptTarget.ES2016,
+  } as const;
+
+  const computed: ts.CompilerOptions = Object.keys(defaultValues).reduce((result, name) => {
+    result[name] = info[name] ?? tsconfig[name] ?? defaultValues[name];
+    return result;
+  }, {});
+
+  return {
+    ...computed,
+    module: packageInfo.module === 'esm' ? ts.ModuleKind.ES2015 : ts.ModuleKind.CommonJS,
     moduleResolution: ts.ModuleResolutionKind.NodeJs,
     skipLibCheck: true,
     sourceMap: true,

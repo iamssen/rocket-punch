@@ -1,35 +1,23 @@
 import { rewriteSrcPath } from '@ssen/rewrite-src-path';
-import {
-  createLiteral,
-  createNodeArray,
-  createStringLiteral,
-  Expression,
-  getMutableClone,
-  isCallExpression,
-  isIdentifier,
-  isImportDeclaration,
-  isPropertyAccessExpression,
-  isStringLiteralLike,
-  Node,
-  SourceFile,
-  StringLiteralLike,
-  SyntaxKind,
-  TransformationContext,
-  TransformerFactory,
-  visitEachChild,
-  visitNode,
-  Visitor,
-} from 'typescript';
+import ts from 'typescript';
 
 interface Configuration {
   src: string;
   fileName?: string;
 }
 
-function createVisitor({ src, ctx, fileName }: Configuration & { ctx: TransformationContext }): Visitor {
-  const visitor: Visitor = (node: Node): Node => {
+function createVisitor({
+  src,
+  ctx,
+  fileName,
+}: Configuration & { ctx: ts.TransformationContext }): ts.Visitor {
+  const visitor: ts.Visitor = (node: ts.Node): ts.Node => {
     // import from '?'
-    if (isImportDeclaration(node) && isStringLiteralLike(node.moduleSpecifier) && node.moduleSpecifier.text) {
+    if (
+      ts.isImportDeclaration(node) &&
+      ts.isStringLiteralLike(node.moduleSpecifier) &&
+      node.moduleSpecifier.text
+    ) {
       const importPath: string = node.moduleSpecifier.text;
       const rewrittenImportPath: string = rewriteSrcPath({
         importPath,
@@ -38,18 +26,18 @@ function createVisitor({ src, ctx, fileName }: Configuration & { ctx: Transforma
       });
 
       if (importPath !== rewrittenImportPath) {
-        const newNode = getMutableClone(node);
-        newNode.moduleSpecifier = createLiteral(rewrittenImportPath);
+        const newNode = ts.getMutableClone(node);
+        newNode.moduleSpecifier = ts.createLiteral(rewrittenImportPath);
         return newNode;
       }
     }
     // import('?')
     else if (
-      isCallExpression(node) &&
-      node.expression.kind === SyntaxKind.ImportKeyword &&
-      isStringLiteralLike(node.arguments[0])
+      ts.isCallExpression(node) &&
+      node.expression.kind === ts.SyntaxKind.ImportKeyword &&
+      ts.isStringLiteralLike(node.arguments[0])
     ) {
-      const importPath: string = (node.arguments[0] as StringLiteralLike).text;
+      const importPath: string = (node.arguments[0] as ts.StringLiteralLike).text;
       const rewrittenImportPath: string = rewriteSrcPath({
         importPath,
         filePath: fileName || node.getSourceFile().fileName,
@@ -57,23 +45,23 @@ function createVisitor({ src, ctx, fileName }: Configuration & { ctx: Transforma
       });
 
       if (importPath !== rewrittenImportPath) {
-        const newNode = getMutableClone(node);
-        const newArguments: Expression[] = [...node.arguments];
-        newArguments[0] = createStringLiteral(rewrittenImportPath);
-        newNode.arguments = createNodeArray(newArguments);
+        const newNode = ts.getMutableClone(node);
+        const newArguments: ts.Expression[] = [...node.arguments];
+        newArguments[0] = ts.createStringLiteral(rewrittenImportPath);
+        newNode.arguments = ts.createNodeArray(newArguments);
         return newNode;
       }
     }
     // require.resolve('?')
     else if (
-      isCallExpression(node) &&
-      isPropertyAccessExpression(node.expression) &&
-      isIdentifier(node.expression.expression) &&
+      ts.isCallExpression(node) &&
+      ts.isPropertyAccessExpression(node.expression) &&
+      ts.isIdentifier(node.expression.expression) &&
       node.expression.expression.escapedText === 'require' &&
       node.expression.name.escapedText === 'resolve' &&
-      isStringLiteralLike(node.arguments[0])
+      ts.isStringLiteralLike(node.arguments[0])
     ) {
-      const importPath: string = (node.arguments[0] as StringLiteralLike).text;
+      const importPath: string = (node.arguments[0] as ts.StringLiteralLike).text;
       const rewrittenImportPath: string = rewriteSrcPath({
         importPath,
         filePath: fileName || node.getSourceFile().fileName,
@@ -81,21 +69,21 @@ function createVisitor({ src, ctx, fileName }: Configuration & { ctx: Transforma
       });
 
       if (importPath !== rewrittenImportPath) {
-        const newNode = getMutableClone(node);
-        const newArguments: Expression[] = [...node.arguments];
-        newArguments[0] = createStringLiteral(rewrittenImportPath);
-        newNode.arguments = createNodeArray(newArguments);
+        const newNode = ts.getMutableClone(node);
+        const newArguments: ts.Expression[] = [...node.arguments];
+        newArguments[0] = ts.createStringLiteral(rewrittenImportPath);
+        newNode.arguments = ts.createNodeArray(newArguments);
         return newNode;
       }
     }
     // require('?')
     else if (
-      isCallExpression(node) &&
-      isIdentifier(node.expression) &&
+      ts.isCallExpression(node) &&
+      ts.isIdentifier(node.expression) &&
       node.expression.escapedText === 'require' &&
-      isStringLiteralLike(node.arguments[0])
+      ts.isStringLiteralLike(node.arguments[0])
     ) {
-      const importPath: string = (node.arguments[0] as StringLiteralLike).text;
+      const importPath: string = (node.arguments[0] as ts.StringLiteralLike).text;
       const rewrittenImportPath: string = rewriteSrcPath({
         importPath,
         filePath: fileName || node.getSourceFile().fileName,
@@ -103,22 +91,22 @@ function createVisitor({ src, ctx, fileName }: Configuration & { ctx: Transforma
       });
 
       if (importPath !== rewrittenImportPath) {
-        const newNode = getMutableClone(node);
-        const newArguments: Expression[] = [...node.arguments];
-        newArguments[0] = createStringLiteral(rewrittenImportPath);
-        newNode.arguments = createNodeArray(newArguments);
+        const newNode = ts.getMutableClone(node);
+        const newArguments: ts.Expression[] = [...node.arguments];
+        newArguments[0] = ts.createStringLiteral(rewrittenImportPath);
+        newNode.arguments = ts.createNodeArray(newArguments);
         return newNode;
       }
     }
 
-    return visitEachChild(node, visitor, ctx);
+    return ts.visitEachChild(node, visitor, ctx);
   };
 
   return visitor;
 }
 
-export const importPathRewrite = (config: Configuration): TransformerFactory<SourceFile> => (
-  ctx: TransformationContext,
-) => (node: SourceFile) => {
-  return visitNode(node, createVisitor({ ...config, ctx }));
+export const importPathRewrite = (config: Configuration): ts.TransformerFactory<ts.SourceFile> => (
+  ctx: ts.TransformationContext,
+) => (node: ts.SourceFile) => {
+  return ts.visitNode(node, createVisitor({ ...config, ctx }));
 };

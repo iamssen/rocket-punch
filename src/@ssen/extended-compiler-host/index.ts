@@ -3,15 +3,7 @@ import fs from 'fs-extra';
 import { safeLoad } from 'js-yaml';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import path from 'path';
-import {
-  CompilerHost,
-  CompilerOptions,
-  createCompilerHost,
-  createSourceFile,
-  ScriptKind,
-  ScriptTarget,
-  SourceFile,
-} from 'typescript';
+import ts from 'typescript';
 
 interface TransformConfig {
   getSourceText: (fileName: string) => string;
@@ -86,10 +78,10 @@ function findConfig(fileName: string): TransformConfig | undefined {
 }
 
 export function createExtendedCompilerHost(
-  options: CompilerOptions,
+  options: ts.CompilerOptions,
   setParentNodes?: boolean,
-  compilerHost: CompilerHost = createCompilerHost(options, setParentNodes),
-): CompilerHost {
+  compilerHost: ts.CompilerHost = ts.createCompilerHost(options, setParentNodes),
+): ts.CompilerHost {
   //const compilerHost: CompilerHost = createCompilerHost(options, setParentNodes);
 
   function fileExists(fileName: string): boolean {
@@ -122,20 +114,20 @@ export function createExtendedCompilerHost(
 
   function getSourceFile(
     fileName: string,
-    languageVersion: ScriptTarget,
+    languageVersion: ts.ScriptTarget,
     onError?: (message: string) => void,
     shouldCreateNewSourceFile?: boolean,
-  ): SourceFile | undefined {
+  ): ts.SourceFile | undefined {
     const transformConfig: TransformConfig | undefined = findConfig(fileName);
 
     if (transformConfig) {
       const sourceText: string = transformConfig.getSourceText(fileName);
-      return createSourceFile(
+      return ts.createSourceFile(
         fileName,
         sourceText,
-        options.target || ScriptTarget.Latest,
+        options.target || ts.ScriptTarget.Latest,
         setParentNodes,
-        ScriptKind.TSX,
+        ts.ScriptKind.TSX,
       );
     }
 

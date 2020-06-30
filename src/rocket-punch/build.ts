@@ -7,15 +7,7 @@ import { rewriteSrcPath } from '@ssen/rewrite-src-path';
 import fs from 'fs-extra';
 import path from 'path';
 import { PackageJson } from 'type-fest';
-import {
-  CompilerHost,
-  CompilerOptions,
-  createProgram,
-  Diagnostic,
-  EmitResult,
-  getPreEmitDiagnostics,
-  Program,
-} from 'typescript';
+import ts from 'typescript';
 import { getPackagesEntry } from './entry/getPackagesEntry';
 import { computePackageJson } from './package-json/computePackageJson';
 import { getRootDependencies } from './package-json/getRootDependencies';
@@ -35,8 +27,8 @@ export type BuildMessages =
   | {
       type: 'tsc';
       packageName: string;
-      compilerOptions: CompilerOptions;
-      diagnostics: Diagnostic[];
+      compilerOptions: ts.CompilerOptions;
+      diagnostics: ts.Diagnostic[];
     }
   | {
       type: 'package-json';
@@ -54,11 +46,17 @@ export type BuildMessages =
 interface Params {
   cwd?: string;
   dist?: string;
+  tsconfig?: string;
 
   onMessage: (message: BuildMessages) => Promise<void>;
 }
 
-export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist'), onMessage }: Params) {
+export async function build({
+  cwd = process.cwd(),
+  dist = path.join(cwd, 'dist'),
+  tsconfig = 'tsconfig.json',
+  onMessage,
+}: Params) {
   // ---------------------------------------------
   // rule
   // collect information based on directory rules
@@ -163,9 +161,13 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
     // ---------------------------------------------
     // tsc
     // ---------------------------------------------
-    const computedCompilerOptions: CompilerOptions = getCompilerOptions();
+    const computedCompilerOptions: ts.CompilerOptions = getCompilerOptions({
+      searchPath: cwd,
+      configName: tsconfig,
+      packageInfo,
+    });
 
-    const compilerOptions: CompilerOptions = {
+    const compilerOptions: ts.CompilerOptions = {
       ...computedCompilerOptions,
 
       baseUrl: sourceDir,
@@ -178,21 +180,18 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
       outDir,
     };
 
-    const extendedHost: CompilerHost = createExtendedCompilerHost(compilerOptions);
-    const host: CompilerHost = createImportPathRewriteCompilerHost({
+    const extendedHost: ts.CompilerHost = createExtendedCompilerHost(compilerOptions);
+    const host: ts.CompilerHost = createImportPathRewriteCompilerHost({
       src: path.join(cwd, 'src'),
       rootDir: sourceDir,
     })(compilerOptions, undefined, extendedHost);
 
     const files: string[] = host.readDirectory!(sourceDir, ...readDirectoryPatterns);
 
-    const program: Program = createProgram(files, compilerOptions, host);
+    const program: ts.Program = ts.createProgram(files, compilerOptions, host);
 
-    //const emitResult: EmitResult = program.emit(undefined, undefined, undefined, undefined, {
-    //  before: [importPathRewrite({ src: path.join(cwd, 'src') })],
-    //});
-    const emitResult: EmitResult = program.emit();
-    const diagnostics: Diagnostic[] = getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
+    const emitResult: ts.EmitResult = program.emit();
+    const diagnostics: ts.Diagnostic[] = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 
     await onMessage({
       type: 'tsc',
@@ -204,16 +203,6 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
     if (emitResult.emitSkipped) {
       throw new Error(`Build "${packageName}" is failed`);
     }
-
-    //for (const diagnostic of diagnostics) {
-    //  if (diagnostic.file && diagnostic.start) {
-    //    const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
-    //    const message: string = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-    //    console.log(`TS${diagnostic.code} : ${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`);
-    //  } else {
-    //    console.log(`TS${diagnostic.code} : ${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
-    //  }
-    //}
 
     // ---------------------------------------------
     // copy static files
@@ -232,10 +221,6 @@ export async function build({ cwd = process.cwd(), dist = path.join(cwd, 'dist')
       packageName,
       packageJson,
     });
-
-    //if (!process.env.JEST_WORKER_ID) {
-    //  console.log(`👍 ${packageName}@${packageInfo.version} → ${outDir}`);
-    //}
 
     await onMessage({
       type: 'success',

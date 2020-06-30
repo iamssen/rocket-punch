@@ -1,9 +1,9 @@
 import fs from 'fs';
 import Module from 'module';
 import path from 'path';
-import { ModuleKind, transpileModule, TranspileOutput } from 'typescript';
+import ts from 'typescript';
 
-export function requireTypescript<T>(file: string): T & TranspileOutput {
+export function requireTypescript<T>(file: string): T & ts.TranspileOutput {
   const fileNames: string[] = [
     file,
     path.join(file + '.js'),
@@ -21,12 +21,12 @@ export function requireTypescript<T>(file: string): T & TranspileOutput {
 
   const source: string = fs.readFileSync(existsFile, { encoding: 'utf-8' });
 
-  const result: TranspileOutput = transpileModule(source, {
+  const result: ts.TranspileOutput = ts.transpileModule(source, {
     compilerOptions: {
       downlevelIteration: true,
       allowSyntheticDefaultImports: true,
       esModuleInterop: true,
-      module: ModuleKind.CommonJS,
+      module: ts.ModuleKind.CommonJS,
       skipLibCheck: true,
     },
   });

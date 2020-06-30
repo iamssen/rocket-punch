@@ -9,6 +9,9 @@ export interface PackageInfo {
   name: string;
   version: string;
   tag: string;
+  module: 'commonjs' | 'esm';
+  compilerOptions: object;
+  packageJson: object;
 }
 
 export interface PublishOption {

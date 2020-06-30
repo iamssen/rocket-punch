@@ -1,3 +1,4 @@
+import path from 'path';
 import yargs from 'yargs';
 import { build } from './build';
 import { buildMessageHandler } from './message-handlers/build';
@@ -5,8 +6,6 @@ import { publishMessageHandler } from './message-handlers/publish';
 import { viewMessageHandler } from './message-handlers/view';
 import { publish } from './publish';
 import { view } from './view';
-import fs from 'fs-extra';
-import path from 'path';
 
 const cwd: string = process.cwd();
 
@@ -15,6 +14,10 @@ const argv = yargs
   .command('publish', 'Publish Packages')
   .command('view', 'View Packages Info')
   .demandCommand()
+  .option('tsconfig', {
+    type: 'string',
+    describe: 'if specific this option it will use that file instead of tsconfig.json',
+  })
   .option('out-dir', {
     type: 'string',
     alias: 'o',
@@ -37,6 +40,7 @@ const argv = yargs
   })
   .example('$0 build', 'Build packages')
   .example('$0 build --out-dir /some/directory', 'Build packages to specific directory')
+  .example('$0 build --tsconfig tsconfig.build.json', 'Use another tsconfig.json file on build')
   .example('$0 publish', 'Publish packages')
   .example('$0 publish --out-dir /some/directory', 'Publish packages from specific directory')
   .example('$0 publish --skip-selection', 'Publish all packages without user selection (e.g. CI)')
@@ -61,6 +65,7 @@ switch (argv._[0]) {
     build({
       cwd,
       dist: toAbsolutePath(argv['out-dir']),
+      tsconfig: argv['tsconfig'],
       onMessage: buildMessageHandler,
     });
     break;

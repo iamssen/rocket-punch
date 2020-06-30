@@ -9,6 +9,10 @@ describe('getPackagesEntry()', () => {
     const cwd: string = await copyTmpDirectory(process.cwd(), `test/fixtures/rocket-punch/sample`);
     const entry: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
     const externalPackages: PackageJson.Dependency = await getRootDependencies({ cwd });
+    
+    expect(entry.get('a')?.module).toBe('commonjs');
+    expect(entry.get('a')?.packageJson).toEqual({});
+    expect(entry.get('a')?.compilerOptions).toEqual({});
 
     expect(entry.has('a')).toBeTruthy();
     expect(entry.has('b')).toBeTruthy();
@@ -20,6 +24,10 @@ describe('getPackagesEntry()', () => {
     const cwd: string = await copyTmpDirectory(process.cwd(), `test/fixtures/rocket-punch/group-entry`);
     const entry: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
     const externalPackages: PackageJson.Dependency = await getRootDependencies({ cwd });
+    
+    expect(entry.get('@group/a')?.module).toBe('commonjs');
+    expect(entry.get('@group/a')?.packageJson).toEqual({});
+    expect(entry.get('@group/a')?.compilerOptions).toEqual({});
 
     expect(entry.has('@group/a')).toBeTruthy();
     expect(entry.has('@group/b')).toBeTruthy();
