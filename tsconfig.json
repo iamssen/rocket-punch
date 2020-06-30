@@ -14,7 +14,7 @@
     "strictPropertyInitialization": true,
     // build
     "module": "commonjs",
-    "target": "esnext",
+    "target": "ES2018",
     "moduleResolution": "node",
     "skipLibCheck": true,
     // export
