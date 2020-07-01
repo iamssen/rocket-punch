@@ -27,7 +27,7 @@ export async function getPackagesEntry({ cwd }: Params): Promise<Map<string, Pac
   }
 
   const entry: Record<string, string | Entry> = content as Record<string, string | Entry>;
-  const packages: { [name: string]: string | { version: string; tag?: string } } = {};
+  const packages: Record<string, string | Entry> = {};
 
   for (const name of Object.keys(entry)) {
     if (/\/\*$/.test(name)) {
