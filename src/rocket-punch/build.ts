@@ -77,6 +77,7 @@ export async function build({
       internalPackages: entry,
       externalPackages,
       selfNames: new Set<string>([packageName]),
+      checkUndefinedPackage: 'error',
       fixImportPath: ({ importPath, filePath }) =>
         rewriteSrcPath({
           rootDir: path.join(cwd, 'src'),

@@ -1,6 +1,9 @@
+import { builtinModules } from 'module';
 import { PackageJson } from 'type-fest';
 import ts from 'typescript';
 import { PackageInfo } from './types';
+
+const nodeAPIList: Set<string> = new Set<string>(builtinModules);
 
 export const collectTypeScript: { extensions: string[]; excludes: string[]; includes: string[] } = {
   extensions: ['.ts', '.tsx'],
@@ -47,6 +50,7 @@ interface CollectDependenciesParams {
   compilerOptions?: ts.CompilerOptions;
   selfNames?: Set<string>;
   fixImportPath?: (args: { importPath: string; filePath: string }) => string;
+  checkUndefinedPackage?: 'error' | 'pass';
 }
 
 export async function collectDependencies({
@@ -59,6 +63,7 @@ export async function collectDependencies({
   compilerOptions = {},
   selfNames = new Set(),
   fixImportPath,
+  checkUndefinedPackage = 'error',
 }: CollectDependenciesParams): Promise<PackageJson.Dependency> {
   compilerOptions = {
     allowJs: extensions.some((ext) => /^.js/.test(ext)),
@@ -162,13 +167,20 @@ export async function collectDependencies({
       ? importPath.split('/').slice(0, 2).join('/')
       : importPath.split('/')[0];
 
-    if (!imports[packageName] && !selfNames.has(packageName)) {
+    if (
+      !imports[packageName] &&
+      !selfNames.has(packageName) &&
+      !/^\./.test(packageName) &&
+      !nodeAPIList.has(packageName)
+    ) {
       const internalPackage: PackageInfo | undefined = internalPackages.get(packageName);
 
       if (internalPackage) {
         imports[packageName] = `^${internalPackage.version}`;
       } else if (externalPackages[packageName]) {
         imports[packageName] = externalPackages[packageName];
+      } else if (checkUndefinedPackage === 'error') {
+        throw new Error(`Undefined package "${packageName}" from "${importPath}"`);
       }
     }
   }

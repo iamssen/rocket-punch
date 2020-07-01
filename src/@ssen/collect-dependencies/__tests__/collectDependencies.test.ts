@@ -134,10 +134,26 @@ describe('collectDependencies()', () => {
       rootDir,
       internalPackages: new Map<string, PackageInfo>(),
       externalPackages: require(path.join(rootDir, 'package.json')).dependencies,
+      checkUndefinedPackage: 'pass',
       ...collectTypeScript,
     });
 
     expect('@ssen/tmp-directory' in dependencies).toBeFalsy();
+  });
+
+  test('should throw error with unspecified internal dependency', async () => {
+    const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/ts');
+    expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
+
+    await expect(() =>
+      collectDependencies({
+        rootDir,
+        internalPackages: new Map<string, PackageInfo>(),
+        externalPackages: require(path.join(rootDir, 'package.json')).dependencies,
+        checkUndefinedPackage: 'error',
+        ...collectTypeScript,
+      }),
+    ).rejects.toThrow();
   });
 
   test('should fix import paths', async () => {
