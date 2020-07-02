@@ -85,4 +85,19 @@ describe('readTSConfig()', () => {
 
     expect(errors.length).toBe(0);
   });
+
+  test('should throw error if their is no tsconfig', async () => {
+    const cwd: string = await copyTmpDirectory(process.cwd(), 'test/fixtures/read-tsconfig/no-tsconfig');
+    expect(() => readTSConfig(cwd)).toThrow();
+  });
+  
+  test('should throw error if the tsconfig has wrong syntax ', async () => {
+    const cwd: string = await copyTmpDirectory(process.cwd(), 'test/fixtures/read-tsconfig/wrong-syntax');
+    expect(() => readTSConfig(cwd)).toThrow();
+  });
+  
+  test('should throw error if the tsconfig has not a compiler options ', async () => {
+    const cwd: string = await copyTmpDirectory(process.cwd(), 'test/fixtures/read-tsconfig/empty-config');
+    expect(() => readTSConfig(cwd)).toThrow();
+  });
 });
