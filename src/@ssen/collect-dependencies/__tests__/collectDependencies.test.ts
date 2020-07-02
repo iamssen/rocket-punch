@@ -1,9 +1,8 @@
-import { collectDependencies, collectScripts, collectTypeScript } from '@ssen/collect-dependencies';
+import { collectDependencies, collectScripts, collectTypeScript, PackageInfo } from '@ssen/collect-dependencies';
 import { rewriteSrcPath } from '@ssen/rewrite-src-path';
 import fs from 'fs-extra';
 import path from 'path';
 import { PackageJson } from 'type-fest';
-import { PackageInfo } from '../types';
 
 describe('collectDependencies()', () => {
   test('should get all dependencies from typescript sources', async () => {

@@ -41,21 +41,29 @@ export const collectScripts: { extensions: string[]; excludes: string[]; include
 };
 
 interface CollectDependenciesParams {
+  // source directory
   rootDir: string;
-  internalPackages: Map<string, PackageInfo>;
+  // dependency references
+  internalPackages?: Map<string, PackageInfo>;
   externalPackages: PackageJson.Dependency;
+  // typescript configs
   extensions?: string[];
   excludes?: string[];
   includes?: string[];
   compilerOptions?: ts.CompilerOptions;
+  // if you want to do not collect some dependencies like this `import {} from 'self-package-name'`
+  // you can pass this like { selfNames: new Set(['self-package-name']) }
   selfNames?: Set<string>;
   fixImportPath?: (args: { importPath: string; filePath: string }) => string;
+  // if you set this to 'pass'
+  // when find the undefined package name
+  // it does not throw a error
   checkUndefinedPackage?: 'error' | 'pass';
 }
 
 export async function collectDependencies({
   rootDir,
-  internalPackages,
+  internalPackages = new Map(),
   externalPackages,
   extensions = collectTypeScript.extensions,
   excludes = collectTypeScript.excludes,
