@@ -10,6 +10,8 @@ describe('build()', () => {
   test('should basic build normally', async () => {
     const cwd: string = await copyTmpDirectory(path.join(process.cwd(), 'test/fixtures/rocket-punch/basic'));
     const dist: string = await createTmpDirectory();
+    
+    //await exec(`open ${dist}`);
 
     await build({
       cwd,

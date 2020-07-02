@@ -1,8 +1,11 @@
 '@ssen/*':
   version: 1.0.0-alpha.7
   tag: latest
-  module: 'commonjs'
+  module: commonjs
 rocket-punch:
   version: 1.0.0-alpha.7
   tag: latest
-  module: 'commonjs'
+  module: commonjs
+  packageJson:
+    bin:
+      'rocket-punch': ./bin/rocket-punch.js
