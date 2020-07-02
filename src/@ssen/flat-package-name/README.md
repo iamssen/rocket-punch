@@ -7,7 +7,7 @@ Flat package name rule.
 <!-- import __tests__/*.test.ts -->
 
 ```ts
-import { flatPackageName } from '@ssen/flat-package-name/index';
+import { flatPackageName } from '@ssen/flat-package-name';
 
 describe('flatPackageName()', () => {
   test('should flat package names', () => {

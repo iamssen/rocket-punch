@@ -1,4 +1,4 @@
-import { flatPackageName } from '@ssen/flat-package-name/index';
+import { flatPackageName } from '@ssen/flat-package-name';
 
 describe('flatPackageName()', () => {
   test('should flat package names', () => {
