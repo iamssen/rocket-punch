@@ -1,6 +1,6 @@
 # `@ssen/collect-dependencies`
 
-It will collect `import`, `import()`, `require()` and `require.resolve()` from JS and TS files in a directory by analyze their source codes.
+It will collect dependencies (package names) by analyze `import`, `import()`, `require()` and `require.resolve()` of JS and TS source codes of a directory.
 
 ```ts
 import { collectDependencies, collectScripts, PackageInfo } from '@ssen/collect-dependencies';
