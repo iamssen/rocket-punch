@@ -1,8 +1,8 @@
 import { PackageJsonTransformFunction } from 'rocket-punch';
 
-export default ((computedPackageJson) => {
+export const transformPackageJson: PackageJsonTransformFunction = (computedPackageJson) => {
   return {
     ...computedPackageJson,
     keywords: ['hello'],
   };
-}) as PackageJsonTransformFunction;
+};

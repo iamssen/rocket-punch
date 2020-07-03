@@ -1,4 +1,5 @@
 import { PackageJson } from 'type-fest';
+import ts from 'typescript';
 
 export interface PackageConfig {
   version: string;
@@ -23,8 +24,26 @@ export interface PublishOption {
 
 export { PackageJson };
 
+//export interface PackageJsonTransformFile {
+//  default: PackageJsonTransformFunction;
+//}
+
 export type PackageJsonTransformFunction = (computedPackageJson: PackageJson) => PackageJson;
 
-export interface PackageJsonTransformFile {
-  default: PackageJsonTransformFunction;
+export type CompilerOptionsTransformFunction = (
+  computedCompilerOptions: ts.CompilerOptions,
+) => ts.CompilerOptions;
+
+export type CompilerHostTransformFunction = (
+  compilerOptions: ts.CompilerOptions,
+  compilerHost: ts.CompilerHost,
+) => ts.CompilerHost;
+
+export type EmitCustomTransformer = () => ts.CustomTransformers | undefined;
+
+export interface PackageTransformFile {
+  transformPackageJson?: PackageJsonTransformFunction;
+  transformCompilerOptions?: CompilerOptionsTransformFunction;
+  transformCompilerHost?: CompilerHostTransformFunction;
+  emitCustomTransformer?: EmitCustomTransformer;
 }

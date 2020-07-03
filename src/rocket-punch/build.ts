@@ -6,6 +6,7 @@ import { rimraf } from '@ssen/promised';
 import { rewriteSrcPath } from '@ssen/rewrite-src-path';
 import fs from 'fs-extra';
 import path from 'path';
+import { getTransformFunctions } from 'rocket-punch/rule/getTransformFunctions';
 import { PackageJson } from 'type-fest';
 import ts from 'typescript';
 import { getPackagesEntry } from './entry/getPackagesEntry';
@@ -99,12 +100,18 @@ export async function build({
       throw new Error(`undefiend dependencies of ${packageName}`);
     }
 
-    const packageJson: PackageJson = await computePackageJson({
+    const packageDir: string = path.join(cwd, 'src', packageName);
+
+    const computedPackageJson: PackageJson = await computePackageJson({
       packageInfo,
       sharedConfig,
-      packageDir: path.join(cwd, 'src', packageName),
+      packageDir,
       dependencies,
     });
+
+    const { transformPackageJson } = getTransformFunctions(packageDir);
+
+    const packageJson: PackageJson = transformPackageJson(computedPackageJson);
 
     packageJsonMap.set(packageName, packageJson);
   }
@@ -133,6 +140,10 @@ export async function build({
     if (!packageJson) {
       throw new Error(`undefined packagejson content!`);
     }
+
+    const { transformCompilerOptions, transformCompilerHost, emitCustomTransformer } = getTransformFunctions(
+      sourceDir,
+    );
 
     await onMessage({
       type: 'begin',
@@ -168,7 +179,7 @@ export async function build({
       packageInfo,
     });
 
-    const compilerOptions: ts.CompilerOptions = {
+    const compilerOptions: ts.CompilerOptions = transformCompilerOptions({
       ...computedCompilerOptions,
 
       baseUrl: sourceDir,
@@ -179,19 +190,27 @@ export async function build({
 
       rootDir: sourceDir,
       outDir,
-    };
+    });
 
     const extendedHost: ts.CompilerHost = createExtendedCompilerHost(compilerOptions);
-    const host: ts.CompilerHost = createImportPathRewriteCompilerHost({
+    const pathRewriteHost: ts.CompilerHost = createImportPathRewriteCompilerHost({
       src: path.join(cwd, 'src'),
       rootDir: sourceDir,
     })(compilerOptions, undefined, extendedHost);
+
+    const host: ts.CompilerHost = transformCompilerHost(compilerOptions, pathRewriteHost);
 
     const files: string[] = host.readDirectory!(sourceDir, ...readDirectoryPatterns);
 
     const program: ts.Program = ts.createProgram(files, compilerOptions, host);
 
-    const emitResult: ts.EmitResult = program.emit();
+    const emitResult: ts.EmitResult = program.emit(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      emitCustomTransformer(),
+    );
     const diagnostics: ts.Diagnostic[] = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 
     await onMessage({

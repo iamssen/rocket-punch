@@ -1,8 +1,5 @@
-import { requireTypescript } from '@ssen/require-typescript';
-import path from 'path';
 import { PackageJson } from 'type-fest';
-import { packageJsonFactoryFileName } from '../rule/fileNames';
-import { PackageInfo, PackageJsonTransformFile } from '../types';
+import { PackageInfo } from '../types';
 
 interface Params {
   packageDir: string;
@@ -47,11 +44,14 @@ export async function computePackageJson({
     computedConfig.engines.node = computedConfig.engines.node ?? '>=14';
   }
 
-  const factoryFile: string = path.join(packageDir, packageJsonFactoryFileName);
+  return computedConfig;
 
-  try {
-    return requireTypescript<PackageJsonTransformFile>(factoryFile).default(computedConfig);
-  } catch {
-    return computedConfig;
-  }
+  //const factoryFile: string = path.join(packageDir, packageTransformFile);
+  //
+  //try {
+  //  const { transformPackageJson } = requireTypescript<PackageTransformFile>(factoryFile);
+  //  return typeof transformPackageJson === 'function' ? transformPackageJson(computedConfig) : computedConfig;
+  //} catch {
+  //  return computedConfig;
+  //}
 }
