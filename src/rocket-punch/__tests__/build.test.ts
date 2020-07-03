@@ -27,6 +27,30 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
   }, 100000);
 
+  test.each(['minimum-config', 'minimum-config-cra', 'minimum-config-js-cra'])(
+    'should build with minimum config with "%s"',
+    async (dir: string) => {
+      const cwd: string = await copyTmpDirectory(
+        path.join(process.cwd(), `test/fixtures/rocket-punch/${dir}`),
+      );
+      const dist: string = await createTmpDirectory();
+
+      await build({
+        cwd,
+        dist,
+        onMessage: async () => {},
+      });
+
+      expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
+      expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+    },
+    100000,
+  );
+
   test('should transform import paths', async () => {
     const cwd: string = await copyTmpDirectory(
       path.join(process.cwd(), 'test/fixtures/rocket-punch/import-path-rewrite'),
