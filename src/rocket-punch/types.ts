@@ -1,9 +1,13 @@
 import { PackageJson } from 'type-fest';
 import ts from 'typescript';
 
+/** Scheme of .packages.yaml */
 export interface PackageConfig {
   version: string;
-  tag?: string;
+  tag?: string; // ?= latest
+  module?: string; // ?= commonjs
+  compilerOptions?: object; // ?= {}
+  packageJson?: object; // ?= {}
 }
 
 export interface PackageInfo {

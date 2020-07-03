@@ -2,18 +2,10 @@ import fs from 'fs-extra';
 import yaml from 'js-yaml';
 import path from 'path';
 import { packagesFileName } from '../rule/fileNames';
-import { PackageInfo } from '../types';
+import { PackageConfig, PackageInfo } from '../types';
 
 interface Params {
   cwd: string;
-}
-
-interface Entry {
-  version: string;
-  tag?: string;
-  module?: string;
-  compilerOptions?: object;
-  packageJson?: object;
 }
 
 export async function getPackagesEntry({ cwd }: Params): Promise<Map<string, PackageInfo>> {
@@ -26,8 +18,8 @@ export async function getPackagesEntry({ cwd }: Params): Promise<Map<string, Pac
     throw new Error(`yaml.safeLoad does not return an object`);
   }
 
-  const entry: Record<string, string | Entry> = content as Record<string, string | Entry>;
-  const packages: Record<string, string | Entry> = {};
+  const entry: Record<string, string | PackageConfig> = content as Record<string, string | PackageConfig>;
+  const packages: Record<string, string | PackageConfig> = {};
 
   for (const name of Object.keys(entry)) {
     if (/\/\*$/.test(name)) {
@@ -47,7 +39,7 @@ export async function getPackagesEntry({ cwd }: Params): Promise<Map<string, Pac
   }
 
   return Object.keys(packages).reduce((map, name) => {
-    const versionOrInfo: string | Entry = packages[name];
+    const versionOrInfo: string | PackageConfig = packages[name];
 
     if (typeof versionOrInfo === 'string') {
       map.set(name, {

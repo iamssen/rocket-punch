@@ -1,12 +1,12 @@
 import getPackageJson, { FullMetadata } from 'package-json';
 import { getPackagesEntry } from './entry/getPackagesEntry';
-import { PackageConfig, PackageInfo } from './types';
+import { PackageInfo } from './types';
 
 export type ViewMessages = {
   type: 'view';
   metadata: FullMetadata;
   tags: Record<string, string>;
-  packageConfig: PackageConfig;
+  packageConfig: PackageInfo;
 };
 
 interface Params {
@@ -32,7 +32,7 @@ export async function view({ cwd = process.cwd(), onMessage }: Params) {
       throw new Error(`undefined package ${metadata.name}`);
     }
 
-    const info: PackageConfig = internalPackages.get(metadata.name)!;
+    const info: PackageInfo = internalPackages.get(metadata.name)!;
     const tags: Record<string, string> = metadata['dist-tags'];
 
     await onMessage({
