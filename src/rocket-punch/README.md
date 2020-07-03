@@ -146,3 +146,8 @@ export const transformCompilerOptions: CompilerOptionsTransformFunction = (compu
   };
 };
 ```
+
+# FAQ
+
+- You don't need to create a `package.json` file and write `dependencies` of `package.json`. `rocket-punch` will auto create the `package.json` file and will write `dependencies` with analysis the import statements of source codes. just run `rocket-punch build`
+- It works javascript and typescript both.
