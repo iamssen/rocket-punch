@@ -106,7 +106,7 @@ You can refer this typescript interface.
 
 ```yaml
 your-package-name:
-	version: 0.1.0
+  version: 0.1.0
   tag: canary # if you want publish to another channel instead latest
   module: esm # you can choose module type between 'commonjs' and 'esm'
   compilerOptions: # if you want customize tsc compilerOptions of this package
