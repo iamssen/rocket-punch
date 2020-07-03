@@ -1,8 +1,7 @@
 import { flatPackageName } from '@ssen/flat-package-name';
 import { copyTmpDirectory, createTmpDirectory } from '@ssen/tmp-directory';
 import path from 'path';
-import { build } from 'rocket-punch/build';
-import { publish, PublishMessages } from 'rocket-punch/publish';
+import { build, publish, PublishMessages } from 'rocket-punch';
 
 describe('publish()', () => {
   test('should get exec commands', async () => {

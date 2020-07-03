@@ -2,7 +2,7 @@ import { exec } from '@ssen/promised';
 import { copyTmpDirectory, createTmpDirectory } from '@ssen/tmp-directory';
 import fs from 'fs-extra';
 import path from 'path';
-import { build } from 'rocket-punch/build';
+import { build } from 'rocket-punch';
 import { getPackagesEntry } from 'rocket-punch/entry/getPackagesEntry';
 import { PackageInfo } from 'rocket-punch/types';
 
@@ -10,7 +10,7 @@ describe('build()', () => {
   test('should basic build normally', async () => {
     const cwd: string = await copyTmpDirectory(path.join(process.cwd(), 'test/fixtures/rocket-punch/basic'));
     const dist: string = await createTmpDirectory();
-    
+
     //await exec(`open ${dist}`);
 
     await build({
