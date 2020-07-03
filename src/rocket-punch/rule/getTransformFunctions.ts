@@ -7,7 +7,7 @@ const defaultFunctions: Required<PackageTransformFile> = {
   transformPackageJson: (computedPackageJson) => computedPackageJson,
   transformCompilerOptions: (computedCompilerOptions) => computedCompilerOptions,
   transformCompilerHost: (compilerOptions, compilerHost) => compilerHost,
-  emitCustomTransformer: () => undefined,
+  emitCustomTransformers: () => undefined,
 };
 
 export function getTransformFunctions(packageDir: string): Required<PackageTransformFile> {
@@ -17,14 +17,14 @@ export function getTransformFunctions(packageDir: string): Required<PackageTrans
       transformPackageJson = defaultFunctions.transformPackageJson,
       transformCompilerOptions = defaultFunctions.transformCompilerOptions,
       transformCompilerHost = defaultFunctions.transformCompilerHost,
-      emitCustomTransformer = defaultFunctions.emitCustomTransformer,
+      emitCustomTransformers = defaultFunctions.emitCustomTransformers,
     } = requireTypescript<PackageTransformFile>(factoryFile);
 
     return {
       transformPackageJson,
       transformCompilerOptions,
       transformCompilerHost,
-      emitCustomTransformer,
+      emitCustomTransformers,
     };
   } catch {
     return defaultFunctions;

@@ -141,7 +141,7 @@ export async function build({
       throw new Error(`undefined packagejson content!`);
     }
 
-    const { transformCompilerOptions, transformCompilerHost, emitCustomTransformer } = getTransformFunctions(
+    const { transformCompilerOptions, transformCompilerHost, emitCustomTransformers } = getTransformFunctions(
       sourceDir,
     );
 
@@ -209,7 +209,7 @@ export async function build({
       undefined,
       undefined,
       undefined,
-      emitCustomTransformer(),
+      emitCustomTransformers(),
     );
     const diagnostics: ts.Diagnostic[] = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 

@@ -39,11 +39,11 @@ export type CompilerHostTransformFunction = (
   compilerHost: ts.CompilerHost,
 ) => ts.CompilerHost;
 
-export type EmitCustomTransformer = () => ts.CustomTransformers | undefined;
+export type EmitCustomTransformers = () => ts.CustomTransformers | undefined;
 
 export interface PackageTransformFile {
   transformPackageJson?: PackageJsonTransformFunction;
   transformCompilerOptions?: CompilerOptionsTransformFunction;
   transformCompilerHost?: CompilerHostTransformFunction;
-  emitCustomTransformer?: EmitCustomTransformer;
+  emitCustomTransformers?: EmitCustomTransformers;
 }
