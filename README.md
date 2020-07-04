@@ -24,6 +24,8 @@ npx rocket-punch publish
 
 You can publish the `package1`, `package2` and `package3` directories to NPM with this simple commands.
 
+- [Publish your React components as NPM packages from your React project](https://medium.com/@iamssen/publish-your-react-components-as-npm-packages-from-your-react-project-d1d1853ade9c?source=friends_link&sk=b173102386aff3c409912b9efd00c35a)
+
 # 🧩 Installation
 
 ```bash
