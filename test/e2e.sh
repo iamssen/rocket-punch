@@ -58,7 +58,7 @@ ts-node -r tsconfig-paths/register src/publish-packages-e2e.ts --tag e2e --regis
 fileExists() {
   if ! ls "$1" 1> /dev/null 2>&1; then
     echo "ERROR: Undefined the file $1";
-    exit 1;
+    handleError;
   fi
 }
 

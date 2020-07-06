@@ -24,11 +24,6 @@ packages:
     access: $anonymous
     publish: $anonymous
 
-  '@*/*':
-    access: $anonymous
-    publish: $anonymous
-    proxy: npmjs
-
   '**':
     access: $anonymous
     publish: $anonymous
