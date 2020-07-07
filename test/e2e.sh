@@ -74,8 +74,8 @@ createTmpFixture() {
 }
 
 createTmpFixture rocket-punch/basic;
-npm install rocket-punch@e2e --save-dev --registry "$LOCAL_REGISTRY_URL";
 npm install;
+npm install rocket-punch@e2e --save-dev --registry "$LOCAL_REGISTRY_URL";
 npm run build;
 fileExists "$TEMP/dist/a/index.js";
 fileExists "$TEMP/dist/a/index.d.ts";
@@ -85,8 +85,8 @@ fileExists "$TEMP/dist/c/index.js";
 fileExists "$TEMP/dist/c/index.d.ts";
 
 createTmpFixture rocket-punch/js;
-npm install rocket-punch@e2e --save-dev --registry "$LOCAL_REGISTRY_URL";
 npm install;
+npm install rocket-punch@e2e --save-dev --registry "$LOCAL_REGISTRY_URL";
 npm run build;
 fileExists "$TEMP/dist/a/index.js";
 fileExists "$TEMP/dist/a/index.d.ts";
@@ -96,8 +96,8 @@ fileExists "$TEMP/dist/c/index.js";
 fileExists "$TEMP/dist/c/index.d.ts";
 
 createTmpFixture rocket-punch/bundle;
-npm install rocket-punch@e2e --save-dev --registry "$LOCAL_REGISTRY_URL";
 npm install;
+npm install rocket-punch@e2e --save-dev --registry "$LOCAL_REGISTRY_URL";
 npm run build;
 fileExists "$TEMP/dist/a/index.js";
 fileExists "$TEMP/dist/a/index.d.ts";
