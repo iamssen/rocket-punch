@@ -13,7 +13,10 @@ echo "LOCAL_REGISTRY_URL=$LOCAL_REGISTRY_URL";
 # SETUP LOCAL REGISTRY
 # ==================================================----------------------------------
 function stopLocalRegistry {
-  kill -9 $(lsof -t -i:$VERDACCIO_PORT); # kill verdaccio
+  PID=$(lsof -t -i:$VERDACCIO_PORT); # kill verdaccio
+  if [[ $PID =~ ^[0-9]+$ ]] ; then
+    kill -9 $PID;
+  fi
   rm -rf "$ROOT/test/storage"; # clean verdaccio storage
 }
 
@@ -55,14 +58,14 @@ ts-node -r tsconfig-paths/register src/publish-packages-e2e.ts --tag e2e --regis
 
 # TEST
 # ==================================================----------------------------------
-fileExists() {
+function fileExists() {
   if ! ls "$1" 1> /dev/null 2>&1; then
     echo "ERROR: Undefined the file $1";
     handleError;
   fi
 }
 
-createTmpFixture() {
+function createTmpFixture() {
   TEMP=$(mktemp -d);
   cp -rv "$ROOT/test/fixtures/$1"/* "$TEMP";
   cp -rv "$ROOT/test/fixtures/$1"/.[^.]* "$TEMP";
