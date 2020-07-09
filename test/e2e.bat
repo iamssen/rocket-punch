@@ -19,7 +19,8 @@ if exist "%ROOT%/test/storage" (
 )
 
 start /B "npx verdaccio@latest --config %ROOT%/test/verdaccio.yaml --listen %VERDACCIO_PORT%"
-timeout 30 > nul
+rem timeout 30 > nul
+ping 127.0.0.1 -n 30 > nul 
 
 rem LOCAL PUBLISH
 rem ==================================================----------------------------------
