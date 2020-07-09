@@ -35,4 +35,4 @@ jobs:
         run: npm run build
 
       - name: E2E Test
-        run: powershell ./test/e2e.ps1
+        run: ./test/e2e.bat
