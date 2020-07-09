@@ -23,7 +23,7 @@ function cleanup {
 
 # TODO handleError, handleExit, trap
 
-if (Test-Path "$ROOT/test/storage" -Path-Type Container) {
+if (Test-Path "$ROOT/test/storage" -PathType Container) {
   tree "$ROOT/test/storage" /f;
   Remove-Item "$ROOT/test/storage" -Recurse -Force;
 }
