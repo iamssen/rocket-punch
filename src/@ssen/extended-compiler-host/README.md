@@ -13,8 +13,10 @@ const compilerHost: CompilerHost = createExtendedCompilerHost(compilerOptions);
 # Support Files
 
 ## Plain Text
+- `import string from './file.html'`
 - `import string from './file.txt'`
 - `import string from './file.md'`
+- `import string from './file.ejs'`
 
 ## YAML
 - `import object from './file.yaml'`

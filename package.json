@@ -7,6 +7,7 @@
     "clean": "rimraf dist",
     "build": "npm run clean && ts-node -r tsconfig-paths/register src/build-packages.ts",
     "publish": "ts-node -r tsconfig-paths/register src/publish-packages.ts",
+    "publish:local": "ts-node -r tsconfig-paths/register src/publish-packages-e2e.ts --tag canary --registry $LOCAL_NPM_REGISTRY",
     "view": "ts-node -r tsconfig-paths/register src/view-packages.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",

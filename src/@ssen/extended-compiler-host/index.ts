@@ -35,6 +35,8 @@ const yamlTransformConfig: TransformConfig = {
 };
 
 const transformConfigs: Record<string, TransformConfig> = {
+  html: plainTextTransformConfig,
+  ejs: plainTextTransformConfig,
   txt: plainTextTransformConfig,
   md: plainTextTransformConfig,
   yml: yamlTransformConfig,
@@ -82,35 +84,10 @@ export function createExtendedCompilerHost(
   setParentNodes?: boolean,
   compilerHost: ts.CompilerHost = ts.createCompilerHost(options, setParentNodes),
 ): ts.CompilerHost {
-  //const compilerHost: CompilerHost = createCompilerHost(options, setParentNodes);
-
   function fileExists(fileName: string): boolean {
     const transformConfig: TransformConfig | undefined = findConfig(fileName);
     return !!transformConfig || compilerHost.fileExists(fileName);
   }
-
-  //function resolveModuleNames(
-  //  moduleNames: string[],
-  //  containingFile: string,
-  //  reusedNames: string[] | undefined,
-  //  redirectedReference: ResolvedProjectReference | undefined,
-  //  options: CompilerOptions,
-  //): (ResolvedModule | undefined)[] {
-  //  if (moduleNames.some(moduleName => /(a|b|c)$/.test(moduleName))) {
-  //    console.log('index.ts..resolveModuleNames()', moduleNames, containingFile, reusedNames, redirectedReference, options);
-  //  }
-  //  //if (compilerHost.resolveModuleNames) {
-  //  //  const returnValue: (ResolvedModule | undefined)[] = compilerHost.resolveModuleNames(
-  //  //    moduleNames,
-  //  //    containingFile,
-  //  //    reusedNames,
-  //  //    redirectedReference,
-  //  //    options,
-  //  //  );
-  //  //  return returnValue;
-  //  //}
-  //  return moduleNames.map(() => undefined);
-  //}
 
   function getSourceFile(
     fileName: string,
@@ -136,7 +113,6 @@ export function createExtendedCompilerHost(
 
   return {
     ...compilerHost,
-    //resolveModuleNames,
     fileExists,
     getSourceFile,
   };

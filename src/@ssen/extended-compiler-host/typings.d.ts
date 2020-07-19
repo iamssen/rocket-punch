@@ -44,7 +44,7 @@ declare module '*.webp' {
 }
 
 declare module '*.svg' {
-  import { ComponentType } from 'react';
-  const content: ComponentType;
+  import React from 'react';
+  const content: string & { ReactComponent: React.ComponentType<React.SVGProps<SVGSVGElement>> };
   export = content;
 }
