@@ -6,7 +6,6 @@ import { rimraf } from '@ssen/promised';
 import { rewriteSrcPath } from '@ssen/rewrite-src-path';
 import fs from 'fs-extra';
 import path from 'path';
-import { getTransformFunctions } from 'rocket-punch/rule/getTransformFunctions';
 import { PackageJson } from 'type-fest';
 import ts from 'typescript';
 import { getPackagesEntry } from './entry/getPackagesEntry';
@@ -15,6 +14,7 @@ import { getRootDependencies } from './package-json/getRootDependencies';
 import { getSharedPackageJson } from './package-json/getSharedPackageJson';
 import { fsCopyFilter } from './rule/fsCopyFilter';
 import { getCompilerOptions } from './rule/getCompilerOptions';
+import { getTransformFunctions } from './rule/getTransformFunctions';
 import { readDirectoryPatterns } from './rule/readDirectoryPatterns';
 import { PackageInfo } from './types';
 
