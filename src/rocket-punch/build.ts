@@ -164,6 +164,10 @@ export async function build({
     // ---------------------------------------------
     const symlink: string = path.join(cwd, 'node_modules', packageName);
 
+    if (fs.existsSync(symlink) && fs.lstatSync(symlink).isSymbolicLink()) {
+      fs.unlinkSync(symlink);
+    }
+
     await fs.mkdirp(path.dirname(symlink));
 
     await fs.symlink(outDir, symlink);
