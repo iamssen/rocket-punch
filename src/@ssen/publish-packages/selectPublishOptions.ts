@@ -31,23 +31,9 @@ export async function selectPublishOptions({
       ({ currentVersion, remoteVersion }) => !remoteVersion || semver.gt(currentVersion, remoteVersion),
     );
 
-  if (skipSelection) {
-    // no remote package
-    // or build version is higher than remote version
-
-    //if (availablePublishOptions.length > 0) {
-    //  for (const publishOption of availablePublishOptions) {
-    //    const { name, tag } = publishOption;
-    //    const { currentVersion, remoteVersion } = getVersions(publishOption);
-    //
-    //    const title: string = remoteVersion
-    //      ? `${name}@${tag} (${remoteVersion} → ${currentVersion})`
-    //      : `${name}@${tag} (→ ${currentVersion})`;
-    //
-    //    console.log(title);
-    //  }
-    //}
-
+  if (availablePublishOptions.length === 0) {
+    return [];
+  } else if (skipSelection) {
     return availablePublishOptions;
   } else {
     const answer: Answers<'publishOptions'> = await prompts<'publishOptions'>({
