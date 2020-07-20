@@ -35,10 +35,7 @@
       "dom.iterable",
       "esnext"
     ],
-    "baseUrl": "src",
-    "paths": {
-      "*": ["*"]
-    }
+    "baseUrl": "src"
   },
   "exclude": [".dev", "dist", "node_modules", "*.js"]
 }

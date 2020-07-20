@@ -25,7 +25,6 @@ describe('readTSConfig()', () => {
     expect(options.sourceMap).toBeTruthy();
     expect(options.declaration).toBeTruthy();
     expect(options.baseUrl).toBe(path.join(cwd, 'src').replace(/\\/g, '/'));
-    expect(JSON.stringify(options.paths)).toBe(JSON.stringify({ '*': ['*'] }));
 
     expect(options.allowJs).toBeUndefined();
     expect(options.rootDirs).toBeUndefined();
@@ -55,9 +54,6 @@ describe('readTSConfig()', () => {
         declaration: true,
         baseUrl: 'src',
         allowJs: undefined,
-        paths: {
-          '*': ['*'],
-        },
       },
     });
 
@@ -78,7 +74,6 @@ describe('readTSConfig()', () => {
     expect(options.sourceMap).toBeTruthy();
     expect(options.declaration).toBeTruthy();
     expect(options.baseUrl).toBe(path.join(cwd, 'src').replace(/\\/g, '/'));
-    expect(JSON.stringify(options.paths)).toBe(JSON.stringify({ '*': ['*'] }));
 
     expect(options.allowJs).toBeUndefined();
     expect(options.rootDirs).toBeUndefined();
