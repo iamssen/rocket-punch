@@ -64,9 +64,9 @@ You can refer this compare link for setting `rocket-punch` to your `create-react
 
 You need to just 3 things.
 
-1. [Create `.packages.yaml` file.](https://github.com/rocket-hangar/rocket-punch-create-react-app-template/compare/create-react-app-initialize...HEAD#diff-1ed02b3afcba1812b68ab3eb2fac55c1R1)
-2. [Install `rocket-punch` and add "scripts" in your `package.json` file.](https://github.com/rocket-hangar/rocket-punch-create-react-app-template/compare/create-react-app-initialize...HEAD#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R23)
-3. [If you use "typescript". add "baseUrl" and "paths" in your `tsconfig.json` file.](https://github.com/rocket-hangar/rocket-punch-create-react-app-template/compare/create-react-app-initialize...HEAD#diff-e5e546dd2eb0351f813d63d1b39dbc48R21)
+1. [Create `.packages.yaml` file.](https://github.com/rocket-hangar/rocket-punch-create-react-app-template/compare/create-react-app-initialize...278ca81e5eaaf4de38b57fa9c6c536290ad52aff#diff-1ed02b3afcba1812b68ab3eb2fac55c1R1)
+2. [Install `rocket-punch` and add "scripts" in your `package.json` file.](https://github.com/rocket-hangar/rocket-punch-create-react-app-template/compare/create-react-app-initialize...278ca81e5eaaf4de38b57fa9c6c536290ad52aff#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R24)
+3. [If you use "typescript". add "baseUrl" in your `tsconfig.json` file.](https://github.com/rocket-hangar/rocket-punch-create-react-app-template/compare/create-react-app-initialize...278ca81e5eaaf4de38b57fa9c6c536290ad52aff#diff-e5e546dd2eb0351f813d63d1b39dbc48R21)
 
 # 🗄 Available Import Types
 

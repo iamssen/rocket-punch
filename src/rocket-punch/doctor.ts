@@ -47,21 +47,6 @@ export async function doctor({ cwd = process.cwd(), tsconfig = 'tsconfig.json', 
     });
   }
 
-  if (!options.paths || !options.paths['*'] || !options.paths['*'].some((p) => p === '*')) {
-    tsconfigResult.push({
-      message: `compilerOptions.paths should have "paths: *".`,
-      fixer: {
-        compilerOptions: {
-          paths: {
-            paths: {
-              '*': ['*'],
-            },
-          },
-        },
-      },
-    });
-  }
-
   if (tsconfigResult.length > 0) {
     await onMessage({
       type: 'tsconfig',

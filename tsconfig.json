@@ -23,9 +23,6 @@
     // output
     "outDir": "lib",
     // path
-    "baseUrl": "src",
-    "paths": {
-      "*": ["*"]
-    }
+    "baseUrl": "src"
   }
 }
