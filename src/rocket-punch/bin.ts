@@ -1,7 +1,9 @@
 import path from 'path';
 import yargs from 'yargs';
 import { build } from './build';
+import { doctor } from './doctor';
 import { buildMessageHandler } from './message-handlers/build';
+import { doctorMessageHandler } from './message-handlers/doctor';
 import { publishMessageHandler } from './message-handlers/publish';
 import { viewMessageHandler } from './message-handlers/view';
 import { publish } from './publish';
@@ -10,9 +12,10 @@ import { view } from './view';
 const cwd: string = process.cwd();
 
 const argv = yargs
-  .command('build', 'Build Packages')
-  .command('publish', 'Publish Packages')
-  .command('view', 'View Packages Info')
+  .command('build', 'Build packages')
+  .command('publish', 'Publish packages')
+  .command('view', 'View packages information')
+  .command('doctor', 'Check configs is validate for rocket-punch')
   .demandCommand()
   .option('tsconfig', {
     type: 'string',
@@ -45,6 +48,8 @@ const argv = yargs
   .example('$0 publish --out-dir /some/directory', 'Publish packages from specific directory')
   .example('$0 publish --skip-selection', 'Publish all packages without user selection (e.g. CI)')
   .example('$0 publish --skip-selection --tag e2e --registry http://localhost:4873', 'E2E test')
+  .example('$0 view', 'View packages information')
+  .example('$0 doctor', 'Check configs is validate for rocket-punch')
   .wrap(yargs.terminalWidth())
   .help('h')
   .alias('h', 'help')
@@ -83,6 +88,12 @@ switch (argv._[0]) {
     view({
       cwd,
       onMessage: viewMessageHandler,
+    });
+    break;
+  case 'doctor':
+    doctor({
+      cwd,
+      onMessage: doctorMessageHandler,
     });
     break;
   default:

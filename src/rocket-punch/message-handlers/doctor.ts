@@ -42,5 +42,11 @@ export async function doctorMessageHandler(message: DoctorMessages) {
         console.log('');
       }
       break;
+    case 'tsconfig':
+      for (const result of message.result) {
+        console.log(chalk.bold(result.message));
+        console.log(chalk.blueBright(JSON.stringify(result.fixer, null, 2)));
+      }
+      break;
   }
 }
