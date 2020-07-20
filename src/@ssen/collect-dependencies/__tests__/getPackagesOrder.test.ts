@@ -3,11 +3,17 @@ import { getPackagesOrder } from '../getPackagesOrder';
 
 describe('getPackagesOrder()', () => {
   test('should get the ordered names array', () => {
+    // Arrange : get test condition and test result from function args
     function test(packageJsonContents: PackageJson[], matchOrderedNames: string[]) {
+      // Act
       const orderedNames: string[] = getPackagesOrder({ packageJsonContents });
 
+      // Assert
+      // result should be equal with expected result
       expect(orderedNames).toEqual(matchOrderedNames);
 
+      // Assert
+      // verification result
       orderedNames.reverse().forEach((a: string, i: number) => {
         // sorted.slice(0, i) does not have a
         for (const b of orderedNames.slice(0, i)) {
@@ -48,6 +54,9 @@ describe('getPackagesOrder()', () => {
           },
         },
       ],
+      // Assert
+      // @lunit/heatmap is higher order
+      // because of @lunit/insight-viewer includes @lunit/heatmap
       ['@lunit/heatmap', '@lunit/insight-viewer'],
     );
 
@@ -80,6 +89,12 @@ describe('getPackagesOrder()', () => {
           name: 'e',
         },
       ],
+      // Assert
+      // c
+      // a { c }
+      // b { a, c }
+      // e
+      // d { e, b: { a, c } }
       ['c', 'a', 'b', 'e', 'd'],
     );
 
@@ -120,11 +135,17 @@ describe('getPackagesOrder()', () => {
           },
         },
       ],
+      // Assert
+      // order by package name - @ssen/test-module1, @router-store
+      // test-module3 { @ssen/test-module1 }
+      // @ssen/test-module2 { test-module3 }
+      // does not have any reason to order - use-react-intl
       ['@ssen/test-module1', 'router-store', 'test-module3', '@ssen/test-module2', 'use-react-intl'],
     );
   });
 
   test('should cause error if does not have name field in the package.json', () => {
+    // Arrange
     const packageJsonContents: PackageJson[] = [
       {
         name: '@ssen/test-module1',
@@ -139,10 +160,14 @@ describe('getPackagesOrder()', () => {
       },
     ];
 
+    // Act
+    // second package has not name field
+    // so it will throw an error
     expect(() => getPackagesOrder({ packageJsonContents })).toThrow();
   });
 
   test('should cause error if the dependencies are circular references', () => {
+    // Arrange
     const packageJsonContents: PackageJson[] = [
       {
         name: '@ssen/test-module1',
@@ -158,10 +183,16 @@ describe('getPackagesOrder()', () => {
       },
     ];
 
+    // Act
+    // @ssen/test-module1 { @ssen/test-module2 }
+    // @ssen/test-module2 { @ssen/test-module1 }
+    // they have circular references
+    // so it will throw an error
     expect(() => getPackagesOrder({ packageJsonContents })).toThrow();
   });
 
   test('should sort by names if they have not some dependencies each other', () => {
+    // Arrange
     const packageJsonContents: PackageJson[] = [
       {
         name: '@ssen/test-module1',
@@ -171,6 +202,10 @@ describe('getPackagesOrder()', () => {
       },
     ];
 
+    // Act
+    // Assert
+    // there is no dependencies each other
+    // so they will be ordered by names
     expect(getPackagesOrder({ packageJsonContents })).toEqual(['@ssen/test-module1', '@ssen/test-module2']);
   });
 

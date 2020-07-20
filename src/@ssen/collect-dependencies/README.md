@@ -57,188 +57,258 @@ async function collectDependencies(params: {
 <!-- import __tests__/*.test.ts -->
 
 ```ts
-import { collectDependencies, collectScripts, collectTypeScript, PackageInfo } from '@ssen/collect-dependencies';
+import {
+  collectDependencies,
+  collectScripts,
+  collectTypeScript,
+  PackageInfo,
+} from '@ssen/collect-dependencies';
 import { rewriteSrcPath } from '@ssen/rewrite-src-path';
 import fs from 'fs-extra';
 import path from 'path';
+import process from 'process';
 import { PackageJson } from 'type-fest';
 
 describe('collectDependencies()', () => {
   test('should get all dependencies from typescript sources', async () => {
+    // Arrange : create temporary fixture
     const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/ts');
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
+    // Arrange : create test data
+    const internalPackages: Map<string, PackageInfo> = new Map([
+      [
+        '@ssen/tmp-directory',
+        {
+          name: '@ssen/tmp-directory',
+          version: '0.1.0',
+        },
+      ],
+    ]);
+    const externalPackages: PackageJson.Dependency = require(path.join(rootDir, 'package.json')).dependencies;
+
+    // Act
     const dependencies: PackageJson.Dependency = await collectDependencies({
       rootDir,
-      internalPackages: new Map<string, PackageInfo>([
-        [
-          '@ssen/tmp-directory',
-          {
-            name: '@ssen/tmp-directory',
-            version: '0.1.0',
-          },
-        ],
-      ]),
-      externalPackages: require(path.join(rootDir, 'package.json')).dependencies,
+      internalPackages,
+      externalPackages,
       ...collectTypeScript,
     });
 
+    // Assert
+    // imported from externalPackages
     expect('react' in dependencies).toBeTruthy();
     expect('rimraf' in dependencies).toBeTruthy();
     expect('tmp' in dependencies).toBeTruthy();
     expect('semver' in dependencies).toBeTruthy();
     expect('glob' in dependencies).toBeTruthy();
-
+    // imported from internalPackages
     expect('@ssen/tmp-directory' in dependencies).toBeTruthy();
   });
 
-  test('should use default configs', async () => {
+  test('should work with default config', async () => {
+    // Arrange : create temporary fixture
     const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/ts');
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
+    // Arrange : create test data
+    const internalPackages: Map<string, PackageInfo> = new Map<string, PackageInfo>([
+      [
+        '@ssen/tmp-directory',
+        {
+          name: '@ssen/tmp-directory',
+          version: '0.1.0',
+        },
+      ],
+    ]);
+    const externalPackages: PackageJson.Dependency = require(path.join(rootDir, 'package.json')).dependencies;
+
+    // Act
     const dependencies: PackageJson.Dependency = await collectDependencies({
       rootDir,
-      internalPackages: new Map<string, PackageInfo>([
-        [
-          '@ssen/tmp-directory',
-          {
-            name: '@ssen/tmp-directory',
-            version: '0.1.0',
-          },
-        ],
-      ]),
-      externalPackages: require(path.join(rootDir, 'package.json')).dependencies,
+      internalPackages,
+      externalPackages,
     });
 
+    // Assert
+    // imported from externalPackages
     expect('react' in dependencies).toBeTruthy();
     expect('rimraf' in dependencies).toBeTruthy();
     expect('tmp' in dependencies).toBeTruthy();
     expect('semver' in dependencies).toBeTruthy();
     expect('glob' in dependencies).toBeTruthy();
-
+    // imported from internalPackages
     expect('@ssen/tmp-directory' in dependencies).toBeTruthy();
   });
 
-  test('should get all dependencies from sources', async () => {
+  test('should get all dependencies from javascript sources', async () => {
+    // Arrange : create temporary fixture
     const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/js');
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
+    // Arrange : create test data
+    const internalPackages: Map<string, PackageInfo> = new Map<string, PackageInfo>([
+      [
+        '@ssen/tmp-directory',
+        {
+          name: '@ssen/tmp-directory',
+          version: '0.1.0',
+        },
+      ],
+    ]);
+    const externalPackages: PackageJson.Dependency = require(path.join(rootDir, 'package.json')).dependencies;
+
+    // Act
     const dependencies: PackageJson.Dependency = await collectDependencies({
       rootDir,
-      internalPackages: new Map<string, PackageInfo>([
-        [
-          '@ssen/tmp-directory',
-          {
-            name: '@ssen/tmp-directory',
-            version: '0.1.0',
-          },
-        ],
-      ]),
-      externalPackages: require(path.join(rootDir, 'package.json')).dependencies,
+      internalPackages,
+      externalPackages,
       ...collectScripts,
     });
 
+    // Assert
+    // imported from externalPackages
     expect('react' in dependencies).toBeTruthy();
     expect('rimraf' in dependencies).toBeTruthy();
     expect('tmp' in dependencies).toBeTruthy();
     expect('semver' in dependencies).toBeTruthy();
     expect('glob' in dependencies).toBeTruthy();
-
+    // imported from internalPackages
     expect('@ssen/tmp-directory' in dependencies).toBeTruthy();
   });
 
   test('should get all dependencies without self name', async () => {
+    // Arrange : create temporary fixture
     const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/self-name');
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
+    // Arrange : create test data
+    const internalPackages: Map<string, PackageInfo> = new Map<string, PackageInfo>([
+      [
+        '@ssen/tmp-directory',
+        {
+          name: '@ssen/tmp-directory',
+          version: '0.1.0',
+        },
+      ],
+      [
+        'imports',
+        {
+          name: 'imports',
+          version: '0.1.0',
+        },
+      ],
+    ]);
+    const externalPackages: PackageJson.Dependency = require(path.join(rootDir, 'package.json')).dependencies;
+    const selfNames: Set<string> = new Set<string>(['imports']);
+
+    // Act
     const dependencies: PackageJson.Dependency = await collectDependencies({
       rootDir,
-      internalPackages: new Map<string, PackageInfo>([
-        [
-          '@ssen/tmp-directory',
-          {
-            name: '@ssen/tmp-directory',
-            version: '0.1.0',
-          },
-        ],
-        [
-          'imports',
-          {
-            name: 'imports',
-            version: '0.1.0',
-          },
-        ],
-      ]),
-      externalPackages: require(path.join(rootDir, 'package.json')).dependencies,
-      selfNames: new Set(['imports']),
+      internalPackages,
+      externalPackages,
+      selfNames,
       ...collectScripts,
     });
 
+    // Assert
+    // imported from externalPackages
     expect('react' in dependencies).toBeTruthy();
     expect('rimraf' in dependencies).toBeTruthy();
     expect('tmp' in dependencies).toBeTruthy();
     expect('semver' in dependencies).toBeTruthy();
     expect('glob' in dependencies).toBeTruthy();
+    // `imports` is self name when the build of `imports`
+    // `import {} from 'imports'` would be ignored
     expect('imports' in dependencies).toBeFalsy();
-
+    // imported from internalPackages
     expect('@ssen/tmp-directory' in dependencies).toBeTruthy();
   });
 
   test('should can not get unspecified internal dependency', async () => {
+    // Arrange : create temporary fixture
     const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/ts');
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
+    // Arrange : create test data
+    const internalPackages: Map<string, PackageInfo> = new Map<string, PackageInfo>();
+    const externalPackages: PackageJson.Dependency = require(path.join(rootDir, 'package.json')).dependencies;
+    const checkUndefinedPackage: 'pass' | 'error' = 'pass';
+
+    // Act
     const dependencies: PackageJson.Dependency = await collectDependencies({
       rootDir,
-      internalPackages: new Map<string, PackageInfo>(),
-      externalPackages: require(path.join(rootDir, 'package.json')).dependencies,
-      checkUndefinedPackage: 'pass',
+      internalPackages,
+      externalPackages,
+      checkUndefinedPackage,
       ...collectTypeScript,
     });
 
+    // Assert
+    // missing dependency will not throw an error just will be ignored
     expect('@ssen/tmp-directory' in dependencies).toBeFalsy();
   });
 
   test('should throw error with unspecified internal dependency', async () => {
+    // Arrange : create temporary fixture
     const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/ts');
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
+    // Arrange : create test data
+    const internalPackages: Map<string, PackageInfo> = new Map<string, PackageInfo>();
+    const externalPackages: PackageJson.Dependency = require(path.join(rootDir, 'package.json')).dependencies;
+    const checkUndefinedPackage: 'pass' | 'error' = 'error';
+
+    // Act
+    // it will not find '@ssen/tmp-directory' package
+    // because of the internalPackages does not have that package.
+    // "checkUndefinedPackge: error" option will throw error when find undefined package.
     await expect(() =>
       collectDependencies({
         rootDir,
-        internalPackages: new Map<string, PackageInfo>(),
-        externalPackages: require(path.join(rootDir, 'package.json')).dependencies,
-        checkUndefinedPackage: 'error',
+        internalPackages,
+        externalPackages,
+        checkUndefinedPackage,
         ...collectTypeScript,
       }),
     ).rejects.toThrow();
   });
 
   test('should fix import paths', async () => {
+    // Arrange : create temporary fixture
     const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/fix-import-path');
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
+    // Arrange : create test data
+    const internalPackages: Map<string, PackageInfo> = new Map<string, PackageInfo>(
+      ['b', 'c', 'd', 'e'].map((name) => [
+        name,
+        {
+          name,
+          version: '0.1.0',
+        },
+      ]),
+    );
+    const externalPackages: PackageJson.Dependency = {};
+    const fixImportPath = ({ importPath, filePath }: { importPath: string; filePath: string }) => {
+      return rewriteSrcPath({
+        rootDir,
+        importPath,
+        filePath,
+      });
+    };
+
+    // Act
     const dependencies: PackageJson.Dependency = await collectDependencies({
       rootDir: path.join(rootDir, 'a'),
-      internalPackages: new Map<string, PackageInfo>(
-        ['b', 'c', 'd', 'e'].map((name) => [
-          name,
-          {
-            name,
-            version: '0.1.0',
-          },
-        ]),
-      ),
-      externalPackages: {},
+      internalPackages,
+      externalPackages,
       ...collectTypeScript,
-      fixImportPath: ({ importPath, filePath }) =>
-        rewriteSrcPath({
-          rootDir,
-          importPath,
-          filePath,
-        }),
+      fixImportPath,
     });
 
+    // Assert
+    // `import {} from '../b'` is fixed to `import {} from 'b'` by fixImportPath option
     expect('b' in dependencies).toBeTruthy();
   });
 });
@@ -252,11 +322,17 @@ import { getPackagesOrder } from '../getPackagesOrder';
 
 describe('getPackagesOrder()', () => {
   test('should get the ordered names array', () => {
+    // Arrange : get test condition and test result from function args
     function test(packageJsonContents: PackageJson[], matchOrderedNames: string[]) {
+      // Act
       const orderedNames: string[] = getPackagesOrder({ packageJsonContents });
 
+      // Assert
+      // result should be equal with expected result
       expect(orderedNames).toEqual(matchOrderedNames);
 
+      // Assert
+      // verification result
       orderedNames.reverse().forEach((a: string, i: number) => {
         // sorted.slice(0, i) does not have a
         for (const b of orderedNames.slice(0, i)) {
@@ -297,6 +373,9 @@ describe('getPackagesOrder()', () => {
           },
         },
       ],
+      // Assert
+      // @lunit/heatmap is higher order
+      // because of @lunit/insight-viewer includes @lunit/heatmap
       ['@lunit/heatmap', '@lunit/insight-viewer'],
     );
 
@@ -329,6 +408,12 @@ describe('getPackagesOrder()', () => {
           name: 'e',
         },
       ],
+      // Assert
+      // c
+      // a { c }
+      // b { a, c }
+      // e
+      // d { e, b: { a, c } }
       ['c', 'a', 'b', 'e', 'd'],
     );
 
@@ -369,11 +454,17 @@ describe('getPackagesOrder()', () => {
           },
         },
       ],
+      // Assert
+      // order by package name - @ssen/test-module1, @router-store
+      // test-module3 { @ssen/test-module1 }
+      // @ssen/test-module2 { test-module3 }
+      // does not have any reason to order - use-react-intl
       ['@ssen/test-module1', 'router-store', 'test-module3', '@ssen/test-module2', 'use-react-intl'],
     );
   });
 
   test('should cause error if does not have name field in the package.json', () => {
+    // Arrange
     const packageJsonContents: PackageJson[] = [
       {
         name: '@ssen/test-module1',
@@ -388,10 +479,14 @@ describe('getPackagesOrder()', () => {
       },
     ];
 
+    // Act
+    // second package has not name field
+    // so it will throw an error
     expect(() => getPackagesOrder({ packageJsonContents })).toThrow();
   });
 
   test('should cause error if the dependencies are circular references', () => {
+    // Arrange
     const packageJsonContents: PackageJson[] = [
       {
         name: '@ssen/test-module1',
@@ -407,10 +502,16 @@ describe('getPackagesOrder()', () => {
       },
     ];
 
+    // Act
+    // @ssen/test-module1 { @ssen/test-module2 }
+    // @ssen/test-module2 { @ssen/test-module1 }
+    // they have circular references
+    // so it will throw an error
     expect(() => getPackagesOrder({ packageJsonContents })).toThrow();
   });
 
   test('should sort by names if they have not some dependencies each other', () => {
+    // Arrange
     const packageJsonContents: PackageJson[] = [
       {
         name: '@ssen/test-module1',
@@ -420,6 +521,10 @@ describe('getPackagesOrder()', () => {
       },
     ];
 
+    // Act
+    // Assert
+    // there is no dependencies each other
+    // so they will be ordered by names
     expect(getPackagesOrder({ packageJsonContents })).toEqual(['@ssen/test-module1', '@ssen/test-module2']);
   });
 

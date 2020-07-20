@@ -1,13 +1,16 @@
 import path from 'path';
+import process from 'process';
 import { getRootDependencies } from 'rocket-punch/package-json/getRootDependencies';
 import { PackageJson } from 'type-fest';
 
 describe('getRootDependencies()', () => {
   test('should get root dependencies', async () => {
+    // Act
     const deps: PackageJson.Dependency = await getRootDependencies({
       cwd: path.join(process.cwd(), `test/fixtures/rocket-punch/sample`),
     });
 
+    // Assert
     expect(deps['react']).not.toBeUndefined();
     expect(deps['react-app-polyfill']).not.toBeUndefined();
     expect(deps['react-dom']).not.toBeUndefined();
@@ -18,11 +21,14 @@ describe('getRootDependencies()', () => {
 
   test('should throw error if there is no package.json', async () => {
     async function check() {
+      // Act
       await getRootDependencies({
         cwd: path.join(process.cwd(), `test/fixtures/require-typescript/basic`),
       });
     }
 
+    // Assert
+    // there is no package.json
     await expect(check()).rejects.toThrow();
   });
 });

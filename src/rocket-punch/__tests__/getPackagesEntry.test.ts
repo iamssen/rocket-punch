@@ -1,4 +1,5 @@
 import { copyTmpDirectory } from '@ssen/tmp-directory';
+import process from 'process';
 import { PackageInfo } from 'rocket-punch';
 import { getPackagesEntry } from 'rocket-punch/entry/getPackagesEntry';
 import { getRootDependencies } from 'rocket-punch/package-json/getRootDependencies';
@@ -6,10 +7,14 @@ import { PackageJson } from 'type-fest';
 
 describe('getPackagesEntry()', () => {
   test('should get packages entry', async () => {
+    // Arrange
     const cwd: string = await copyTmpDirectory(process.cwd(), `test/fixtures/rocket-punch/sample`);
+
+    // Act
     const entry: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
     const externalPackages: PackageJson.Dependency = await getRootDependencies({ cwd });
 
+    // Assert
     expect(entry.get('a')?.module).toBe('commonjs');
     expect(entry.get('a')?.packageJson).toEqual({});
     expect(entry.get('a')?.compilerOptions).toEqual({});
@@ -21,10 +26,14 @@ describe('getPackagesEntry()', () => {
   });
 
   test('should get packages entry by @group/*', async () => {
+    // Arrange
     const cwd: string = await copyTmpDirectory(process.cwd(), `test/fixtures/rocket-punch/group-entry`);
+
+    // Act
     const entry: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
     const externalPackages: PackageJson.Dependency = await getRootDependencies({ cwd });
 
+    // Assert
     expect(entry.get('@group/a')?.module).toBe('commonjs');
     expect(entry.get('@group/a')?.packageJson).toEqual({});
     expect(entry.get('@group/a')?.compilerOptions).toEqual({});
@@ -36,12 +45,16 @@ describe('getPackagesEntry()', () => {
   });
 
   test('should get packageJson and compilerOptions', async () => {
+    // Arrange
     const cwd: string = await copyTmpDirectory(
       process.cwd(),
       `test/fixtures/rocket-punch/packages-package-json`,
     );
+
+    // Act
     const entry: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
 
+    // Assert
     expect(entry.get('a')?.module).toBe('commonjs');
     expect(entry.get('a')?.packageJson['bin']['cli-a']).toBe('./bin/test.js');
     expect(entry.get('b')?.module).toBe('commonjs');

@@ -20,6 +20,7 @@ console.assert(hello === 3);
 ```ts
 import path from 'path';
 import { requireTypescript } from '@ssen/require-typescript';
+import process from 'process';
 
 describe('requireTypescript', () => {
   test.each(['basic', 'js'])('should get exports from %s', (dir: string) => {

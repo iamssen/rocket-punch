@@ -1,10 +1,12 @@
 import { flatPackageName } from '@ssen/flat-package-name';
 import { copyTmpDirectory, createTmpDirectory } from '@ssen/tmp-directory';
 import path from 'path';
+import process from 'process';
 import { build, publish, PublishMessages } from 'rocket-punch';
 
 describe('publish()', () => {
   test('should get exec commands', async () => {
+    // Arrange
     const cwd: string = await copyTmpDirectory(
       path.join(process.cwd(), 'test/fixtures/rocket-punch/publish'),
     );
@@ -12,6 +14,8 @@ describe('publish()', () => {
 
     //await exec(`open ${dist}`);
 
+    // Arrange
+    // build fixture
     await build({
       cwd,
       dist,
@@ -20,6 +24,7 @@ describe('publish()', () => {
 
     const messages: PublishMessages[] = [];
 
+    // Act
     await publish({
       cwd,
       dist,
@@ -33,6 +38,7 @@ describe('publish()', () => {
       },
     });
 
+    // Assert
     expect(messages[0].command).toContain(`cd "${path.join(dist, flatPackageName('@ssen-temp/a'))}"`);
     expect(messages[0].command).toContain(`npm publish --tag latest`);
     expect(messages[1].command).toContain(`cd "${path.join(dist, flatPackageName('@ssen-temp/b'))}"`);

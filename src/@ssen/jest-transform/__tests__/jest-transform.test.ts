@@ -3,6 +3,7 @@ import textTransformer from '@ssen/jest-transform/transform/text';
 import yamlTransformer from '@ssen/jest-transform/transform/yaml';
 import prettier from 'prettier';
 
+// Arrange
 const yaml = `
 test:
   x:
@@ -52,17 +53,26 @@ function format(sourceText: string): string {
 
 describe('jest-transform', () => {
   test('should transform yaml', () => {
+    // Act
     const result = yamlTransformer.process(yaml);
+
+    // Assert
     expect(format(result)).toBe(format(yamlResult));
   });
 
   test('should transform text', () => {
+    // Act
     const result = textTransformer.process(text);
+
+    // Assert
     expect(format(result)).toBe(format(textResult));
   });
 
   test('should transform svg', () => {
+    // Act
     const result = svgTransformer.process(svg);
+
+    // Assert
     expect(format(result)).toBe(format(svgResult));
   });
 });
