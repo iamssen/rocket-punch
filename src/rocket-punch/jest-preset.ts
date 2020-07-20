@@ -12,6 +12,7 @@ export = {
     ),
     '.(css|less|sass|scss)$': require.resolve('@ssen/jest-transform/mockup/style'),
   },
+  setupFilesAfterEnv: [require.resolve('@ssen/jest-transform/setup/fetch')],
   testMatch: ['**/__test?(s)__/**/*.ts?(x)', '**/?(*.)(spec|test).ts?(x)'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'yaml', 'yml', 'svg'],
   collectCoverageFrom: ['src/**/*.ts?(x)', '!**/*.d.ts?(x)', '!**/__*__/**', '!**/bin/**', '!**/public/**'],

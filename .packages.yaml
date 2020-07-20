@@ -1,9 +1,9 @@
 '@ssen/*':
-  version: 1.1.0
+  version: 1.2.0-alpha.3
   tag: latest
   module: commonjs
 rocket-punch:
-  version: 1.1.0
+  version: 1.2.0-alpha.3
   tag: latest
   module: commonjs
   packageJson:
@@ -13,3 +13,4 @@ rocket-punch:
       - multi package
       - npm
       - package
+      - typescript
