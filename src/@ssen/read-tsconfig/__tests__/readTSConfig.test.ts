@@ -8,7 +8,7 @@ describe('readTSConfig()', () => {
   test('should read tsconfig without errors', async () => {
     // Arrange
     const cwd: string = await copyTmpDirectory(process.cwd(), 'test/fixtures/rocket-punch/basic');
-    
+
     // Act
     const { options, errors } = readTSConfig(cwd);
 
@@ -40,7 +40,7 @@ describe('readTSConfig()', () => {
   test('should parse object', async () => {
     // Arrange
     const cwd: string = await copyTmpDirectory(process.cwd(), 'test/fixtures/rocket-punch/basic');
-    
+
     // Act
     const { options, errors } = parseTSConfig(cwd, {
       compilerOptions: {
@@ -93,23 +93,23 @@ describe('readTSConfig()', () => {
   test('should throw error if their is no tsconfig', async () => {
     // Arrange
     const cwd: string = await copyTmpDirectory(process.cwd(), 'test/fixtures/read-tsconfig/no-tsconfig');
-    
+
     // Act
     expect(() => readTSConfig(cwd)).toThrow();
   });
-  
+
   test('should throw error if the tsconfig has wrong syntax ', async () => {
     // Arrange
     const cwd: string = await copyTmpDirectory(process.cwd(), 'test/fixtures/read-tsconfig/wrong-syntax');
-    
+
     // Act
     expect(() => readTSConfig(cwd)).toThrow();
   });
-  
+
   test('should throw error if the tsconfig has not a compiler options ', async () => {
     // Arrange
     const cwd: string = await copyTmpDirectory(process.cwd(), 'test/fixtures/read-tsconfig/empty-config');
-    
+
     // Act
     expect(() => readTSConfig(cwd)).toThrow();
   });

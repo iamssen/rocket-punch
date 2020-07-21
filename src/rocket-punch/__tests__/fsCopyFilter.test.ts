@@ -21,7 +21,7 @@ describe('fsPackagesCopyFilter()', () => {
     expect(
       fsCopyFilter(path.join('/Users/foo/bar', pattern), path.join('/Users/foo/bar/dist', pattern)),
     ).toBeFalsy();
-    
+
     expect(
       fsCopyFilter(path.win32.join('C:/foo/bar', pattern), path.win32.join('C:/foo/bar/dist', pattern)),
     ).toBeFalsy();
@@ -46,7 +46,7 @@ describe('fsPackagesCopyFilter()', () => {
     expect(
       fsCopyFilter(path.join('/Users/foo/bar', pattern), path.join('/Users/foo/bar/dist', pattern)),
     ).toBeTruthy();
-    
+
     expect(
       fsCopyFilter(path.win32.join('C:/foo/bar', pattern), path.win32.join('C:/foo/bar/dist', pattern)),
     ).toBeTruthy();

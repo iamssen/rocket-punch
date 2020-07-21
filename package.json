@@ -22,7 +22,7 @@
     }
   },
   "lint-staged": {
-    "packages/**/src/**/*.{ts,tsx}": [
+    "src/**/*.{ts,tsx}": [
       "prettier --write",
       "eslint",
       "jest --colors --findRelatedTests"

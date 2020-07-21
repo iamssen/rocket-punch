@@ -32,7 +32,9 @@ export async function buildMessageHandler(message: BuildMessages) {
       console.log('');
       break;
     case 'success':
-      console.log(chalk.blueBright(`👍 ${message.packageName}@${message.packageJson.version} → ${message.outDir}`));
+      console.log(
+        chalk.blueBright(`👍 ${message.packageName}@${message.packageJson.version} → ${message.outDir}`),
+      );
       console.log('');
       break;
   }
