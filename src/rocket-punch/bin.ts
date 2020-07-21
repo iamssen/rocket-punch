@@ -1,4 +1,5 @@
 import path from 'path';
+import * as process from 'process';
 import yargs from 'yargs';
 import { build } from './build';
 import { doctor } from './doctor';
@@ -41,9 +42,14 @@ const argv = yargs
     alias: 'r',
     describe: 'npm publish --registry {registry}',
   })
+  .option('svg', {
+    type: 'string',
+    describe: 'svg compile type <default|create-react-app>',
+  })
   .example('$0 build', 'Build packages')
   .example('$0 build --out-dir /some/directory', 'Build packages to specific directory')
   .example('$0 build --tsconfig tsconfig.build.json', 'Use another tsconfig.json file on build')
+  .example('$0 build --svg default', 'SVG transform to `import ReactComponent from "./file.svg"`')
   .example('$0 publish', 'Publish packages')
   .example('$0 publish --out-dir /some/directory', 'Publish packages from specific directory')
   .example('$0 publish --skip-selection', 'Publish all packages without user selection (e.g. CI)')
@@ -67,6 +73,10 @@ function toAbsolutePath(dir: string | undefined): string | undefined {
 
 switch (argv._[0]) {
   case 'build':
+    if (argv['svg'] === 'default') {
+      process.env.TS_SVG_EXPORT = 'default';
+    }
+
     build({
       cwd,
       dist: toAbsolutePath(argv['out-dir']),
