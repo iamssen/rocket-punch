@@ -1,4 +1,5 @@
 import getPackageJson, { FullMetadata } from 'package-json';
+import process from 'process';
 import { getPackagesEntry } from './entry/getPackagesEntry';
 import { PackageInfo } from './types';
 
@@ -18,13 +19,17 @@ interface Params {
 export async function view({ cwd = process.cwd(), onMessage }: Params) {
   const internalPackages: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
 
-  const metadatas: FullMetadata[] = await Promise.all(
+  const originMetadatas: (FullMetadata | undefined)[] = await Promise.all(
     Array.from(internalPackages.keys()).map((name) =>
       getPackageJson(name, {
         fullMetadata: true,
         allVersions: true,
-      }),
+      }).catch(() => undefined),
     ),
+  );
+
+  const metadatas: FullMetadata[] = originMetadatas.filter(
+    (metadata): metadata is FullMetadata => !!metadata,
   );
 
   for (const metadata of metadatas) {
@@ -41,14 +46,5 @@ export async function view({ cwd = process.cwd(), onMessage }: Params) {
       tags,
       packageConfig: info,
     });
-
-    //console.log(chalk.bold(`🧩 ${metadata.name}`));
-    //const tagList: string[] = Object.keys(tags);
-    //const maxLength: number = Math.max(...tagList.map((tag) => tag.length));
-    //
-    //tagList.forEach((tag) => {
-    //  console.log(chalk.dim(`${tag.padEnd(maxLength, ' ')} : ${tags[tag]} ${info.tag === tag ? '*' : ''}`));
-    //});
-    //console.log('');
   }
 }

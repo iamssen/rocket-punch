@@ -4,7 +4,11 @@ import { ViewMessages } from '../view';
 export async function viewMessageHandler(message: ViewMessages) {
   switch (message.type) {
     case 'view':
-      console.log(chalk.bold(`🧩 ${message.metadata.name}`));
+      console.log(
+        `📦 ${chalk.bold(message.metadata.name)} <${message.packageConfig.version}@${
+          message.packageConfig.tag
+        }>`,
+      );
       const tagList: string[] = Object.keys(message.tags);
       const maxLength: number = Math.max(...tagList.map((tag) => tag.length));
 
