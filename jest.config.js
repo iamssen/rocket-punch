@@ -15,6 +15,7 @@ module.exports = {
     '!src/rocket-punch/bin.ts',
     '!src/**/.package.json.ts',
   ],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   globals: {
     'ts-jest': {
       tsConfig: 'tsconfig.json',
