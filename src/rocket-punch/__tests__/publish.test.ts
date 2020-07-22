@@ -45,5 +45,5 @@ describe('publish()', () => {
     expect(messages[1].command).toContain(`npm publish --tag latest`);
     expect(messages[2].command).toContain(`cd "${path.join(dist, flatPackageName('@ssen-temp/c'))}"`);
     expect(messages[2].command).toContain(`npm publish --tag latest`);
-  }, 10000);
+  });
 });

@@ -31,7 +31,7 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
-  }, 100000);
+  });
 
   test.each(['minimum-config', 'minimum-config-cra', 'minimum-config-js-cra'])(
     'should build with minimum config with "%s"',
@@ -59,7 +59,6 @@ describe('build()', () => {
       expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
       expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
     },
-    100000,
   );
 
   test('should transform import paths', async () => {
@@ -87,7 +86,7 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
-  }, 100000);
+  });
 
   test('should build with module types', async () => {
     // Arrange
@@ -128,7 +127,7 @@ describe('build()', () => {
     expect(/exports.b/g.test(fs.readFileSync(path.join(dist, 'b/index.js'), 'utf8'))).toBeTruthy();
     // check source code is made in esm
     expect(/export function c/g.test(fs.readFileSync(path.join(dist, 'c/index.js'), 'utf8'))).toBeTruthy();
-  }, 100000);
+  });
 
   test('should local-paths build normally', async () => {
     // Arrange
@@ -155,7 +154,7 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'b/x/y/z.d.ts'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
-  }, 100000);
+  });
 
   test('should js build normally', async () => {
     // Arrange
@@ -178,7 +177,7 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
-  }, 100000);
+  });
 
   test('should bundle build normally', async () => {
     // Arrrange
@@ -221,7 +220,7 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'c/data.yaml.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/data.yaml.d.ts'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/data-not-bundle.yaml'))).toBeTruthy();
-  }, 100000);
+  });
 
   test.each(['sample', 'transform-package-json'])(
     'should build packages normally with %s',
@@ -266,6 +265,5 @@ describe('build()', () => {
           break;
       }
     },
-    100000,
   );
 });
