@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add an option `rocket-punch build --svg default`
 
 ### Fixed
-- Exclude from result of `rocket-punch view` if can't get package metadata from NPM registry 
+- Exclude from result of `rocket-punch view` if can't get package metadata from NPM registry
+- Guide detailed paths when catch a circular dependency in `@ssen/collect-dependencies/getPackagesOrder`
 
 ## [1.3.1] - 2020-07-20
 
