@@ -191,6 +191,42 @@ describe('getPackagesOrder()', () => {
     expect(() => getPackagesOrder({ packageJsonContents })).toThrow();
   });
 
+  test('should guide detailed circular references error', () => {
+    // Arrange
+    const packageJsonContents: PackageJson[] = [
+      {
+        name: '@ssen/test-module1',
+        dependencies: {
+          '@ssen/test-module2': '0',
+        },
+      },
+      {
+        name: '@ssen/test-module2',
+        dependencies: {
+          '@ssen/test-module3': '0',
+        },
+      },
+      {
+        name: '@ssen/test-module3',
+        dependencies: {
+          '@ssen/test-module4': '0',
+        },
+      },
+      {
+        name: '@ssen/test-module4',
+        dependencies: {
+          '@ssen/test-module1': '0',
+        },
+      },
+    ];
+
+    // Act
+    // throwed message should has detailed paths
+    expect(() => getPackagesOrder({ packageJsonContents })).toThrow(
+      'package.json files have circularly referenced dependencies : "@ssen/test-module1" in "@ssen/test-module1 < @ssen/test-module2 < @ssen/test-module3 < @ssen/test-module4 < @ssen/test-module1"',
+    );
+  });
+
   test('should sort by names if they have not some dependencies each other', () => {
     // Arrange
     const packageJsonContents: PackageJson[] = [

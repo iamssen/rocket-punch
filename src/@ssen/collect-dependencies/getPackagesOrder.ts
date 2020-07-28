@@ -52,13 +52,18 @@ export function getPackagesOrder({ packageJsonContents }: Params): string[] {
     ownerName: string,
     dependencies: PackageJson.Dependency | undefined,
     dependenciesSet: Set<string>,
+    parents: string[],
   ): Set<string> {
     if (dependencies) {
       const dependencyNames: string[] = Object.keys(dependencies);
 
       for (const dependencyName of dependencyNames) {
         if (dependencyName === ownerName) {
-          throw new Error(`package.json files have circularly referenced dependencies : "${ownerName}"`);
+          throw new Error(
+            `package.json files have circularly referenced dependencies : "${ownerName}" in "${parents.join(
+              ' < ',
+            )} < ${dependencyName}"`,
+          );
         }
 
         dependenciesSet.add(dependencyName);
@@ -70,7 +75,10 @@ export function getPackagesOrder({ packageJsonContents }: Params): string[] {
 
         // if childPackageJson is exists search childPackageJson's dependencies
         if (childPackageJson && childPackageJson.dependencies) {
-          searchNestedDependencies(ownerName, childPackageJson.dependencies, dependenciesSet);
+          searchNestedDependencies(ownerName, childPackageJson.dependencies, dependenciesSet, [
+            ...parents,
+            dependencyName,
+          ]);
         }
       }
     }
@@ -83,7 +91,9 @@ export function getPackagesOrder({ packageJsonContents }: Params): string[] {
     if (!packageJson.name) throw new Error(`Undefined "name" field on ${packageJson}`);
     return {
       name: packageJson.name,
-      dependencies: searchNestedDependencies(packageJson.name, packageJson.dependencies, new Set()),
+      dependencies: searchNestedDependencies(packageJson.name, packageJson.dependencies, new Set(), [
+        packageJson.name,
+      ]),
     };
   });
 

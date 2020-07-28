@@ -326,11 +326,11 @@ describe('getPackagesOrder()', () => {
     function test(packageJsonContents: PackageJson[], matchOrderedNames: string[]) {
       // Act
       const orderedNames: string[] = getPackagesOrder({ packageJsonContents });
-
+      
       // Assert
       // result should be equal with expected result
       expect(orderedNames).toEqual(matchOrderedNames);
-
+      
       // Assert
       // verification result
       orderedNames.reverse().forEach((a: string, i: number) => {
@@ -344,7 +344,7 @@ describe('getPackagesOrder()', () => {
         }
       });
     }
-
+    
     test(
       [
         {
@@ -378,7 +378,7 @@ describe('getPackagesOrder()', () => {
       // because of @lunit/insight-viewer includes @lunit/heatmap
       ['@lunit/heatmap', '@lunit/insight-viewer'],
     );
-
+    
     test(
       [
         {
@@ -416,7 +416,7 @@ describe('getPackagesOrder()', () => {
       // d { e, b: { a, c } }
       ['c', 'a', 'b', 'e', 'd'],
     );
-
+    
     test(
       [
         {
@@ -462,7 +462,7 @@ describe('getPackagesOrder()', () => {
       ['@ssen/test-module1', 'router-store', 'test-module3', '@ssen/test-module2', 'use-react-intl'],
     );
   });
-
+  
   test('should cause error if does not have name field in the package.json', () => {
     // Arrange
     const packageJsonContents: PackageJson[] = [
@@ -478,13 +478,13 @@ describe('getPackagesOrder()', () => {
         },
       },
     ];
-
+    
     // Act
     // second package has not name field
     // so it will throw an error
     expect(() => getPackagesOrder({ packageJsonContents })).toThrow();
   });
-
+  
   test('should cause error if the dependencies are circular references', () => {
     // Arrange
     const packageJsonContents: PackageJson[] = [
@@ -501,7 +501,7 @@ describe('getPackagesOrder()', () => {
         },
       },
     ];
-
+    
     // Act
     // @ssen/test-module1 { @ssen/test-module2 }
     // @ssen/test-module2 { @ssen/test-module1 }
@@ -509,7 +509,41 @@ describe('getPackagesOrder()', () => {
     // so it will throw an error
     expect(() => getPackagesOrder({ packageJsonContents })).toThrow();
   });
-
+  
+  test('should guide detailed circular references error', () => {
+    // Arrange
+    const packageJsonContents: PackageJson[] = [
+      {
+        name: '@ssen/test-module1',
+        dependencies: {
+          '@ssen/test-module2': '0',
+        },
+      },
+      {
+        name: '@ssen/test-module2',
+        dependencies: {
+          '@ssen/test-module3': '0',
+        },
+      },
+      {
+        name: '@ssen/test-module3',
+        dependencies: {
+          '@ssen/test-module4': '0',
+        },
+      },
+      {
+        name: '@ssen/test-module4',
+        dependencies: {
+          '@ssen/test-module1': '0',
+        },
+      },
+    ];
+    
+    // Act
+    // throwed message should has detailed paths
+    expect(() => getPackagesOrder({ packageJsonContents })).toThrow('package.json files have circularly referenced dependencies : "@ssen/test-module1" in "@ssen/test-module1 < @ssen/test-module2 < @ssen/test-module3 < @ssen/test-module4 < @ssen/test-module1"');
+  });
+  
   test('should sort by names if they have not some dependencies each other', () => {
     // Arrange
     const packageJsonContents: PackageJson[] = [
@@ -520,14 +554,14 @@ describe('getPackagesOrder()', () => {
         name: '@ssen/test-module2',
       },
     ];
-
+    
     // Act
     // Assert
     // there is no dependencies each other
     // so they will be ordered by names
     expect(getPackagesOrder({ packageJsonContents })).toEqual(['@ssen/test-module1', '@ssen/test-module2']);
   });
-
+  
   // ---------------------------------------------
   // error cases
   // ---------------------------------------------
@@ -973,7 +1007,7 @@ describe('getPackagesOrder()', () => {
         typings: 'index.d.ts',
       },
     ];
-
+    
     // it error throwed by not filtered dependencies
     // and it solved by fix collectTypeScript() and collectScript()
     expect(() => getPackagesOrder({ packageJsonContents })).toThrow();
