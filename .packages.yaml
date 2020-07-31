@@ -3,7 +3,7 @@
   tag: latest
   module: commonjs
 rocket-punch:
-  version: 1.3.4
+  version: 1.3.5
   tag: latest
   module: commonjs
   packageJson:

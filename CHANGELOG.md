@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Exclude from result of `rocket-punch view` if can't get package metadata from NPM registry
 - Guide detailed paths when catch a circular dependency in `@ssen/collect-dependencies/getPackagesOrder`
+- Fix regex string of `moduleNameMapper` of jest-preset from `".(css|scss)$":` to `"\\.(css|scss)$"` for prevent error on `import "postcss"`  
 
 ## [1.3.1] - 2020-07-20
 
