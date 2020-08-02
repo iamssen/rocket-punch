@@ -10,7 +10,7 @@ export type PublishMessages = {
   publishOption: AvailablePublishOption;
 };
 
-interface Params {
+export interface PublishParams {
   cwd?: string;
   dist?: string;
 
@@ -28,7 +28,7 @@ export async function publish({
   tag,
   registry,
   onMessage,
-}: Params) {
+}: PublishParams) {
   const internalPackages: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
 
   const publishOptions: Map<string, PublishOption> = await getPublishOptions({

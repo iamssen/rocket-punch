@@ -10,13 +10,13 @@ export type ViewMessages = {
   packageConfig: PackageInfo;
 };
 
-interface Params {
+export interface ViewParams {
   cwd?: string;
 
   onMessage: (message: ViewMessages) => Promise<void>;
 }
 
-export async function view({ cwd = process.cwd(), onMessage }: Params) {
+export async function view({ cwd = process.cwd(), onMessage }: ViewParams) {
   const internalPackages: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
 
   const originMetadatas: (FullMetadata | undefined)[] = await Promise.all(

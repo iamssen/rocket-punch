@@ -44,7 +44,7 @@ export type BuildMessages =
       outDir: string;
     };
 
-interface Params {
+export interface BuildParams {
   cwd?: string;
   dist?: string;
   tsconfig?: string;
@@ -57,7 +57,7 @@ export async function build({
   dist = path.join(cwd, 'dist'),
   tsconfig = 'tsconfig.json',
   onMessage,
-}: Params) {
+}: BuildParams) {
   // ---------------------------------------------
   // rule
   // collect information based on directory rules

@@ -14,14 +14,14 @@ export type DoctorMessages =
       result: { message: string; fixer: object }[];
     };
 
-interface Params {
+export interface DoctorParams {
   cwd?: string;
   tsconfig?: string;
 
   onMessage: (message: DoctorMessages) => Promise<void>;
 }
 
-export async function doctor({ cwd = process.cwd(), tsconfig = 'tsconfig.json', onMessage }: Params) {
+export async function doctor({ cwd = process.cwd(), tsconfig = 'tsconfig.json', onMessage }: DoctorParams) {
   const internalPackages: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
 
   const depcheckResult = await depcheck(cwd, {
