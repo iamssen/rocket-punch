@@ -29,11 +29,16 @@ export async function getPackagesEntry({ cwd }: Params): Promise<Map<string, Pac
 
       for (const pkgName of files) {
         const pkgDir: string = path.join(dir, pkgName);
-        if (fs.statSync(pkgDir).isDirectory() && fs.readdirSync(pkgDir).length > 0) {
+        const groupAndPkgName: string = groupName + '/' + pkgName;
+        if (
+          fs.statSync(pkgDir).isDirectory() &&
+          fs.readdirSync(pkgDir).length > 0 &&
+          !packages[groupAndPkgName]
+        ) {
           packages[groupName + '/' + pkgName] = entry[name];
         }
       }
-    } else {
+    } else if (!packages[name]) {
       packages[name] = entry[name];
     }
   }
