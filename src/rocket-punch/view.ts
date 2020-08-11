@@ -1,22 +1,8 @@
 import getPackageJson, { FullMetadata } from 'package-json';
 import process from 'process';
-import { readPackages } from 'rocket-punch/entry/readPackages';
-import { PackageConfig, PackageInfo } from './types';
-
-export type ViewMessages = {
-  type: 'view';
-  metadata: FullMetadata;
-  tags: Record<string, string>;
-  packageConfig: PackageInfo;
-};
-
-export interface ViewParams {
-  cwd?: string;
-
-  entry: Record<string, string | PackageConfig>;
-
-  onMessage: (message: ViewMessages) => Promise<void>;
-}
+import { readPackages } from './entry/readPackages';
+import { ViewParams } from './params';
+import { PackageInfo } from './types';
 
 export async function view({ cwd = process.cwd(), entry, onMessage }: ViewParams) {
   const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, entry });

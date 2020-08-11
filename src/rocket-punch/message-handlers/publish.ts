@@ -1,6 +1,6 @@
 import { exec } from '@ssen/promised';
-import { PublishMessages } from '../publish';
 import chalk from 'chalk';
+import { PublishMessages } from '../params';
 
 export async function publishMessageHandler(message: PublishMessages) {
   switch (message.type) {

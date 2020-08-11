@@ -13,56 +13,11 @@ import { readPackages } from './entry/readPackages';
 import { computePackageJson } from './package-json/computePackageJson';
 import { getRootDependencies } from './package-json/getRootDependencies';
 import { getSharedPackageJson } from './package-json/getSharedPackageJson';
+import { BuildParams } from './params';
 import { fsCopyFilter } from './rule/fsCopyFilter';
 import { getCompilerOptions } from './rule/getCompilerOptions';
 import { readDirectoryPatterns } from './rule/readDirectoryPatterns';
-import { PackageConfig, PackageInfo } from './types';
-
-export type BuildMessages =
-  | {
-      type: 'begin';
-      packageName: string;
-      sourceDir: string;
-      outDir: string;
-    }
-  | {
-      type: 'tsc';
-      packageName: string;
-      compilerOptions: ts.CompilerOptions;
-      diagnostics: ts.Diagnostic[];
-    }
-  | {
-      type: 'package-json';
-      packageName: string;
-      packageJson: PackageJson;
-    }
-  | {
-      type: 'success';
-      packageJson: PackageJson;
-      packageName: string;
-      sourceDir: string;
-      outDir: string;
-    };
-
-export interface BuildParams {
-  cwd?: string;
-  dist?: string;
-  tsconfig?: string;
-  svg?: 'default' | 'create-react-app';
-
-  entry: Record<string, string | PackageConfig>;
-
-  transformPackageJson?: (packageName: string) => (computedPackageJson: PackageJson) => PackageJson;
-  transformCompilerOptions?: (
-    packageName: string,
-  ) => (computedCompilerOptions: ts.CompilerOptions) => ts.CompilerOptions;
-  transformCompilerHost?: (
-    packageName: string,
-  ) => (compilerOptions: ts.CompilerOptions, compilerHost: ts.CompilerHost) => ts.CompilerHost;
-  emitCustomTransformers?: (packageName: string) => () => ts.CustomTransformers | undefined;
-
-  onMessage: (message: BuildMessages) => Promise<void>;
-}
+import { PackageInfo } from './types';
 
 export async function build({
   cwd = process.cwd(),

@@ -1,28 +1,10 @@
 import { readTSConfig } from '@ssen/read-tsconfig';
-import depcheck, { Results } from 'depcheck';
+import depcheck from 'depcheck';
 import path from 'path';
 import process from 'process';
-import { readPackages } from 'rocket-punch/entry/readPackages';
-import { PackageConfig, PackageInfo } from './types';
-
-export type DoctorMessages =
-  | {
-      type: 'depcheck';
-      result: Results;
-    }
-  | {
-      type: 'tsconfig';
-      result: { message: string; fixer: object }[];
-    };
-
-export interface DoctorParams {
-  cwd?: string;
-  tsconfig?: string;
-
-  entry: Record<string, string | PackageConfig>;
-
-  onMessage: (message: DoctorMessages) => Promise<void>;
-}
+import { readPackages } from './entry/readPackages';
+import { DoctorParams } from './params';
+import { PackageInfo } from './types';
 
 export async function doctor({
   cwd = process.cwd(),

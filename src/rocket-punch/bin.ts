@@ -1,15 +1,16 @@
 import path from 'path';
 import * as process from 'process';
 import yargs, { Arguments, Argv } from 'yargs';
-import { build, BuildParams } from './build';
-import { doctor, DoctorParams } from './doctor';
-import { readEntry } from 'rocket-punch/entry/readEntry';
+import { build } from './build';
+import { doctor } from './doctor';
+import { readEntry } from './entry/readEntry';
 import { buildMessageHandler } from './message-handlers/build';
 import { doctorMessageHandler } from './message-handlers/doctor';
 import { publishMessageHandler } from './message-handlers/publish';
 import { viewMessageHandler } from './message-handlers/view';
-import { publish, PublishParams } from './publish';
-import { view, ViewParams } from './view';
+import { BuildParams, DoctorParams, PublishParams, ViewParams } from './params';
+import { publish } from './publish';
+import { view } from './view';
 
 const cwd: string = process.cwd();
 

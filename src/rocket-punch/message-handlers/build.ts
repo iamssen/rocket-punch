@@ -1,5 +1,5 @@
+import { BuildMessages } from '../params';
 import ts from 'typescript';
-import { BuildMessages } from '../build';
 import chalk from 'chalk';
 
 export async function buildMessageHandler(message: BuildMessages) {

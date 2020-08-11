@@ -3,26 +3,8 @@ import { AvailablePublishOption, getPublishOptions, selectPublishOptions } from 
 import path from 'path';
 import process from 'process';
 import { readPackages } from 'rocket-punch/entry/readPackages';
-import { PackageConfig, PackageInfo, PublishOption } from './types';
-
-export type PublishMessages = {
-  type: 'exec';
-  command: string;
-  publishOption: AvailablePublishOption;
-};
-
-export interface PublishParams {
-  cwd?: string;
-  dist?: string;
-
-  entry: Record<string, string | PackageConfig>;
-
-  skipSelection?: boolean;
-  tag?: string;
-  registry?: string;
-
-  onMessage: (message: PublishMessages) => Promise<void>;
-}
+import { PublishParams } from './params';
+import { PackageInfo, PublishOption } from './types';
 
 export async function publish({
   cwd = process.cwd(),

@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { ViewMessages } from '../view';
+import { ViewMessages } from '../params';
 
 export async function viewMessageHandler(message: ViewMessages) {
   switch (message.type) {

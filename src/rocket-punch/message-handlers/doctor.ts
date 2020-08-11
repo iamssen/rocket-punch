@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { DoctorMessages } from '../doctor';
+import { DoctorMessages } from '../params';
 
 export async function doctorMessageHandler(message: DoctorMessages) {
   switch (message.type) {
