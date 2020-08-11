@@ -1,3 +1,4 @@
+export * from './params';
 export * from './publish';
 export * from './build';
 export * from './view';
