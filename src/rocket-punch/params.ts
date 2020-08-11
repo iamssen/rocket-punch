@@ -31,43 +31,11 @@ export type BuildMessages =
       outDir: string;
     };
 
-export interface BuildParams {
-  cwd?: string;
-  entry: Record<string, string | PackageConfig>;
-  dist?: string;
-  tsconfig?: string;
-  svg?: 'default' | 'create-react-app';
-
-  transformPackageJson?: (packageName: string) => (computedPackageJson: PackageJson) => PackageJson;
-  transformCompilerOptions?: (
-    packageName: string,
-  ) => (computedCompilerOptions: ts.CompilerOptions) => ts.CompilerOptions;
-  transformCompilerHost?: (
-    packageName: string,
-  ) => (compilerOptions: ts.CompilerOptions, compilerHost: ts.CompilerHost) => ts.CompilerHost;
-  emitCustomTransformers?: (packageName: string) => () => ts.CustomTransformers | undefined;
-
-  onMessage: (message: BuildMessages) => Promise<void>;
-}
-
 export type PublishMessages = {
   type: 'exec';
   command: string;
   publishOption: AvailablePublishOption;
 };
-
-export interface PublishParams {
-  cwd?: string;
-  dist?: string;
-
-  entry: Record<string, string | PackageConfig>;
-
-  skipSelection?: boolean;
-  tag?: string;
-  registry?: string;
-
-  onMessage: (message: PublishMessages) => Promise<void>;
-}
 
 export type ViewMessages = {
   type: 'view';
@@ -75,14 +43,6 @@ export type ViewMessages = {
   tags: Record<string, string>;
   packageConfig: PackageInfo;
 };
-
-export interface ViewParams {
-  cwd?: string;
-
-  entry: Record<string, string | PackageConfig>;
-
-  onMessage: (message: ViewMessages) => Promise<void>;
-}
 
 export type DoctorMessages =
   | {
@@ -94,11 +54,128 @@ export type DoctorMessages =
       result: { message: string; fixer: object }[];
     };
 
-export interface DoctorParams {
+export interface CommonParams {
+  /**
+   * if you run from outside of project root.
+   *
+   * you have to set this value to your project root.
+   *
+   * @example { cwd: path.join(__dirname, 'my-project) }
+   *
+   * @default process.cwd()
+   */
   cwd?: string;
-  tsconfig?: string;
 
+  /**
+   * package entry
+   *
+   * @example
+   * build({
+   *   entry: {
+   *     // it will make the `src/package1` directory as a package `package1`
+   *     package1: {
+   *       version: 0.1.0
+   *     },
+   *     // it will make the `src/@group/package2` directory as a package `@group/package2`
+   *     '@group/package2': {
+   *       version: 0.1.0
+   *     },
+   *     // it will make the subdirectories on the `src/@group` as packages
+   *     '@group/*': {
+   *       version: 0.2.0
+   *     }
+   *   }
+   * })
+   */
   entry: Record<string, string | PackageConfig>;
 
+  /**
+   * build output directory
+   *
+   * @example { dist: path.join(process.cwd(), 'dist') }
+   *
+   * @default path.join(cwd, 'out/packages')
+   */
+  dist?: string;
+
+  /**
+   * tsconfig file name
+   *
+   * @example { tsconfig: 'tsconfig.build.json' }
+   *
+   * @default tsconfig.json
+   */
+  tsconfig?: string;
+}
+
+export interface BuildParams extends CommonParams {
+  /**
+   * svg import style
+   *
+   * if you set to `{ svg: 'default' }` it will work like `import ReactComponent from './image.svg'`
+   *
+   * if you set to `{ svg: 'create-react-app' }` it will work like `import svgUrl, { ReactComponent } from './image.svg'`
+   *
+   * @default create-react-app
+   */
+  svg?: 'default' | 'create-react-app';
+
+  /**
+   * [advanced] you can transform the packageJson before emit
+   */
+  transformPackageJson?: (packageName: string) => (computedPackageJson: PackageJson) => PackageJson;
+
+  /**
+   * [advanced] you can transform the compilerOptions of typescript compiler before emit
+   */
+  transformCompilerOptions?: (
+    packageName: string,
+  ) => (computedCompilerOptions: ts.CompilerOptions) => ts.CompilerOptions;
+
+  /**
+   * [advanced] you can transform the compilerHost of typescript compiler before emit
+   */
+  transformCompilerHost?: (
+    packageName: string,
+  ) => (compilerOptions: ts.CompilerOptions, compilerHost: ts.CompilerHost) => ts.CompilerHost;
+
+  /**
+   * [advanced] you can set transformers on typescript compiler's emit
+   */
+  emitCustomTransformers?: (packageName: string) => () => ts.CustomTransformers | undefined;
+
+  onMessage: (message: BuildMessages) => Promise<void>;
+}
+
+export interface PublishParams extends Pick<CommonParams, 'cwd' | 'entry' | 'dist'> {
+  /**
+   * if you set this value to true rocket-punch will publish every packages without request to you for selection.
+   *
+   * @default false
+   */
+  skipSelection?: boolean;
+
+  /**
+   * if you set this value rocket-punch will change the tag of packages by force
+   *
+   * this is useful in situations like E2E test.
+   */
+  tag?: string;
+
+  /**
+   * if you set this value rocket-punch will change the registry of packages by force
+   *
+   * this is useful in situations like E2E test.
+   */
+  registry?: string;
+
+  onMessage: (message: PublishMessages) => Promise<void>;
+}
+
+export interface ViewParams extends Pick<CommonParams, 'cwd' | 'entry'> {
+  onMessage: (message: ViewMessages) => Promise<void>;
+}
+
+export interface DoctorParams extends Pick<CommonParams, 'cwd' | 'entry' | 'tsconfig'> {
   onMessage: (message: DoctorMessages) => Promise<void>;
 }
