@@ -1,13 +1,12 @@
-import { PackageJson } from 'type-fest';
-import ts from 'typescript';
+import { LiteralUnion, PackageJson } from 'type-fest';
 
 /** Scheme of .packages.yaml */
 export interface PackageConfig {
   version: string;
-  tag?: string; // ?= latest
-  module?: string; // ?= commonjs
+  tag?: LiteralUnion<'latest' | 'canary' | 'next', string>; // ?= latest
+  module?: 'commonjs' | 'esm'; // ?= commonjs
   compilerOptions?: object; // ?= {}
-  packageJson?: object; // ?= {}
+  packageJson?: PackageJson; // ?= {}
 }
 
 export interface PackageInfo {
@@ -27,27 +26,3 @@ export interface PublishOption {
 }
 
 export { PackageJson };
-
-//export interface PackageJsonTransformFile {
-//  default: PackageJsonTransformFunction;
-//}
-
-export type PackageJsonTransformFunction = (computedPackageJson: PackageJson) => PackageJson;
-
-export type CompilerOptionsTransformFunction = (
-  computedCompilerOptions: ts.CompilerOptions,
-) => ts.CompilerOptions;
-
-export type CompilerHostTransformFunction = (
-  compilerOptions: ts.CompilerOptions,
-  compilerHost: ts.CompilerHost,
-) => ts.CompilerHost;
-
-export type EmitCustomTransformers = () => ts.CustomTransformers | undefined;
-
-export interface PackageTransformFile {
-  transformPackageJson?: PackageJsonTransformFunction;
-  transformCompilerOptions?: CompilerOptionsTransformFunction;
-  transformCompilerHost?: CompilerHostTransformFunction;
-  emitCustomTransformers?: EmitCustomTransformers;
-}

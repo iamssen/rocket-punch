@@ -3,6 +3,7 @@ import * as process from 'process';
 import yargs, { Arguments, Argv } from 'yargs';
 import { build, BuildParams } from './build';
 import { doctor, DoctorParams } from './doctor';
+import { readEntry } from 'rocket-punch/entry/readEntry';
 import { buildMessageHandler } from './message-handlers/build';
 import { doctorMessageHandler } from './message-handlers/doctor';
 import { publishMessageHandler } from './message-handlers/publish';
@@ -101,14 +102,12 @@ export function run() {
           .example('$0 build --tsconfig tsconfig.build.json', 'Use another tsconfig.json file on build')
           .example('$0 build --svg default', 'SVG transform to `import ReactComponent from "./file.svg"`'),
       handler: ({ emit, outDir, tsconfig, svg }: Arguments<CommonArgs & BuildArgs>) => {
-        if (svg === 'default') {
-          process.env.TS_SVG_EXPORT = 'default';
-        }
-
         const params: BuildParams = {
           cwd,
+          svg: svg === 'default' ? 'default' : 'create-react-app',
           dist: toAbsolutePath(outDir),
           tsconfig,
+          entry: readEntry({ cwd }),
           onMessage: buildMessageHandler,
         };
 
@@ -136,6 +135,7 @@ export function run() {
         const params: PublishParams = {
           cwd,
           dist: toAbsolutePath(outDir),
+          entry: readEntry({ cwd }),
           skipSelection,
           tag,
           registry,
@@ -156,6 +156,7 @@ export function run() {
       handler: ({ emit }: Arguments<CommonArgs>) => {
         const params: ViewParams = {
           cwd,
+          entry: readEntry({ cwd }),
           onMessage: viewMessageHandler,
         };
 
@@ -176,6 +177,7 @@ export function run() {
       handler: ({ emit }: Arguments<CommonArgs>) => {
         const params: DoctorParams = {
           cwd,
+          entry: readEntry({ cwd }),
           onMessage: doctorMessageHandler,
         };
 

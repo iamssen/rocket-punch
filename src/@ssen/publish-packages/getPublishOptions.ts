@@ -14,7 +14,7 @@ const getNpmRemotePackageJson: GetRemotePackageJson = ({ name, ...options }) => 
 };
 
 interface Params {
-  entry: Map<string, PackageInfo>;
+  packages: Map<string, PackageInfo>;
   outDir: string;
   tag: string | undefined;
   registry: string | undefined;
@@ -22,7 +22,7 @@ interface Params {
 }
 
 export async function getPublishOptions({
-  entry,
+  packages,
   outDir,
   tag: forceTag,
   registry: forceRegistry,
@@ -33,11 +33,11 @@ export async function getPublishOptions({
   }
 
   const tags: Map<string, string> = new Map();
-  for (const [name, { tag }] of entry) {
+  for (const [name, { tag }] of packages) {
     tags.set(name, tag || 'latest');
   }
 
-  const currentPackageJsons: PackageJson[] = Array.from(entry.values())
+  const currentPackageJsons: PackageJson[] = Array.from(packages.values())
     // PackageInfo => /path/to/dist/{name}/package.json
     .map(({ name: packageName }) => path.join(outDir, flatPackageName(packageName), 'package.json'))
     // /path/to/dist/{name}/package.json => boolean
@@ -60,7 +60,7 @@ export async function getPublishOptions({
     }),
   );
 
-  return Array.from(entry.values()).reduce((map, current, i) => {
+  return Array.from(packages.values()).reduce((map, current, i) => {
     if (!current.name) throw new Error(``);
 
     map.set(current.name, {

@@ -1,8 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "build": "rocket-punch build",
-    "publish": "rocket-punch publish"
+    "build": "node scripts/build.js"
   },
   "dependencies": {
     "react": "^16.8.6",

@@ -3,8 +3,9 @@ import { copyTmpDirectory, createTmpDirectory } from '@ssen/tmp-directory';
 import fs from 'fs-extra';
 import path from 'path';
 import process from 'process';
-import { build } from 'rocket-punch';
-import { getPackagesEntry } from 'rocket-punch/entry/getPackagesEntry';
+import { build, PackageConfig } from 'rocket-punch';
+import { readEntry } from 'rocket-punch/entry/readEntry';
+import { readPackages } from 'rocket-punch/entry/readPackages';
 import { PackageInfo } from 'rocket-punch/types';
 
 describe('build()', () => {
@@ -20,6 +21,11 @@ describe('build()', () => {
     await build({
       cwd,
       dist,
+      entry: {
+        a: { version: '0.1.0' },
+        b: { version: '0.1.0' },
+        c: { version: '0.1.0' },
+      },
       onMessage: async () => {},
     });
 
@@ -47,6 +53,11 @@ describe('build()', () => {
       await build({
         cwd,
         dist,
+        entry: {
+          a: { version: '0.1.0' },
+          b: { version: '0.1.0' },
+          c: { version: '0.1.0' },
+        },
         onMessage: async () => {},
       });
 
@@ -75,6 +86,11 @@ describe('build()', () => {
     await build({
       cwd,
       dist,
+      entry: {
+        a: { version: '0.1.0' },
+        b: { version: '0.1.0' },
+        c: { version: '0.1.0' },
+      },
       onMessage: async () => {},
     });
 
@@ -94,7 +110,8 @@ describe('build()', () => {
 
     // Act
     // read .packages.yaml
-    const entry: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
+    const packages: Record<string, string | PackageConfig> = readEntry({ cwd });
+    const entry: Map<string, PackageInfo> = await readPackages({ cwd, entry: packages });
 
     // Assert
     // check module property of package
@@ -109,6 +126,7 @@ describe('build()', () => {
     await build({
       cwd,
       dist,
+      entry: packages,
       onMessage: async () => {},
     });
 
@@ -142,6 +160,11 @@ describe('build()', () => {
     await build({
       cwd,
       dist,
+      entry: {
+        a: { version: '0.1.0' },
+        b: { version: '0.1.0' },
+        c: { version: '0.1.0' },
+      },
       onMessage: async () => {},
     });
 
@@ -167,6 +190,11 @@ describe('build()', () => {
     await build({
       cwd,
       dist,
+      entry: {
+        a: { version: '0.1.0' },
+        b: { version: '0.1.0' },
+        c: { version: '0.1.0' },
+      },
       onMessage: async () => {},
     });
 
@@ -192,6 +220,11 @@ describe('build()', () => {
     await build({
       cwd,
       dist,
+      entry: {
+        a: { version: '0.1.0' },
+        b: { version: '0.1.0' },
+        c: { version: '0.1.0' },
+      },
       onMessage: async () => {},
     });
 
@@ -222,48 +255,115 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'c/data-not-bundle.yaml'))).toBeTruthy();
   });
 
-  test.each(['sample', 'transform-package-json'])(
-    'should build packages normally with %s',
-    async (dir: string) => {
-      // Arrange
-      const cwd: string = await copyTmpDirectory(process.cwd(), `test/fixtures/rocket-punch/${dir}`);
-      const dist: string = path.join(cwd, 'dist');
+  test('should build sample directory', async () => {
+    // Arrange
+    const cwd: string = await copyTmpDirectory(process.cwd(), 'test/fixtures/rocket-punch/sample');
+    const dist: string = path.join(cwd, 'out/packages');
 
-      await exec(`npm install`, { cwd });
-      //await exec(`open ${cwd}`);
+    await exec(`npm install`, { cwd });
+    //await exec(`open ${cwd}`);
 
-      // Act
-      await build({
-        cwd,
-        dist,
-        onMessage: async () => {},
-      });
+    // Act
+    await build({
+      cwd,
+      dist,
+      entry: {
+        a: {
+          version: '0.1.0',
+          tag: 'latest',
+        },
+        b: {
+          version: '0.1.0',
+          tag: 'latest',
+        },
+        c: {
+          version: '0.1.0',
+          tag: 'latest',
+        },
+      },
+      onMessage: async () => {},
+    });
 
-      // Arrange
-      expect(fs.existsSync(path.join(dist, 'a/README.md'))).toBeTruthy();
-      expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
-      expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
-      expect(fs.existsSync(path.join(dist, 'a/package.json'))).toBeTruthy();
+    // Assert
+    expect(fs.existsSync(path.join(dist, 'a/README.md'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/package.json'))).toBeTruthy();
 
-      expect(fs.existsSync(path.join(dist, 'b/README.md'))).toBeTruthy();
-      expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
-      expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
-      expect(fs.existsSync(path.join(dist, 'b/package.json'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/README.md'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/package.json'))).toBeTruthy();
 
-      expect(fs.existsSync(path.join(dist, 'c/README.md'))).toBeTruthy();
-      expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
-      expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
-      expect(fs.existsSync(path.join(dist, 'c/package.json'))).toBeTruthy();
-      expect(fs.existsSync(path.join(dist, 'c/public/test.txt'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/README.md'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/package.json'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/public/test.txt'))).toBeTruthy();
+  });
 
-      switch (dir) {
-        // Arrange
-        // b/package.json has "hello" field
-        // that package.json transformed by .package.ts file
-        case 'transform-package-json':
-          expect(fs.readJsonSync(path.join(dist, 'b/package.json')).keywords).toEqual(['hello']);
-          break;
-      }
-    },
-  );
+  test('should transform package.json', async () => {
+    // Arrange
+    const cwd: string = await copyTmpDirectory(
+      process.cwd(),
+      `test/fixtures/rocket-punch/transform-package-json`,
+    );
+    const dist: string = path.join(cwd, 'out/packages');
+
+    await exec(`npm install`, { cwd });
+    //await exec(`open ${cwd}`);
+
+    // Act
+    await build({
+      cwd,
+      dist,
+      entry: {
+        a: {
+          version: '0.1.0',
+          tag: 'latest',
+        },
+        b: {
+          version: '0.1.0',
+          tag: 'latest',
+        },
+        c: {
+          version: '0.1.0',
+          tag: 'latest',
+        },
+      },
+      transformPackageJson: (packageName) => (computedPackageJson) => {
+        if (packageName === 'b') {
+          return {
+            ...computedPackageJson,
+            keywords: ['hello'],
+          };
+        }
+
+        return computedPackageJson;
+      },
+      onMessage: async () => {},
+    });
+
+    // Assert
+    expect(fs.existsSync(path.join(dist, 'a/README.md'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/package.json'))).toBeTruthy();
+
+    expect(fs.existsSync(path.join(dist, 'b/README.md'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/package.json'))).toBeTruthy();
+
+    expect(fs.existsSync(path.join(dist, 'c/README.md'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/package.json'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/public/test.txt'))).toBeTruthy();
+
+    // Assert
+    // b/package.json has "hello" field
+    // that package.json transformed by .package.ts file
+    expect(fs.readJsonSync(path.join(dist, 'b/package.json')).keywords).toEqual(['hello']);
+  });
 });

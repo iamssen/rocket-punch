@@ -1,8 +1,9 @@
 import { flatPackageName } from '@ssen/flat-package-name';
 import { AvailablePublishOption, getPublishOptions, selectPublishOptions } from '@ssen/publish-packages';
 import path from 'path';
-import { getPackagesEntry } from './entry/getPackagesEntry';
-import { PackageInfo, PublishOption } from './types';
+import process from 'process';
+import { readPackages } from 'rocket-punch/entry/readPackages';
+import { PackageConfig, PackageInfo, PublishOption } from './types';
 
 export type PublishMessages = {
   type: 'exec';
@@ -14,6 +15,8 @@ export interface PublishParams {
   cwd?: string;
   dist?: string;
 
+  entry: Record<string, string | PackageConfig>;
+
   skipSelection?: boolean;
   tag?: string;
   registry?: string;
@@ -23,16 +26,20 @@ export interface PublishParams {
 
 export async function publish({
   cwd = process.cwd(),
-  dist = path.join(cwd, 'dist'),
+  dist = path.join(cwd, 'out/packages'),
   skipSelection = false,
   tag,
+  entry,
   registry,
   onMessage,
 }: PublishParams) {
-  const internalPackages: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
+  const packages: Map<string, PackageInfo> = await readPackages({
+    cwd,
+    entry,
+  });
 
   const publishOptions: Map<string, PublishOption> = await getPublishOptions({
-    entry: internalPackages,
+    packages,
     outDir: dist,
     tag,
     registry,

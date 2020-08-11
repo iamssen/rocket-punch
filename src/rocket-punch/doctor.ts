@@ -1,8 +1,9 @@
 import { readTSConfig } from '@ssen/read-tsconfig';
 import depcheck, { Results } from 'depcheck';
 import path from 'path';
-import { getPackagesEntry } from './entry/getPackagesEntry';
-import { PackageInfo } from './types';
+import process from 'process';
+import { readPackages } from 'rocket-punch/entry/readPackages';
+import { PackageConfig, PackageInfo } from './types';
 
 export type DoctorMessages =
   | {
@@ -18,11 +19,18 @@ export interface DoctorParams {
   cwd?: string;
   tsconfig?: string;
 
+  entry: Record<string, string | PackageConfig>;
+
   onMessage: (message: DoctorMessages) => Promise<void>;
 }
 
-export async function doctor({ cwd = process.cwd(), tsconfig = 'tsconfig.json', onMessage }: DoctorParams) {
-  const internalPackages: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
+export async function doctor({
+  cwd = process.cwd(),
+  entry,
+  tsconfig = 'tsconfig.json',
+  onMessage,
+}: DoctorParams) {
+  const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, entry });
 
   const depcheckResult = await depcheck(cwd, {
     ignoreMatches: [...Array.from(internalPackages.values()).map(({ name }) => name)],

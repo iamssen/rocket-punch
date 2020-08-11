@@ -19,6 +19,11 @@ describe('publish()', () => {
     await build({
       cwd,
       dist,
+      entry: {
+        '@ssen-temp/*': {
+          version: '0.1.0',
+        },
+      },
       onMessage: async () => {},
     });
 
@@ -28,6 +33,11 @@ describe('publish()', () => {
     await publish({
       cwd,
       dist,
+      entry: {
+        '@ssen-temp/*': {
+          version: '0.1.0',
+        },
+      },
       skipSelection: true,
       onMessage: async (message) => {
         switch (message.type) {

@@ -1,24 +1,13 @@
 import fs from 'fs-extra';
-import yaml from 'js-yaml';
 import path from 'path';
-import { packagesFileName } from '../rule/fileNames';
 import { PackageConfig, PackageInfo } from '../types';
 
 interface Params {
   cwd: string;
+  entry: Record<string, string | PackageConfig>;
 }
 
-export async function getPackagesEntry({ cwd }: Params): Promise<Map<string, PackageInfo>> {
-  const source: string = await fs.readFile(path.join(cwd, packagesFileName), {
-    encoding: 'utf8',
-  });
-
-  const content: object | string | undefined = yaml.safeLoad(source);
-  if (!content || typeof content === 'string') {
-    throw new Error(`yaml.safeLoad does not return an object`);
-  }
-
-  const entry: Record<string, string | PackageConfig> = content as Record<string, string | PackageConfig>;
+export async function readPackages({ cwd, entry }: Params): Promise<Map<string, PackageInfo>> {
   const packages: Record<string, string | PackageConfig> = {};
 
   for (const name of Object.keys(entry)) {

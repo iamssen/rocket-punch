@@ -1,6 +1,5 @@
 import { targetExtensions } from '@ssen/extended-compiler-host';
 import fs from 'fs-extra';
-import { packageTransformFilePattern } from './fileNames';
 
 const bundleExtensions: RegExp = new RegExp(`.(${targetExtensions.join('|')})$`);
 
@@ -19,8 +18,7 @@ export function fsCopyFilter(src: string, dest: string): boolean {
   
   const ignore: boolean =
     /\.(ts|tsx|mjs|js|jsx)$/.test(s) ||            // *.ts, *.tsx, *.js, *.jsx, *.mjs
-    isBundled(dest) ||                             // *.txt, *.md, *.yml...
-    packageTransformFilePattern.test(s);           // .package.(js|ts)
+    isBundled(dest);                               // *.txt, *.md, *.yml...
   
   const pass: boolean =
     !completelyIgnore &&

@@ -1,5 +1,6 @@
 import path from 'path';
 import { build } from 'rocket-punch';
+import { readEntry } from 'rocket-punch/entry/readEntry';
 import { buildMessageHandler } from 'rocket-punch/message-handlers/build';
 
 //[
@@ -17,6 +18,7 @@ import { buildMessageHandler } from 'rocket-punch/message-handlers/build';
 
 build({
   cwd: process.cwd(),
-  dist: path.join(process.cwd(), 'dist'),
+  entry: readEntry({ cwd: process.cwd() }),
+  dist: path.join(process.cwd(), 'out/packages'),
   onMessage: buildMessageHandler,
 });

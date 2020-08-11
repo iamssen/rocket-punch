@@ -12,5 +12,5 @@ yarn-error.log*
 /.npm
 /coverage
 /.history
-/dist
+/out
 /test/storage

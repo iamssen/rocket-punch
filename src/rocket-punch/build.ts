@@ -6,17 +6,17 @@ import { rimraf } from '@ssen/promised';
 import { rewriteSrcPath } from '@ssen/rewrite-src-path';
 import fs from 'fs-extra';
 import path from 'path';
+import process from 'process';
 import { PackageJson } from 'type-fest';
 import ts from 'typescript';
-import { getPackagesEntry } from './entry/getPackagesEntry';
+import { readPackages } from './entry/readPackages';
 import { computePackageJson } from './package-json/computePackageJson';
 import { getRootDependencies } from './package-json/getRootDependencies';
 import { getSharedPackageJson } from './package-json/getSharedPackageJson';
 import { fsCopyFilter } from './rule/fsCopyFilter';
 import { getCompilerOptions } from './rule/getCompilerOptions';
-import { getTransformFunctions } from './rule/getTransformFunctions';
 import { readDirectoryPatterns } from './rule/readDirectoryPatterns';
-import { PackageInfo } from './types';
+import { PackageConfig, PackageInfo } from './types';
 
 export type BuildMessages =
   | {
@@ -48,21 +48,46 @@ export interface BuildParams {
   cwd?: string;
   dist?: string;
   tsconfig?: string;
+  svg?: 'default' | 'create-react-app';
+
+  entry: Record<string, string | PackageConfig>;
+
+  transformPackageJson?: (packageName: string) => (computedPackageJson: PackageJson) => PackageJson;
+  transformCompilerOptions?: (
+    packageName: string,
+  ) => (computedCompilerOptions: ts.CompilerOptions) => ts.CompilerOptions;
+  transformCompilerHost?: (
+    packageName: string,
+  ) => (compilerOptions: ts.CompilerOptions, compilerHost: ts.CompilerHost) => ts.CompilerHost;
+  emitCustomTransformers?: (packageName: string) => () => ts.CustomTransformers | undefined;
 
   onMessage: (message: BuildMessages) => Promise<void>;
 }
 
 export async function build({
   cwd = process.cwd(),
-  dist = path.join(cwd, 'dist'),
+  dist = path.join(cwd, 'out/packages'),
   tsconfig = 'tsconfig.json',
+  entry,
+  svg = 'create-react-app',
+  transformPackageJson,
+  transformCompilerHost,
+  transformCompilerOptions,
+  emitCustomTransformers,
   onMessage,
 }: BuildParams) {
+  // ---------------------------------------------
+  // set env
+  // ---------------------------------------------
+  if (svg === 'default') {
+    process.env.TS_SVG_EXPORT = 'default';
+  }
+
   // ---------------------------------------------
   // rule
   // collect information based on directory rules
   // ---------------------------------------------
-  const entry: Map<string, PackageInfo> = await getPackagesEntry({ cwd });
+  const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, entry });
   const externalPackages: PackageJson.Dependency = await getRootDependencies({ cwd });
   const sharedConfig: PackageJson = await getSharedPackageJson({ cwd });
 
@@ -72,10 +97,10 @@ export async function build({
   // ---------------------------------------------
   const dependenciesMap: Map<string, PackageJson.Dependency> = new Map<string, PackageJson.Dependency>();
 
-  for (const packageName of entry.keys()) {
+  for (const packageName of internalPackages.keys()) {
     const imports: PackageJson.Dependency = await collectDependencies({
       rootDir: path.join(cwd, 'src', packageName),
-      internalPackages: entry,
+      internalPackages: internalPackages,
       externalPackages,
       selfNames: new Set<string>([packageName]),
       checkUndefinedPackage: 'error',
@@ -93,7 +118,7 @@ export async function build({
 
   const packageJsonMap: Map<string, PackageJson> = new Map<string, PackageJson>();
 
-  for (const [packageName, packageInfo] of entry) {
+  for (const [packageName, packageInfo] of internalPackages) {
     const dependencies: PackageJson.Dependency | undefined = dependenciesMap.get(packageName);
 
     if (!dependencies) {
@@ -109,9 +134,10 @@ export async function build({
       dependencies,
     });
 
-    const { transformPackageJson } = getTransformFunctions(packageDir);
-
-    const packageJson: PackageJson = transformPackageJson(computedPackageJson);
+    const packageJson: PackageJson =
+      typeof transformPackageJson === 'function'
+        ? transformPackageJson(packageName)(computedPackageJson)
+        : computedPackageJson;
 
     packageJsonMap.set(packageName, packageJson);
   }
@@ -127,7 +153,7 @@ export async function build({
   const symlinkDirs: string[] = [];
 
   for (const packageName of order) {
-    const packageInfo: PackageInfo | undefined = entry.get(packageName);
+    const packageInfo: PackageInfo | undefined = internalPackages.get(packageName);
 
     if (!packageInfo) {
       throw new Error(`TODO`);
@@ -140,10 +166,6 @@ export async function build({
     if (!packageJson) {
       throw new Error(`undefined packagejson content!`);
     }
-
-    const { transformCompilerOptions, transformCompilerHost, emitCustomTransformers } = getTransformFunctions(
-      sourceDir,
-    );
 
     await onMessage({
       type: 'begin',
@@ -177,24 +199,29 @@ export async function build({
     // ---------------------------------------------
     // tsc
     // ---------------------------------------------
-    const computedCompilerOptions: ts.CompilerOptions = getCompilerOptions({
+    const userCompilerOptions: ts.CompilerOptions = getCompilerOptions({
       searchPath: cwd,
       configName: tsconfig,
       packageInfo,
     });
 
-    const compilerOptions: ts.CompilerOptions = transformCompilerOptions({
-      ...computedCompilerOptions,
+    const computedCompilerOptions: ts.CompilerOptions = {
+      ...userCompilerOptions,
 
       baseUrl: sourceDir,
       paths: {
-        ...computedCompilerOptions.paths,
+        ...userCompilerOptions.paths,
         [packageName]: [sourceDir],
       },
 
       rootDir: sourceDir,
       outDir,
-    });
+    };
+
+    const compilerOptions: ts.CompilerOptions =
+      typeof transformCompilerOptions === 'function'
+        ? transformCompilerOptions(packageName)(computedCompilerOptions)
+        : computedCompilerOptions;
 
     const extendedHost: ts.CompilerHost = createExtendedCompilerHost(compilerOptions);
     const pathRewriteHost: ts.CompilerHost = createImportPathRewriteCompilerHost({
@@ -202,7 +229,10 @@ export async function build({
       rootDir: sourceDir,
     })(compilerOptions, undefined, extendedHost);
 
-    const host: ts.CompilerHost = transformCompilerHost(compilerOptions, pathRewriteHost);
+    const host: ts.CompilerHost =
+      typeof transformCompilerHost === 'function'
+        ? transformCompilerHost(packageName)(compilerOptions, pathRewriteHost)
+        : pathRewriteHost;
 
     const files: string[] = host.readDirectory!(sourceDir, ...readDirectoryPatterns);
 
@@ -213,7 +243,7 @@ export async function build({
       undefined,
       undefined,
       undefined,
-      emitCustomTransformers(),
+      typeof emitCustomTransformers === 'function' ? emitCustomTransformers(packageName)() : undefined,
     );
     const diagnostics: ts.Diagnostic[] = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 
