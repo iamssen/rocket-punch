@@ -2,7 +2,7 @@ import { flatPackageName } from '@ssen/flat-package-name';
 import { AvailablePublishOption, getPublishOptions, selectPublishOptions } from '@ssen/publish-packages';
 import path from 'path';
 import process from 'process';
-import { readPackages } from 'rocket-punch/entry/readPackages';
+import { readPackages } from './entry/readPackages';
 import { PublishParams } from './params';
 import { PackageInfo, PublishOption } from './types';
 
@@ -64,9 +64,5 @@ export async function publish({
       command,
       publishOption,
     });
-
-    //const { stderr, stdout } = await exec(command, { encoding: 'utf8' });
-    //console.log(stdout);
-    //console.error(stderr);
   }
 }

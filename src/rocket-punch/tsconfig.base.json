@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    // language
+    "jsx": "react",
+    "allowJs": true,
+    "downlevelIteration": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    // strict
+    "strict": true,
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    // module
+    "module": "commonjs",
+    "target": "ES2018",
+    "moduleResolution": "node",
+    // lib
+    "skipLibCheck": true,
+    // export
+    "sourceMap": true,
+    "declaration": true
+  }
+}

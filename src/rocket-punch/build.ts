@@ -52,8 +52,10 @@ export async function build({
   // ---------------------------------------------
   const dependenciesMap: Map<string, PackageJson.Dependency> = new Map<string, PackageJson.Dependency>();
 
+  // collect dependencies each package
   for (const packageName of internalPackages.keys()) {
     const imports: PackageJson.Dependency = await collectDependencies({
+      // collect dependencies from sources on {cwd}/src/{package}
       rootDir: path.join(cwd, 'src', packageName),
       internalPackages: internalPackages,
       externalPackages,
@@ -73,6 +75,7 @@ export async function build({
 
   const packageJsonMap: Map<string, PackageJson> = new Map<string, PackageJson>();
 
+  // compute package.json contents each package
   for (const [packageName, packageInfo] of internalPackages) {
     const dependencies: PackageJson.Dependency | undefined = dependenciesMap.get(packageName);
 
@@ -82,6 +85,7 @@ export async function build({
 
     const packageDir: string = path.join(cwd, 'src', packageName);
 
+    // compute package.json
     const computedPackageJson: PackageJson = await computePackageJson({
       packageInfo,
       sharedConfig,
@@ -89,6 +93,7 @@ export async function build({
       dependencies,
     });
 
+    // transform package.json contents if user did set the transformPackageJson() function
     const packageJson: PackageJson =
       typeof transformPackageJson === 'function'
         ? transformPackageJson(packageName)(computedPackageJson)
@@ -97,6 +102,8 @@ export async function build({
     packageJsonMap.set(packageName, packageJson);
   }
 
+  // get package build order
+  // it will sort depends on packages dependency relationship
   const order: string[] = await getPackagesOrder({
     packageJsonContents: Array.from(packageJsonMap.values()),
   });
@@ -107,11 +114,15 @@ export async function build({
   // ---------------------------------------------
   const symlinkDirs: string[] = [];
 
+  // ================================================================
+  // build each packages
+  //
+  // ================================================================
   for (const packageName of order) {
     const packageInfo: PackageInfo | undefined = internalPackages.get(packageName);
 
     if (!packageInfo) {
-      throw new Error(`TODO`);
+      throw new Error(`Undefined packageInfo of ${packageName}`);
     }
 
     const sourceDir: string = path.join(cwd, 'src', packageName);
@@ -138,6 +149,7 @@ export async function build({
 
     // ---------------------------------------------
     // symlink
+    // this symlink will be reference to next build packages
     // ---------------------------------------------
     const symlink: string = path.join(cwd, 'node_modules', packageName);
 
@@ -154,12 +166,14 @@ export async function build({
     // ---------------------------------------------
     // tsc
     // ---------------------------------------------
+    // read compilerOptions from {cwd}/tsconfig.json
     const userCompilerOptions: ts.CompilerOptions = getCompilerOptions({
       searchPath: cwd,
       configName: tsconfig,
       packageInfo,
     });
 
+    // compute package.json with add some build information
     const computedCompilerOptions: ts.CompilerOptions = {
       ...userCompilerOptions,
 
@@ -173,17 +187,20 @@ export async function build({
       outDir,
     };
 
+    // transform compilerOptions if user set the transformCompilerOptions() function
     const compilerOptions: ts.CompilerOptions =
       typeof transformCompilerOptions === 'function'
         ? transformCompilerOptions(packageName)(computedCompilerOptions)
         : computedCompilerOptions;
 
+    // create compilerHost
     const extendedHost: ts.CompilerHost = createExtendedCompilerHost(compilerOptions);
     const pathRewriteHost: ts.CompilerHost = createImportPathRewriteCompilerHost({
       src: path.join(cwd, 'src'),
       rootDir: sourceDir,
     })(compilerOptions, undefined, extendedHost);
 
+    // transform compilerHost if user set the transformCompilerHost() function
     const host: ts.CompilerHost =
       typeof transformCompilerHost === 'function'
         ? transformCompilerHost(packageName)(compilerOptions, pathRewriteHost)
@@ -193,6 +210,7 @@ export async function build({
 
     const program: ts.Program = ts.createProgram(files, compilerOptions, host);
 
+    // 🔥 compile!!!!!!!!!
     const emitResult: ts.EmitResult = program.emit(
       undefined,
       undefined,
@@ -200,6 +218,7 @@ export async function build({
       undefined,
       typeof emitCustomTransformers === 'function' ? emitCustomTransformers(packageName)() : undefined,
     );
+
     const diagnostics: ts.Diagnostic[] = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 
     await onMessage({
@@ -221,7 +240,7 @@ export async function build({
     });
 
     // ---------------------------------------------
-    // package.json
+    // create package.json
     // ---------------------------------------------
     await fs.writeJson(path.join(outDir, 'package.json'), packageJson, { encoding: 'utf8', spaces: 2 });
 
@@ -240,6 +259,7 @@ export async function build({
     });
   }
 
+  // clean symlinks on node_modules
   for (const symlink of symlinkDirs) {
     fs.unlinkSync(symlink);
   }
