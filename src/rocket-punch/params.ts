@@ -163,6 +163,13 @@ export interface PublishParams extends Pick<CommonParams, 'cwd' | 'entry' | 'dis
   tag?: string;
 
   /**
+   * if you set this value rocket-punch will change the access of packages by force
+   *
+   * this is useful in situations like E2E test.
+   */
+  access?: 'public' | 'private';
+
+  /**
    * if you set this value rocket-punch will change the registry of packages by force
    *
    * this is useful in situations like E2E test.

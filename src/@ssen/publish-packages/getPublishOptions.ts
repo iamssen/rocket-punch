@@ -34,7 +34,7 @@ export async function getPublishOptions({
 
   const tags: Map<string, string> = new Map();
   for (const [name, { tag }] of packages) {
-    tags.set(name, tag || 'latest');
+    tags.set(name, tag ?? 'latest');
   }
 
   const currentPackageJsons: PackageJson[] = Array.from(packages.values())
@@ -60,8 +60,10 @@ export async function getPublishOptions({
     }),
   );
 
-  return Array.from(packages.values()).reduce((map, current, i) => {
-    if (!current.name) throw new Error(``);
+  return currentPackageJsons.reduce((map, current, i) => {
+    if (!current || !current.name) {
+      throw new Error(``);
+    }
 
     map.set(current.name, {
       name: current.name,
@@ -71,5 +73,5 @@ export async function getPublishOptions({
     });
 
     return map;
-  }, new Map());
+  }, new Map<string, PublishOption>());
 }

@@ -11,6 +11,7 @@ export async function publish({
   dist = path.join(cwd, 'out/packages'),
   skipSelection = false,
   tag,
+  access,
   entry,
   registry,
   onMessage,
@@ -33,16 +34,30 @@ export async function publish({
   });
 
   for (const publishOption of selectedPublishOptions) {
-    const t: string = ` --tag ${tag || publishOption.tag}`;
-    const r: string = registry ? ` --registry "${registry}"` : '';
+    const packageInfo: PackageInfo | undefined = packages.get(publishOption.name);
 
-    //console.log(`npm publish ${publishOption.name}${t}${r}`);
-    //console.log('');
+    if (!packageInfo) {
+      throw new Error(`Undefined packageInfo "${publishOption.name}"`);
+    }
+
+    const p: string[] = [`--tag ${tag || publishOption.tag}`];
+
+    if (access) {
+      p.push(`--access ${access}`);
+    } else if (packageInfo.access) {
+      p.push(`--access ${packageInfo.access}`);
+    }
+
+    if (registry) {
+      p.push(`--registry "${registry}"`);
+    } else if (packageInfo.registry) {
+      p.push(`--registry "${packageInfo.registry}"`);
+    }
 
     const command: string =
       process.platform === 'win32'
-        ? `cd "${path.join(dist, flatPackageName(publishOption.name))}" && npm publish${t}${r}`
-        : `cd "${path.join(dist, flatPackageName(publishOption.name))}"; npm publish${t}${r};`;
+        ? `cd "${path.join(dist, flatPackageName(publishOption.name))}" && npm publish ${p.join(' ')}`
+        : `cd "${path.join(dist, flatPackageName(publishOption.name))}"; npm publish ${p.join(' ')};`;
 
     await onMessage({
       type: 'exec',

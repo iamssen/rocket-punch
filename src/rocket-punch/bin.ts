@@ -56,6 +56,7 @@ type PublishArgs = {
   outDir?: string;
   skipSelection?: boolean;
   tag?: string;
+  access?: string;
   registry?: string;
 };
 
@@ -70,6 +71,11 @@ const publishOptions: Options = {
     type: 'string',
     alias: 't',
     describe: 'npm publish --tag {tag}',
+  },
+  access: {
+    type: 'string',
+    alias: 'a',
+    describe: 'npm publish --access <public|private>',
   },
   registry: {
     type: 'string',
@@ -132,13 +138,21 @@ export function run() {
           .example('$0 publish --out-dir /some/directory', 'Publish packages from specific directory')
           .example('$0 publish --skip-selection', 'Publish all packages without user selection (e.g. CI)')
           .example('$0 publish --skip-selection --tag e2e --registry http://localhost:4873', 'E2E test'),
-      handler: ({ registry, outDir, emit, skipSelection, tag }: Arguments<CommonArgs & PublishArgs>) => {
+      handler: ({
+        registry,
+        outDir,
+        emit,
+        access,
+        skipSelection,
+        tag,
+      }: Arguments<CommonArgs & PublishArgs>) => {
         const params: PublishParams = {
           cwd,
           dist: toAbsolutePath(outDir),
           entry: readEntry({ cwd }),
           skipSelection,
           tag,
+          access: access === 'public' || access === 'private' ? access : undefined,
           registry,
           onMessage: publishMessageHandler,
         };

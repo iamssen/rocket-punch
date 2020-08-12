@@ -10,11 +10,25 @@ export interface PackageConfig {
   version: string;
 
   /**
-   * tag (`next` of `npm install react@next` when you install a package)
+   * tag (for example, `next` of `npm install react@next` when you install a package)
    *
    * @default latest
    */
   tag?: LiteralUnion<'latest' | 'canary' | 'next', string>; // ?= latest
+
+  /**
+   * access
+   *
+   * if you set this value, it will pass to the `npm publish` command like this `npm publish --access public`.
+   */
+  access?: 'public' | 'private';
+
+  /**
+   * target registry
+   *
+   * if you set this value, it will pass to the `npm publish` command like this `npm publish --registry http://...`.
+   */
+  registry?: string;
 
   /**
    * module type
@@ -60,6 +74,8 @@ export interface PackageInfo {
   version: string;
   tag: string;
   module: 'commonjs' | 'esm';
+  access: 'public' | 'private' | undefined;
+  registry: string | undefined;
   compilerOptions: object;
   packageJson: object;
 }
