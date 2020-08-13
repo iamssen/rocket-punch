@@ -1,10 +1,10 @@
 '@ssen/*':
-  version: 2.1.0-alpha.1
-  tag: canary
+  version: 2.1.0
+  tag: latest
   module: commonjs
 rocket-punch:
-  version: 2.1.0-alpha.1
-  tag: canary
+  version: 2.1.0
+  tag: latest
   module: commonjs
   packageJson:
     bin:
