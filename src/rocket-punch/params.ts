@@ -67,6 +67,17 @@ export interface CommonParams {
   cwd?: string;
 
   /**
+   * source root
+   *
+   * it will process to `path.resolve(cwd, sourceRoot)`
+   *
+   * @example { sourceRoot: '.' }
+   *
+   * @default src
+   */
+  sourceRoot?: string;
+
+  /**
    * package entry
    *
    * @example
@@ -147,7 +158,7 @@ export interface BuildParams extends CommonParams {
   onMessage: (message: BuildMessages) => Promise<void>;
 }
 
-export interface PublishParams extends Pick<CommonParams, 'cwd' | 'entry' | 'dist'> {
+export interface PublishParams extends Pick<CommonParams, 'cwd' | 'entry' | 'dist' | 'sourceRoot'> {
   /**
    * if you set this value to true rocket-punch will publish every packages without request to you for selection.
    *
@@ -179,10 +190,10 @@ export interface PublishParams extends Pick<CommonParams, 'cwd' | 'entry' | 'dis
   onMessage: (message: PublishMessages) => Promise<void>;
 }
 
-export interface ViewParams extends Pick<CommonParams, 'cwd' | 'entry'> {
+export interface ViewParams extends Pick<CommonParams, 'cwd' | 'entry' | 'sourceRoot'> {
   onMessage: (message: ViewMessages) => Promise<void>;
 }
 
-export interface DoctorParams extends Pick<CommonParams, 'cwd' | 'entry' | 'tsconfig'> {
+export interface DoctorParams extends Pick<CommonParams, 'cwd' | 'entry' | 'tsconfig' | 'sourceRoot'> {
   onMessage: (message: DoctorMessages) => Promise<void>;
 }

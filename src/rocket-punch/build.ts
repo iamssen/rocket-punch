@@ -21,7 +21,8 @@ import { PackageInfo } from './types';
 
 export async function build({
   cwd = process.cwd(),
-  dist = path.join(cwd, 'out/packages'),
+  sourceRoot = 'src',
+  dist = path.resolve(cwd, 'out/packages'),
   tsconfig = 'tsconfig.json',
   entry,
   svg = 'create-react-app',
@@ -42,7 +43,7 @@ export async function build({
   // rule
   // collect information based on directory rules
   // ---------------------------------------------
-  const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, entry });
+  const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, sourceRoot, entry });
   const externalPackages: PackageJson.Dependency = await getRootDependencies({ cwd });
   const sharedConfig: PackageJson = await getSharedPackageJson({ cwd });
 
@@ -56,14 +57,14 @@ export async function build({
   for (const packageName of internalPackages.keys()) {
     const imports: PackageJson.Dependency = await collectDependencies({
       // collect dependencies from sources on {cwd}/src/{package}
-      rootDir: path.join(cwd, 'src', packageName),
+      rootDir: path.resolve(cwd, sourceRoot, packageName),
       internalPackages: internalPackages,
       externalPackages,
       selfNames: new Set<string>([packageName]),
       checkUndefinedPackage: 'error',
       fixImportPath: ({ importPath, filePath }) =>
         rewriteSrcPath({
-          rootDir: path.join(cwd, 'src'),
+          rootDir: path.resolve(cwd, sourceRoot),
           importPath,
           filePath,
         }),
@@ -83,7 +84,7 @@ export async function build({
       throw new Error(`undefiend dependencies of ${packageName}`);
     }
 
-    const packageDir: string = path.join(cwd, 'src', packageName);
+    const packageDir: string = path.resolve(cwd, sourceRoot, packageName);
 
     // compute package.json
     const computedPackageJson: PackageJson = await computePackageJson({
@@ -116,7 +117,6 @@ export async function build({
 
   // ================================================================
   // build each packages
-  //
   // ================================================================
   for (const packageName of order) {
     const packageInfo: PackageInfo | undefined = internalPackages.get(packageName);
@@ -125,8 +125,8 @@ export async function build({
       throw new Error(`Undefined packageInfo of ${packageName}`);
     }
 
-    const sourceDir: string = path.join(cwd, 'src', packageName);
-    const outDir: string = path.join(dist, flatPackageName(packageName));
+    const sourceDir: string = path.resolve(cwd, sourceRoot, packageName);
+    const outDir: string = path.resolve(dist, flatPackageName(packageName));
     const packageJson: PackageJson | undefined = packageJsonMap.get(packageName);
 
     if (!packageJson) {
@@ -151,7 +151,7 @@ export async function build({
     // symlink
     // this symlink will be reference to next build packages
     // ---------------------------------------------
-    const symlink: string = path.join(cwd, 'node_modules', packageName);
+    const symlink: string = path.resolve(cwd, 'node_modules', packageName);
 
     if (fs.existsSync(symlink) && fs.lstatSync(symlink).isSymbolicLink()) {
       fs.unlinkSync(symlink);
@@ -196,7 +196,7 @@ export async function build({
     // create compilerHost
     const extendedHost: ts.CompilerHost = createExtendedCompilerHost(compilerOptions);
     const pathRewriteHost: ts.CompilerHost = createImportPathRewriteCompilerHost({
-      src: path.join(cwd, 'src'),
+      src: path.resolve(cwd, sourceRoot),
       rootDir: sourceDir,
     })(compilerOptions, undefined, extendedHost);
 
@@ -235,14 +235,14 @@ export async function build({
     // ---------------------------------------------
     // copy static files
     // ---------------------------------------------
-    await fs.copy(path.join(cwd, 'src', packageName), outDir, {
+    await fs.copy(path.resolve(cwd, sourceRoot, packageName), outDir, {
       filter: fsCopyFilter,
     });
 
     // ---------------------------------------------
     // create package.json
     // ---------------------------------------------
-    await fs.writeJson(path.join(outDir, 'package.json'), packageJson, { encoding: 'utf8', spaces: 2 });
+    await fs.writeJson(path.resolve(outDir, 'package.json'), packageJson, { encoding: 'utf8', spaces: 2 });
 
     await onMessage({
       type: 'package-json',

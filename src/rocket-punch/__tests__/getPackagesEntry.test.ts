@@ -12,7 +12,11 @@ describe('getPackagesEntry()', () => {
     const cwd: string = await copyTmpDirectory(process.cwd(), `test/fixtures/rocket-punch/sample`);
 
     // Act
-    const packages: Map<string, PackageInfo> = await readPackages({ cwd, entry: readEntry({ cwd }) });
+    const packages: Map<string, PackageInfo> = await readPackages({
+      cwd,
+      sourceRoot: 'src',
+      entry: readEntry({ cwd }),
+    });
     const externalPackages: PackageJson.Dependency = await getRootDependencies({ cwd });
 
     // Assert
@@ -31,7 +35,11 @@ describe('getPackagesEntry()', () => {
     const cwd: string = await copyTmpDirectory(process.cwd(), `test/fixtures/rocket-punch/group-entry`);
 
     // Act
-    const packages: Map<string, PackageInfo> = await readPackages({ cwd, entry: readEntry({ cwd }) });
+    const packages: Map<string, PackageInfo> = await readPackages({
+      cwd,
+      sourceRoot: 'src',
+      entry: readEntry({ cwd }),
+    });
     const externalPackages: PackageJson.Dependency = await getRootDependencies({ cwd });
 
     // Assert
@@ -53,7 +61,11 @@ describe('getPackagesEntry()', () => {
     );
 
     // Act
-    const packages: Map<string, PackageInfo> = await readPackages({ cwd, entry: readEntry({ cwd }) });
+    const packages: Map<string, PackageInfo> = await readPackages({
+      cwd,
+      sourceRoot: 'src',
+      entry: readEntry({ cwd }),
+    });
 
     // Assert
     expect(packages.get('a')?.module).toBe('commonjs');

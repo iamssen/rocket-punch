@@ -18,6 +18,7 @@ type Options = Parameters<Argv['options']>[0];
 
 type CommonArgs = {
   emit?: boolean;
+  sourceRoot?: string;
 };
 
 const commonOptions: Options = {
@@ -25,6 +26,10 @@ const commonOptions: Options = {
     type: 'boolean',
     default: true,
     describe: 'if you set this false it will only print options without run (e.g. --no-emit or --emit false)',
+  },
+  'source-root': {
+    type: 'string',
+    describe: 'source root (e.g. --source-root src)',
   },
 };
 
@@ -38,12 +43,12 @@ const buildOptions: Options = {
   'out-dir': {
     type: 'string',
     alias: 'o',
-    describe: 'output directory (e.g. --out-dir "{cwd}/out")',
+    describe: 'output directory (e.g. --out-dir out/packages)',
   },
   tsconfig: {
     type: 'string',
     alias: 't',
-    describe: 'tsconfig file name (e.g. --tsconfig "tsconfig.dev.json")',
+    describe: 'tsconfig file name (e.g. --tsconfig tsconfig.dev.json)',
   },
   svg: {
     type: 'string',
@@ -108,12 +113,13 @@ export function run() {
           .example('$0 build --out-dir /some/directory', 'Build packages to specific directory')
           .example('$0 build --tsconfig tsconfig.build.json', 'Use another tsconfig.json file on build')
           .example('$0 build --svg default', 'SVG transform to `import ReactComponent from "./file.svg"`'),
-      handler: ({ emit, outDir, tsconfig, svg }: Arguments<CommonArgs & BuildArgs>) => {
+      handler: ({ emit, outDir, tsconfig, sourceRoot, svg }: Arguments<CommonArgs & BuildArgs>) => {
         const params: BuildParams = {
           cwd,
           svg: svg === 'default' ? 'default' : 'create-react-app',
           dist: toAbsolutePath(outDir),
           tsconfig,
+          sourceRoot,
           entry: readEntry({ cwd }),
           onMessage: buildMessageHandler,
         };
@@ -141,6 +147,7 @@ export function run() {
       handler: ({
         registry,
         outDir,
+        sourceRoot,
         emit,
         access,
         skipSelection,
@@ -151,6 +158,7 @@ export function run() {
           dist: toAbsolutePath(outDir),
           entry: readEntry({ cwd }),
           skipSelection,
+          sourceRoot,
           tag,
           access: access === 'public' || access === 'private' ? access : undefined,
           registry,
@@ -168,9 +176,10 @@ export function run() {
       command: 'view',
       describe: 'View packages information',
       builder: (yargs) => yargs.options({ ...commonOptions }).example('$0 view', 'View packages information'),
-      handler: ({ emit }: Arguments<CommonArgs>) => {
+      handler: ({ emit, sourceRoot }: Arguments<CommonArgs>) => {
         const params: ViewParams = {
           cwd,
+          sourceRoot,
           entry: readEntry({ cwd }),
           onMessage: viewMessageHandler,
         };
@@ -189,9 +198,10 @@ export function run() {
         yargs
           .options({ ...commonOptions })
           .example('$0 doctor', 'Check configs is validate for rocket-punch'),
-      handler: ({ emit }: Arguments<CommonArgs>) => {
+      handler: ({ emit, sourceRoot }: Arguments<CommonArgs>) => {
         const params: DoctorParams = {
           cwd,
+          sourceRoot,
           entry: readEntry({ cwd }),
           onMessage: doctorMessageHandler,
         };

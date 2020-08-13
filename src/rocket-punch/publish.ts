@@ -8,6 +8,7 @@ import { PackageInfo, PublishOption } from './types';
 
 export async function publish({
   cwd = process.cwd(),
+  sourceRoot = 'src',
   dist = path.join(cwd, 'out/packages'),
   skipSelection = false,
   tag,
@@ -18,6 +19,7 @@ export async function publish({
 }: PublishParams) {
   const packages: Map<string, PackageInfo> = await readPackages({
     cwd,
+    sourceRoot,
     entry,
   });
 

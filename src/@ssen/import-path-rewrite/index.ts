@@ -2,7 +2,18 @@ import { rewriteSrcPath } from '@ssen/rewrite-src-path';
 import ts from 'typescript';
 
 interface Configuration {
+  /**
+   * source root
+   *
+   * /project/root/src
+   */
   src: string;
+
+  /**
+   * file path
+   *
+   * /project/root/src/path/file.ts
+   */
   fileName?: string;
 }
 

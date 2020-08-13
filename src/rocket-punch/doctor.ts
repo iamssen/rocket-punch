@@ -9,10 +9,11 @@ import { PackageInfo } from './types';
 export async function doctor({
   cwd = process.cwd(),
   entry,
+  sourceRoot = 'src',
   tsconfig = 'tsconfig.json',
   onMessage,
 }: DoctorParams) {
-  const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, entry });
+  const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, sourceRoot, entry });
 
   const depcheckResult = await depcheck(cwd, {
     ignoreMatches: [...Array.from(internalPackages.values()).map(({ name }) => name)],
@@ -26,6 +27,7 @@ export async function doctor({
   const { options } = readTSConfig(path.join(cwd, tsconfig));
   const tsconfigResult: { message: string; fixer: object }[] = [];
 
+  // TODO src to be user configurable
   if (!/src$/.test(options.baseUrl ?? '')) {
     tsconfigResult.push({
       message: `compilerOptions.baseUrl should be "src".`,

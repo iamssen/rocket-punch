@@ -111,7 +111,7 @@ describe('build()', () => {
     // Act
     // read .packages.yaml
     const packages: Record<string, string | PackageConfig> = readEntry({ cwd });
-    const entry: Map<string, PackageInfo> = await readPackages({ cwd, entry: packages });
+    const entry: Map<string, PackageInfo> = await readPackages({ cwd, sourceRoot: 'src', entry: packages });
 
     // Assert
     // check module property of package

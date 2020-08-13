@@ -9,8 +9,8 @@ const memo: Map<string, any> = new Map<string, any>();
 export function requireTypescript<T>(file: string): T & ts.TranspileOutput {
   const fileNames: string[] = [
     file,
-    path.join(file + '.js'),
-    path.join(file + '.ts'),
+    file + '.js',
+    file + '.ts',
     path.join(file, 'index.ts'),
     path.join(file, 'index.js'),
   ];

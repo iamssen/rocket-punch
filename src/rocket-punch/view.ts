@@ -4,8 +4,8 @@ import { readPackages } from './entry/readPackages';
 import { ViewParams } from './params';
 import { PackageInfo } from './types';
 
-export async function view({ cwd = process.cwd(), entry, onMessage }: ViewParams) {
-  const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, entry });
+export async function view({ cwd = process.cwd(), sourceRoot = 'src', entry, onMessage }: ViewParams) {
+  const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, sourceRoot, entry });
 
   const originMetadatas: (FullMetadata | undefined)[] = await Promise.all(
     Array.from(internalPackages.keys()).map((name) =>
