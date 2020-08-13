@@ -10,6 +10,7 @@ import process from 'process';
 import { PackageJson } from 'type-fest';
 import ts from 'typescript';
 import { readPackages } from './entry/readPackages';
+import { buildMessageHandler } from './message-handlers/build';
 import { computePackageJson } from './package-json/computePackageJson';
 import { getRootDependencies } from './package-json/getRootDependencies';
 import { getSharedPackageJson } from './package-json/getSharedPackageJson';
@@ -30,7 +31,7 @@ export async function build({
   transformCompilerHost,
   transformCompilerOptions,
   emitCustomTransformers,
-  onMessage,
+  onMessage = buildMessageHandler,
 }: BuildParams) {
   // ---------------------------------------------
   // set env

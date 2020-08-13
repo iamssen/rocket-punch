@@ -3,6 +3,7 @@ import { AvailablePublishOption, getPublishOptions, selectPublishOptions } from 
 import path from 'path';
 import process from 'process';
 import { readPackages } from './entry/readPackages';
+import { publishMessageHandler } from './message-handlers/publish';
 import { PublishParams } from './params';
 import { PackageInfo, PublishOption } from './types';
 
@@ -15,7 +16,7 @@ export async function publish({
   access,
   entry,
   registry,
-  onMessage,
+  onMessage = publishMessageHandler,
 }: PublishParams) {
   const packages: Map<string, PackageInfo> = await readPackages({
     cwd,

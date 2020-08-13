@@ -1,10 +1,16 @@
 import getPackageJson, { FullMetadata } from 'package-json';
 import process from 'process';
 import { readPackages } from './entry/readPackages';
+import { viewMessageHandler } from './message-handlers/view';
 import { ViewParams } from './params';
 import { PackageInfo } from './types';
 
-export async function view({ cwd = process.cwd(), sourceRoot = 'src', entry, onMessage }: ViewParams) {
+export async function view({
+  cwd = process.cwd(),
+  sourceRoot = 'src',
+  entry,
+  onMessage = viewMessageHandler,
+}: ViewParams) {
   const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, sourceRoot, entry });
 
   const originMetadatas: (FullMetadata | undefined)[] = await Promise.all(

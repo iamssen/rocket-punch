@@ -3,6 +3,7 @@ import depcheck from 'depcheck';
 import path from 'path';
 import process from 'process';
 import { readPackages } from './entry/readPackages';
+import { doctorMessageHandler } from './message-handlers/doctor';
 import { DoctorParams } from './params';
 import { PackageInfo } from './types';
 
@@ -11,7 +12,7 @@ export async function doctor({
   entry,
   sourceRoot = 'src',
   tsconfig = 'tsconfig.json',
-  onMessage,
+  onMessage = doctorMessageHandler,
 }: DoctorParams) {
   const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, sourceRoot, entry });
 

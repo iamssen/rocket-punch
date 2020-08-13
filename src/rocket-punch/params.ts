@@ -155,7 +155,7 @@ export interface BuildParams extends CommonParams {
    */
   emitCustomTransformers?: (packageName: string) => () => ts.CustomTransformers | undefined;
 
-  onMessage: (message: BuildMessages) => Promise<void>;
+  onMessage?: (message: BuildMessages) => Promise<void>;
 }
 
 export interface PublishParams extends Pick<CommonParams, 'cwd' | 'entry' | 'dist' | 'sourceRoot'> {
@@ -187,13 +187,13 @@ export interface PublishParams extends Pick<CommonParams, 'cwd' | 'entry' | 'dis
    */
   registry?: string;
 
-  onMessage: (message: PublishMessages) => Promise<void>;
+  onMessage?: (message: PublishMessages) => Promise<void>;
 }
 
 export interface ViewParams extends Pick<CommonParams, 'cwd' | 'entry' | 'sourceRoot'> {
-  onMessage: (message: ViewMessages) => Promise<void>;
+  onMessage?: (message: ViewMessages) => Promise<void>;
 }
 
 export interface DoctorParams extends Pick<CommonParams, 'cwd' | 'entry' | 'tsconfig' | 'sourceRoot'> {
-  onMessage: (message: DoctorMessages) => Promise<void>;
+  onMessage?: (message: DoctorMessages) => Promise<void>;
 }
