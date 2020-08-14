@@ -15,7 +15,7 @@ Rocket-punch makes it easier to develop multiple packages than the monorepo tool
 
 But, it may not be able to separate the packages precisely as when using the monorepo tool. This is an alternative to the monorepo tool if you want to develop it easier.
 
-![doc-assets/Untitled.png](doc-assets/main.png)
+![introduce rocket-punch](https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/main.png)
 
 Usage is simple.
 
@@ -24,8 +24,8 @@ Usage is simple.
 
 <details><summary>You can see screenshots 🌠 of the commands in action.</summary>
 <p>
-<img src="doc-assets/screenshot-build.png" style="max-width: 700px" />
-<img src="doc-assets/screenshot-publish.png" style="max-width: 700px" />
+<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/screenshot-build.png" width="700" style="max-width: 700px" />
+<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/screenshot-publish.png" width="700" style="max-width: 700px" />
 </p>
 </details>
 
@@ -52,7 +52,7 @@ When creating a package using bundlers such as Rollup or Webpack, there is a pro
 
 However, Rocket-punch uses the TypeScript Compiler API, not bundler, `*.d.ts` files are created correctly.
 
-<img src="doc-assets/typescript-definitions-sample.png" style="max-width: 500px" />
+<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/typescript-definitions-sample.png" width="500" style="max-width: 500px" />
 
 It will create `*.d.ts` files that match the `*.js` files precisely like the above image.
 
@@ -73,7 +73,7 @@ Let's see through examples of how Rocket-punch can be applied to actual projects
 3. Let's check the [package.json](https://github.com/rocket-hangar/rocket-punch-template/blob/master/package.json) file. In the `scripts` section, you can see the scripts using `rocket-punch build` and `rocket-punch publish`.
 4. Let's check the [jest.config.js](https://github.com/rocket-hangar/rocket-punch-template/blob/master/jest.config.js) file. By using the `jestPreset` provided by Rocket-punch, you can configure the test environment more simply.
 
-<img src="doc-assets/use-this-template.png" style="max-width: 400px"/>
+<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/use-this-template.png" width="400" style="max-width: 400px"/>
 
 You can also create a project right away by clicking the "Use this template" button.
 
@@ -94,7 +94,7 @@ You can also create a project right away by clicking the "Use this template" but
 
 You can check what needs to be added in the initial project created by the `create-react-app` command through "Comparing Changes" above.
 
-<img src="doc-assets/use-this-template.png" style="max-width: 400px"/>
+<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/use-this-template.png" width="400" style="max-width: 400px"/>
 
 You can also create a project right away by clicking the "Use this template" button. (However, it is not recommened to use the template because the template of `create-react-app` can be updated.)
 
@@ -117,7 +117,7 @@ The basic template of Next.js is different from other toolchains, so the project
 
 You can check what needs to be added in the initial project created by the `create-next-app` command through "Comparing Changes" above.
 
-<img src="doc-assets/use-this-template.png" style="max-width: 400px"/>
+<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/use-this-template.png" width="400" style="max-width: 400px"/>
 
 You can also create a project right away by clicking the "Use this template" button. (However, it is not recommended to use the template because the template of `create-next-app` can be updated.)
 
@@ -140,7 +140,7 @@ You can also create a project right away by clicking the "Use this template" but
 
 You can check what needs to be added in the initial project created by the `gatsby create` command through "Comparing Changes" above.
 
-<img src="doc-assets/use-this-template.png" style="max-width: 400px"/>
+<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/use-this-template.png" width="400" style="max-width: 400px"/>
 
 You can also create a project right away by clicking the "Use this template" button. (However, it is not recommended to use the template because the template of `gatsby create` can be updated.)
 
@@ -153,37 +153,37 @@ You can also create a project right away by clicking the "Use this template" but
 
 `rocket-punch build`
 
-<img src="doc-assets/commands-build.png" style="max-width: 800px"/>
+<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/commands-build.png" width="800" style="max-width: 800px"/>
 
 Build the subdirectories in the `/src` directory into the `/out/packages` directory.
 
 `rocket-punch publish`
 
-<img src="doc-assets/commands-publish.png" style="max-width: 800px"/>
+<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/commands-publish.png" width="800" style="max-width: 800px"/>
 
 Publish packages built with `/out/packages` to a registry like the NPM. (You must be logged in to the registry with `npm login` command.)
 
 `rocket-punch doctor`
 
-<img src="doc-assets/commands-doctor.png" style="max-width: 800px"/>
+<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/commands-doctor.png" width="800" style="max-width: 800px"/>
 
 Check that there are no problem with the current project. (In fact, it's not useful yet. 💦)
 
 `rocket-punch view`
 
-<img src="doc-assets/commands-view.png" style="max-width: 800px"/>
+<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/commands-view.png" width="800" style="max-width: 800px"/>
 
 Check the local and remote information of packages.
 
 `rocket-punch help`
 
-<img src="doc-assets/commands-help.png" style="max-width: 800px"/>
+<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/commands-help.png" width="800" style="max-width: 800px"/>
 
 ## API
 
 Rocket-punch has features that are not accessible with the `rocket-punch` CLI commands. (e.g. TypeScript AST Transformer.) If you want, you can write a script using API and executing it using `node` or `ts-node`.
 
-<img src="doc-assets/api.png" style="max-width: 700px"/>
+<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/api.png" width="700" style="max-width: 700px"/>
 
 The API comes with a TypeScript Definition written by JSDoc.
 
