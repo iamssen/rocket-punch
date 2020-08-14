@@ -227,11 +227,11 @@ If this file is on the project root, it will be applied in common to all `packag
 
 ```yaml
 some-package:
-	version: 0.1.0
-	packageJson:
-		keywords:
-			- react
-			- component
+  version: 0.1.0
+  packageJson:
+    keywords:
+      - react
+      - component
 ```
 
 Entering the `packageJson` entry applies it to the individual `package.json` files to be built.
@@ -244,9 +244,9 @@ Use `compilerOptions` of the `tsconfig.json` file on Project Root.
 
 ```yaml
 some-package:
-version: 0.1.0
-compilerOptions:
-jsx: react
+  version: 0.1.0
+  compilerOptions:
+  jsx: react
 ```
 
 Entering the `compilerOptions` item will be used in the TypeScript compile process of individual packages to be built.
