@@ -252,3 +252,7 @@ some-package:
 Entering the `compilerOptions` item will be used in the TypeScript compile process of individual packages to be built.
 
 However, some items in the `compilerOptions` you enter may be overridden during Rocket-punch's build process. More details can be found in the [getCompilerOptions.ts](https://github.com/rocket-hangar/rocket-punch/blob/master/src/rocket-punch/rule/getCompilerOptions.ts) file.
+
+# Advanced strategy
+
+- [Test packages made by rocket-punch on isolated environemnts like monorepo](https://github.com/rocket-hangar/rocket-punch-workspace-example)
