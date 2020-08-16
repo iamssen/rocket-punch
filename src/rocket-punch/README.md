@@ -9,12 +9,6 @@
 
 This is a tool for building multiple packages in a project and publishing them to the registry like the NPM.
 
-When we make multiple packages in a project, we need to use a monorepo tool like the Lerna. But, sometimes using the monorepo tool's commands and configure every package under the `/packages/` are an inconvenience.
-
-Rocket-punch makes it easier to develop multiple packages than the monorepo tool.
-
-But, it may not be able to separate the packages precisely as when using the monorepo tool. This is an alternative to the monorepo tool if you want to develop it easier.
-
 ![introduce rocket-punch](https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/main.png)
 
 Usage is simple.
@@ -33,7 +27,7 @@ That's it.
 
 You don't need some complex commands and many configuration files.
 
-Also, there are several advantages.
+Also, there are few advantages.
 
 <details><summary><code>dependencies</code> will be entered automatically.</summary>
 <p>
