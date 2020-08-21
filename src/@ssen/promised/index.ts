@@ -6,3 +6,4 @@ import { promisify } from 'util';
 export const exec: typeof _exec.__promisify__ = promisify(_exec);
 export const glob: typeof _glob.__promisify__ = promisify(_glob);
 export const rimraf: (path: string) => Promise<void> = promisify(_rimraf);
+export const timeout = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
