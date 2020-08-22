@@ -9,7 +9,7 @@ import { readPackages } from 'rocket-punch/entry/readPackages';
 import { PackageInfo } from 'rocket-punch/types';
 
 describe('build()', () => {
-  test('should basic build normally', async () => {
+  test('should succeed in basic build', async () => {
     // Arrange
     const cwd: string = await copyTmpDirectory(path.join(process.cwd(), 'test/fixtures/rocket-punch/basic'));
     const dist: string = await createTmpDirectory();

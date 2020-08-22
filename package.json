@@ -4,27 +4,20 @@
   "license": "MIT",
   "repository": "github:rocket-hangar/rocket-punch",
   "scripts": {
-    "build": "node -r ts-node/register -r tsconfig-paths/register scripts/build.ts",
-    "publish": "npm run test && npm run build && node -r ts-node/register -r tsconfig-paths/register scripts/publish.ts",
-    "view": "node -r ts-node/register -r tsconfig-paths/register scripts/view.ts",
-    "doctor": "node -r ts-node/register -r tsconfig-paths/register scripts/doctor.ts",
-    "format": "prettier --write scripts \"source/src/{**/*,*}.{ts,tsx}\"",
-    "lint": "eslint scripts \"source/src/{**/*,*}.{ts,tsx}\"",
-    "e2e": "npm run build && bash test/e2e.sh",
-    "test": "jest --colors",
-    "coverage": "jest --coverage"
+    "build": "yarn workspace source run build --out-dir $PWD/out/packages",
+    "publish": "yarn run test && yarn run build && yarn workspace source run publish --out-dir $PWD/out/packages",
+    "view": "yarn workspace source run view",
+    "doctor": "yarn workspace source run doctor",
+    "format": "yarn workspace source run format",
+    "lint": "yarn workspace source run lint",
+    "e2e": "yarn workspace source run e2e",
+    "test": "yarn workspace source run test",
+    "coverage": "yarn workspace source run coverage --coverageDirectory $PWD/coverage"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "cp README.md source/src/rocket-punch/README.md && markdown-source-import \"{,!(node_modules)/**/}*.md\" --git-add && lint-staged"
+      "pre-commit": "cp README.md source/src/rocket-punch/README.md && git add source/src/rocket-punch/README.md && markdown-source-import \"{,!(node_modules)/**/}*.md\" --git-add && lerna run --concurrency 1 --stream precommit --since HEAD --exclude-dependents"
     }
-  },
-  "lint-staged": {
-    "source/src/{**/*,*}.{ts,tsx}": [
-      "prettier --write",
-      "eslint",
-      "jest --colors --findRelatedTests"
-    ]
   },
   "workspaces": [
     "source",
@@ -32,20 +25,8 @@
     "examples/*"
   ],
   "devDependencies": {
-    "@ssen/eslint-config": "^1.1.0",
-    "@ssen/prettier-config": "^1.0.0",
-    "@types/jest": "^26.0.10",
-    "@types/node": "^14.6.0",
-    "@types/prettier": "^2.0.2",
-    "eslint": "^7.7.0",
-    "eslint-config-prettier": "^6.11.0",
     "husky": "^4.2.5",
-    "jest": "^26.4.2",
-    "lint-staged": "^10.2.11",
-    "markdown-source-import": "^1.3.1",
-    "prettier": "^2.0.5",
-    "ts-jest": "^26.2.0",
-    "ts-node": "^9.0.0",
-    "tsconfig-paths": "^3.9.0"
+    "lerna": "^3.22.1",
+    "markdown-source-import": "^1.3.1"
   }
 }

@@ -1,5 +1,5 @@
 module.exports = {
-  roots: ['<rootDir>/source/src/'],
+  roots: ['<rootDir>/src/'],
   transform: {
     '.(ts|tsx)': 'ts-jest',
   },
@@ -7,18 +7,18 @@ module.exports = {
   testMatch: ['**/__test?(s)__/**/*.ts?(x)', '**/?(*.)(spec|test).ts?(x)'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
   collectCoverageFrom: [
-    'source/src/**/*.ts?(x)',
+    'src/**/*.ts?(x)',
     '!**/*.d.ts?(x)',
     '!**/__*__/**',
     '!**/bin/**',
-    '!source/src/rocket-punch/message-handlers/**',
-    '!source/src/rocket-punch/bin.ts',
+    '!src/rocket-punch/message-handlers/**',
+    '!src/rocket-punch/bin.ts',
   ],
   globals: {
     'ts-jest': {
       tsConfig: 'tsconfig.json',
     },
   },
-  moduleDirectories: ['<rootDir>/source/src', 'node_modules'],
-  //modulePaths: ['<rootDir>/source/src/'],
+  moduleDirectories: ['<rootDir>/src', '<rootDir>/node_modules', '<rootDir>../node_modules'],
+  //modulePaths: ['<rootDir>/src/'],
 };

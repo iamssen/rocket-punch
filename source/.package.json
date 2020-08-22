@@ -3,7 +3,7 @@
   "license": "MIT",
   "repository": "github:rocket-hangar/rocket-punch",
   "bugs": "https://github.com/rocket-hangar/rocket-punch/issues",
-  "homepage": "https://github.com/rocket-hangar/rocket-punch/tree/master/src/{name}",
+  "homepage": "https://github.com/rocket-hangar/rocket-punch/tree/master/source/src/{name}",
   "engines": {
     "node": ">=10"
   },
