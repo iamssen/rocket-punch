@@ -69,7 +69,7 @@ describe('getPackagesEntry()', () => {
 
     // Assert
     expect(packages.get('a')?.module).toBe('commonjs');
-    expect(packages.get('a')?.packageJson['bin']['cli-a']).toBe('./bin/test.js');
+    expect(packages.get('a')?.packageJson.bin).toMatchObject({ 'cli-a': './bin/test.js' });
     expect(packages.get('b')?.module).toBe('commonjs');
     expect(packages.get('b')?.packageJson['test']).toBe('hello world 1');
     expect(packages.get('b')?.compilerOptions['allowJs']).toBeTruthy();

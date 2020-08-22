@@ -1,8 +1,8 @@
 import { parseTSConfig, readTSConfig } from '@ssen/read-tsconfig';
+import fs from 'fs-extra';
 import path from 'path';
 import ts from 'typescript';
 import { PackageInfo } from '../types';
-import fs from 'fs-extra';
 
 interface Params {
   searchPath: string;
@@ -13,7 +13,7 @@ interface Params {
 export function getCompilerOptions({ searchPath, configName, packageInfo }: Params): ts.CompilerOptions {
   const { options: tsconfig } = fs.existsSync(path.join(searchPath, configName))
     ? readTSConfig(searchPath, configName)
-    : { options: {} };
+    : { options: {} as ts.CompilerOptions };
   const { options: info } = parseTSConfig(searchPath, { compilerOptions: packageInfo.compilerOptions });
   const defaultValues: Partial<ts.CompilerOptions> = {
     downlevelIteration: true,
@@ -36,7 +36,7 @@ export function getCompilerOptions({ searchPath, configName, packageInfo }: Para
   const computed: ts.CompilerOptions = Object.keys(defaultValues).reduce((result, name) => {
     result[name] = info[name] ?? tsconfig[name] ?? defaultValues[name];
     return result;
-  }, {});
+  }, {} as ts.CompilerOptions);
 
   return {
     ...computed,

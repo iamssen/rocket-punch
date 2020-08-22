@@ -37,9 +37,13 @@ function createVisitor({
       });
 
       if (importPath !== rewrittenImportPath) {
-        const newNode = ts.getMutableClone(node);
-        newNode.moduleSpecifier = ts.createLiteral(rewrittenImportPath);
-        return newNode;
+        return ts.factory.updateImportDeclaration(
+          node,
+          undefined,
+          undefined,
+          undefined,
+          ts.createLiteral(rewrittenImportPath),
+        );
       }
     }
     // import('?')
@@ -56,11 +60,10 @@ function createVisitor({
       });
 
       if (importPath !== rewrittenImportPath) {
-        const newNode = ts.getMutableClone(node);
-        const newArguments: ts.Expression[] = [...node.arguments];
-        newArguments[0] = ts.createStringLiteral(rewrittenImportPath);
-        newNode.arguments = ts.createNodeArray(newArguments);
-        return newNode;
+        return ts.factory.updateCallExpression(node, node.expression, node.typeArguments, [
+          ts.createStringLiteral(rewrittenImportPath),
+          ...node.arguments.slice(1),
+        ]);
       }
     }
     // require.resolve('?')
@@ -80,11 +83,10 @@ function createVisitor({
       });
 
       if (importPath !== rewrittenImportPath) {
-        const newNode = ts.getMutableClone(node);
-        const newArguments: ts.Expression[] = [...node.arguments];
-        newArguments[0] = ts.createStringLiteral(rewrittenImportPath);
-        newNode.arguments = ts.createNodeArray(newArguments);
-        return newNode;
+        return ts.factory.updateCallExpression(node, node.expression, node.typeArguments, [
+          ts.createStringLiteral(rewrittenImportPath),
+          ...node.arguments.slice(1),
+        ]);
       }
     }
     // require('?')
@@ -102,11 +104,10 @@ function createVisitor({
       });
 
       if (importPath !== rewrittenImportPath) {
-        const newNode = ts.getMutableClone(node);
-        const newArguments: ts.Expression[] = [...node.arguments];
-        newArguments[0] = ts.createStringLiteral(rewrittenImportPath);
-        newNode.arguments = ts.createNodeArray(newArguments);
-        return newNode;
+        return ts.factory.updateCallExpression(node, node.expression, node.typeArguments, [
+          ts.createStringLiteral(rewrittenImportPath),
+          ...node.arguments.slice(1),
+        ]);
       }
     }
 

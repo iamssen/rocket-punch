@@ -6,12 +6,9 @@
     // import
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "allowJs": true,
     // strict
-    "alwaysStrict": true,
-    "strictNullChecks": true,
-    "strictBindCallApply": true,
-    "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
+    "strict": true,
     // build
     "module": "commonjs",
     "target": "ES2018",
@@ -20,6 +17,11 @@
     // export
     "sourceMap": true,
     "declaration": true,
+    // types
+    "typeRoots": [
+      "./node_modules/@types",
+      "./@types"
+    ],
     // output
     "outDir": "lib",
     // path
