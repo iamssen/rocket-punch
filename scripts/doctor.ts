@@ -1,9 +1,9 @@
 import { doctor } from 'rocket-punch';
-import { readEntry } from 'rocket-punch/entry/readEntry';
 import { doctorMessageHandler } from 'rocket-punch/message-handlers/doctor';
+import { entry, sourceDir } from './env';
 
 doctor({
-  cwd: process.cwd(),
-  entry: readEntry({ cwd: process.cwd() }),
+  cwd: sourceDir,
+  entry,
   onMessage: doctorMessageHandler,
 });

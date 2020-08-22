@@ -15,7 +15,7 @@ echo "LOCAL_REGISTRY_URL=$LOCAL_REGISTRY_URL";
 function stopLocalRegistry {
   PID=$(lsof -t -i:$VERDACCIO_PORT); # kill verdaccio
   if [[ $PID =~ ^[0-9]+$ ]] ; then
-    kill -9 $PID;
+    kill -9 "$PID";
   fi
   rm -rf "$ROOT/test/storage"; # clean verdaccio storage
 }
@@ -54,14 +54,14 @@ grep -q 'http address' <(tail -f "$VERDACCIO_REGISTRY_LOG"); # wating verdaccio
 
 ## LOCAL PUBLISH
 ## ==================================================----------------------------------
-ts-node -r tsconfig-paths/register src/publish-packages-e2e.ts --tag e2e --registry "$LOCAL_REGISTRY_URL";
+node -r ts-node/register -r tsconfig-paths/register scripts/publish.ts --skip-selection --tag e2e --registry "$LOCAL_REGISTRY_URL";
 
 # TEST
 # ==================================================----------------------------------
 function fileExists() {
   if ! ls "$1" 1> /dev/null 2>&1; then
     echo "ERROR: Undefined the file $1";
-    handleError;
+    handleError 0;
   fi
 }
 
