@@ -16,7 +16,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "markdown-source-import \"{,!(node_modules)/**/}*.md\" --git-add && cp README.md source/src/rocket-punch/README.md && git add source/src/rocket-punch/README.md && lerna run --concurrency 1 --stream precommit --since HEAD --exclude-dependents"
+      "pre-commit": "markdown-source-import \"{,!(node_modules)/**/}*.md\" --git-add && cp README.md source/src/rocket-punch/README.md && git add source/src/rocket-punch/README.md && yarn workspace source run precommit"
     }
   },
   "workspaces": [
@@ -26,7 +26,6 @@
   ],
   "devDependencies": {
     "husky": "^4.2.5",
-    "lerna": "^3.22.1",
     "markdown-source-import": "^1.3.1"
   }
 }
