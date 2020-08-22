@@ -29,6 +29,7 @@
     "outDir": "foo"
   },
   "include": [
-    "src"
+    "src",
+    "scripts"
   ]
 }
