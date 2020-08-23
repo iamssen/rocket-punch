@@ -19,6 +19,6 @@ module.exports = {
       tsConfig: 'tsconfig.json',
     },
   },
-  moduleDirectories: ['<rootDir>/src', '<rootDir>/node_modules', '<rootDir>../node_modules'],
-  //modulePaths: ['<rootDir>/src/'],
+  //moduleDirectories: ['<rootDir>/src', '<rootDir>/node_modules', '<rootDir>/../node_modules'],
+  modulePaths: ['<rootDir>/src/'],
 };
