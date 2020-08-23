@@ -1,3 +1,4 @@
+import { readLastArgv } from '@ssen/read-last-argv';
 import path from 'path';
 import * as process from 'process';
 import yargs, { Arguments, Argv } from 'yargs';
@@ -113,7 +114,8 @@ export function run() {
           .example('$0 build --out-dir /some/directory', 'Build packages to specific directory')
           .example('$0 build --tsconfig tsconfig.build.json', 'Use another tsconfig.json file on build')
           .example('$0 build --svg default', 'SVG transform to `import ReactComponent from "./file.svg"`'),
-      handler: ({ emit, outDir, tsconfig, sourceRoot, svg }: Arguments<CommonArgs & BuildArgs>) => {
+      handler: (argv: Arguments<CommonArgs & BuildArgs>) => {
+        const { emit, outDir, tsconfig, sourceRoot, svg } = readLastArgv(argv);
         const params: BuildParams = {
           cwd,
           svg: svg === 'default' ? 'default' : 'create-react-app',
@@ -144,15 +146,8 @@ export function run() {
           .example('$0 publish --out-dir /some/directory', 'Publish packages from specific directory')
           .example('$0 publish --skip-selection', 'Publish all packages without user selection (e.g. CI)')
           .example('$0 publish --skip-selection --tag e2e --registry http://localhost:4873', 'E2E test'),
-      handler: ({
-        registry,
-        outDir,
-        sourceRoot,
-        emit,
-        access,
-        skipSelection,
-        tag,
-      }: Arguments<CommonArgs & PublishArgs>) => {
+      handler: (argv: Arguments<CommonArgs & PublishArgs>) => {
+        const { registry, outDir, sourceRoot, emit, access, skipSelection, tag } = readLastArgv(argv);
         const params: PublishParams = {
           cwd,
           dist: toAbsolutePath(outDir),
@@ -176,7 +171,8 @@ export function run() {
       command: 'view',
       describe: 'View packages information',
       builder: (yargs) => yargs.options({ ...commonOptions }).example('$0 view', 'View packages information'),
-      handler: ({ emit, sourceRoot }: Arguments<CommonArgs>) => {
+      handler: (argv: Arguments<CommonArgs>) => {
+        const { emit, sourceRoot } = readLastArgv(argv);
         const params: ViewParams = {
           cwd,
           sourceRoot,
@@ -198,7 +194,8 @@ export function run() {
         yargs
           .options({ ...commonOptions })
           .example('$0 doctor', 'Check configs is validate for rocket-punch'),
-      handler: ({ emit, sourceRoot }: Arguments<CommonArgs>) => {
+      handler: (argv: Arguments<CommonArgs>) => {
+        const { emit, sourceRoot } = readLastArgv(argv);
         const params: DoctorParams = {
           cwd,
           sourceRoot,
