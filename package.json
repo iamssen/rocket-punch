@@ -3,29 +3,36 @@
   "author": "SSen <i@ssen.name>",
   "license": "MIT",
   "repository": "github:rocket-hangar/rocket-punch",
-  "scripts": {
-    "build": "yarn workspace source run build --out-dir $PWD/out/packages",
-    "publish": "yarn run test && yarn run build && yarn workspace source run publish --out-dir $PWD/out/packages",
-    "view": "yarn workspace source run view",
-    "doctor": "yarn workspace source run doctor",
-    "format": "yarn workspace source run format",
-    "lint": "yarn workspace source run lint",
-    "e2e": "yarn workspace source run e2e",
-    "test": "yarn workspace source run test",
-    "coverage": "yarn workspace source run coverage --coverageDirectory $PWD/coverage"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "markdown-source-import \"{,!(node_modules)/**/}*.md\" --git-add && cp README.md source/src/rocket-punch/README.md && git add source/src/rocket-punch/README.md && yarn workspace source run precommit"
-    }
-  },
   "workspaces": [
     "source",
     "out/packages/*",
     "examples/*"
   ],
+  "scripts": {
+    "build": "yarn workspace source run build --out-dir $PWD/out/packages",
+    "publish": "yarn run test && yarn run build && yarn workspace source run publish --out-dir $PWD/out/packages",
+    "view": "yarn workspace source run view",
+    "doctor": "yarn workspace source run doctor",
+    "format": "prettier --write \"**/*.{js,ts,tsx}\"",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "e2e": "yarn workspace source run e2e",
+    "test": "yarn workspace source run test",
+    "coverage": "yarn workspace source run coverage --coverageDirectory $PWD/coverage"
+  },
+  "lint-staged": {
+    "**/src/{**/*,*}.{ts,tsx}": [
+      "prettier --write",
+      "eslint"
+    ]
+  },
   "devDependencies": {
+    "@ssen/eslint-config": "^1.1.0",
+    "@ssen/prettier-config": "^1.0.0",
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.11.0",
     "husky": "^4.2.5",
-    "markdown-source-import": "^1.3.1"
+    "lint-staged": "^10.2.11",
+    "markdown-source-import": "^1.3.1",
+    "prettier": "^2.0.5"
   }
 }
