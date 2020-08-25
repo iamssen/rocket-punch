@@ -111,7 +111,7 @@ yarn run publish # or npx rocket-punch publish
 ```diff
 // src/App.tsx
 import React from 'react';
-import { SampleComponent } from 'sample-component';
++import { SampleComponent } from 'sample-component';
 import logo from './logo.svg';
 import './App.css';
 
@@ -220,7 +220,7 @@ yarn run publish # or npx rocket-punch publish
 
 ```diff
 import Link from 'next/link'
-import { Hi } from 'sample-component';
++import { Hi } from 'sample-component';
 import Layout from '../components/Layout'
 
 const IndexPage = () => (
