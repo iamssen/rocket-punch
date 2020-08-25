@@ -5,143 +5,342 @@
 [![codecov](https://codecov.io/gh/rocket-hangar/rocket-punch/branch/master/graph/badge.svg)](https://codecov.io/gh/rocket-hangar/rocket-punch)
 [![devDependencies Status](https://david-dm.org/rocket-hangar/rocket-punch/dev-status.svg?kill_cache=1)](https://david-dm.org/rocket-hangar/rocket-punch?type=dev)
 
-# What is this tool for doing?
+🚀 Rocket Punch is a multi-package builder.
 
-This is a tool for building multiple packages in a project and publishing them to the registry like the NPM.
+You can develop multi-packages without complexibility anywhere.
 
-![introduce rocket-punch](https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/main.png)
+# Quick start the Node.js packages development
 
-Usage is simple.
+<https://github.com/rocket-hangar/rocket-punch-templates/tree/master/templates/packages>
 
-1. It builds the subdirectories under the `/src` to the `/out/packages` directory by `rocket-punch build` command.
-2. And it publishes to a registry (e.g. NPM) by `rocket-punch publish` command.
+```sh
+# create a workspace directory
+npx generate-github-directory https://github.com/rocket-hangar/workspace-template my-project
+cd my-project
 
-<details><summary>You can see screenshots 🌠 of the commands in action.</summary>
-<p>
-<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/screenshot-build.png" width="700" style="max-width: 700px" />
-<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/screenshot-publish.png" width="700" style="max-width: 700px" />
-</p>
-</details>
+# create an app
+npx generate-github-directory https://github.com/rocket-hangar/rocket-punch-templates/tree/master/templates/packages my-packages
 
-That's it.
+# add "my-packages" to workspaces of package.json
 
-You don't need some complex commands and many configuration files.
+# install
+yarn
 
-Also, there are few advantages.
+# start
+cd my-packages
 
-<details><summary><code>dependencies</code> will be entered automatically.</summary>
-<p>
+# start
+yarn run test
+```
 
-When executing the `rocket-punch build` command, it analyzes the package's sources to be built.
+# How to use `rocket-punch` on a `create-react-app` project
 
-After collecting the `import`, `import()`, `require()` and `require.resolve()` statements, the collected items are used to automatically enter `dependencies` in the `package.json` file.
+<https://github.com/rocket-hangar/rocket-punch-templates/tree/master/examples/create-react-app>
 
-</p>
-</details>
+## 1. Create a project and install `rocket-punch`
 
-<details><summary>The correct <code>*.d.ts</code> files will be created.</summary>
-<p>
+```sh
+npx create-react-app my-project --typescript
 
-When creating a package using bundlers such as Rollup or Webpack, there is a problem that `*.d.ts` files are created incorrectly.
+cd my-project
 
-However, Rocket-punch uses the TypeScript Compiler API, not bundler, `*.d.ts` files are created correctly.
+yarn add rocket-punch --dev
+```
 
-<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/typescript-definitions-sample.png" width="500" style="max-width: 500px" />
+## 2. Edit `tsconfig.json`
 
-It will create `*.d.ts` files that match the `*.js` files precisely like the above image.
+Add `compilerOptions.baseUrl` property
 
-</p>
-</details>
+```json
+{
+  "compilerOptions": {
+    "baseUrl": "src"
+  }
+}
+```
 
-# How to use it?
+## 3. Edit `package.json`
 
-Let's see through examples of how Rocket-punch can be applied to actual projects.
+Add scripts
 
-<details><summary>When you only need to make packages.</summary>
-<p>
+```json
+{
+  "scripts": {
+    "pack": "rocket-punch build",
+    "publish": "rocket-punch publish"
+  }
+}
+```
 
-[https://github.com/rocket-hangar/rocket-punch-template](https://github.com/rocket-hangar/rocket-punch-template)
+## 4. Create a sample package
 
-1. There is the [sample-package](https://github.com/rocket-hangar/rocket-punch-template/tree/master/src/sample-package) directory in the `/src` directory.
-2. Let's check the [.packages.yaml](https://github.com/rocket-hangar/rocket-punch-template/blob/master/.packages.yaml) file. Information about the `sample-package` is entered.
-3. Let's check the [package.json](https://github.com/rocket-hangar/rocket-punch-template/blob/master/package.json) file. In the `scripts` section, you can see the scripts using `rocket-punch build` and `rocket-punch publish`.
-4. Let's check the [jest.config.js](https://github.com/rocket-hangar/rocket-punch-template/blob/master/jest.config.js) file. By using the `jestPreset` provided by Rocket-punch, you can configure the test environment more simply.
+```tsx
+// src/sample-component/index.tsx
+// `sample-component` is your package name
+import React, { ReactNode } from 'react';
 
-<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/use-this-template.png" width="400" style="max-width: 400px"/>
+export interface SampleComponentProps {
+  children: ReactNode;
+}
 
-You can also create a project right away by clicking the "Use this template" button.
+export function SampleComponent({children}: SampleComponentProps) {
+  return (
+    <p>{children}</p>
+  );
+}
+```
 
-</p>
-</details>
+## 5. Create the `.packages.yaml`
 
-<details><summary>When you want to publish the directories in the <b>Create-React-App</b> project as packages.</summary>
-<p>
+```yaml
+# listing your component `sample-component` 
+sample-component:
+  version: 1.1.0
+  module: esm
+```
 
-[https://github.com/rocket-hangar/rocket-punch-create-react-app-template](https://github.com/rocket-hangar/rocket-punch-create-react-app-template)
+## 6. Build and publish
 
-1. There is the directory [some-package](https://github.com/rocket-hangar/rocket-punch-create-react-app-template/tree/master/src/some-component) in the `/src` directory.
-2. Let's check the [.packages.yaml](https://github.com/rocket-hangar/rocket-punch-create-react-app-template/compare/create-react-app-initialize...HEAD#diff-1ed02b3afcba1812b68ab3eb2fac55c1R1) file. Information about the `some-package` is entered.
-3. Let's check the [package.json](https://github.com/rocket-hangar/rocket-punch-create-react-app-template/compare/create-react-app-initialize...HEAD#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R24) file. pack and publish have been added to the `scripts` section. You can build packages using the `npm run pack` command, and publish the built packages using the `npm run publish` command.
-4. Let's check the [tsconfig.json](https://github.com/rocket-hangar/rocket-punch-create-react-app-template/compare/create-react-app-initialize...HEAD#diff-e5e546dd2eb0351f813d63d1b39dbc48R21) file. You can see that `"baseUrl": "src"` has been added. You need to add `"baseUrl": "src"` to import with absolute paths like `import {} from 'some-package'` in TypeScript source.
+```sh
+yarn run pack # or npx rocket-punch build
+yarn run publish # or npx rocket-punch publish 
+```
 
-[https://github.com/rocket-hangar/rocket-punch-create-react-app-template/compare/create-react-app-initialize...HEAD](https://github.com/rocket-hangar/rocket-punch-create-react-app-template/compare/create-react-app-initialize...HEAD)
+## 7. Import your package to your App by absolute path
 
-You can check what needs to be added in the initial project created by the `create-react-app` command through "Comparing Changes" above.
+```diff
+// src/App.tsx
+import React from 'react';
+import { SampleComponent } from 'sample-component';
+import logo from './logo.svg';
+import './App.css';
 
-<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/use-this-template.png" width="400" style="max-width: 400px"/>
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+-        <p>
++        <SampleComponent>
+          Edit <code>src/App.tsx</code> and save to reload.
+-        </p>
++        </SampleComponent>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
+}
 
-You can also create a project right away by clicking the "Use this template" button. (However, it is not recommened to use the template because the template of `create-react-app` can be updated.)
+export default App;
+```
 
-</p>
-</details>
+# How to use `rocket-punch` on a `next` project
 
-<details><summary>When you want to publish the directories in the <b>Next.js</b> project as packages.</summary>
-<p>
+<https://github.com/rocket-hangar/rocket-punch-templates/tree/master/examples/nextjs>
 
-[https://github.com/rocket-hangar/rocket-punch-next-template](https://github.com/rocket-hangar/rocket-punch-next-template)
+## 1. Create a project and install `rocket-punch`
 
-The basic template of Next.js is different from other toolchains, so the project is created without `/src` directory. The project root is the source root.
+```sh
+npx create-next-app --example with-typescript my-project
 
-1. There is the directory [@ssen-temp/sample-next-component](https://github.com/rocket-hangar/rocket-punch-next-template/tree/master/%40ssen-temp/sample-next-component) in the `/src` directory.
-2. Let's check the [.packages.yaml](https://github.com/rocket-hangar/rocket-punch-next-template/compare/next-initialized...HEAD#diff-1ed02b3afcba1812b68ab3eb2fac55c1R1) file. Information about the @ssen-temp/sample-next-component is entered.
-3. Let's check the [package.json](https://github.com/rocket-hangar/rocket-punch-next-template/compare/next-initialized...HEAD#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R8) file. `pack` and `publish` are added to the `scripts` section. You can build packages using the `npm run pack` command, and publish the built packages using the `npm run publish` command. Note that the source root has been reassigned like `rocket-punch build --source-root .`. Since the Next.js project is created without `/src` directory, you need to set the source root using the `--source-root .` parameter.
-4. Let's check the [tsconfig.json](https://github.com/rocket-hangar/rocket-punch-next-template/compare/next-initialized...HEAD#diff-e5e546dd2eb0351f813d63d1b39dbc48R20) file. You can see that `"baseUrl": "."` has been added. You need to add `"baseUrl": "."` to import with absolute paths like `import {} from '@ssen-temp/sample-next-component'` in TypeScript source.
+cd my-project
 
-[https://github.com/rocket-hangar/rocket-punch-next-template/compare/next-initialized...HEAD](https://github.com/rocket-hangar/rocket-punch-next-template/compare/next-initialized...HEAD)
+yarn add rocket-punch --dev
+```
 
-You can check what needs to be added in the initial project created by the `create-next-app` command through "Comparing Changes" above.
+## 2. Edit `tsconfig.json`
 
-<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/use-this-template.png" width="400" style="max-width: 400px"/>
+Add `compilerOptions.baseUrl` property
 
-You can also create a project right away by clicking the "Use this template" button. (However, it is not recommended to use the template because the template of `create-next-app` can be updated.)
+```json
+{
+  "compilerOptions": {
+    "baseUrl": "."
+  }
+}
+```
 
-</p>
-</details>
+## 3. Edit `package.json`
 
-<details><summary>When you want to publish the directories in the <b>Gatsby</b> project as packages.</summary>
-<p>
+Add scripts
 
-[https://github.com/rocket-hangar/rocket-punch-gatsby-template](https://github.com/rocket-hangar/rocket-punch-gatsby-template)
+```json
+{
+  "scripts": {
+    "pack": "rocket-punch build --source-root .",
+    "publish": "rocket-punch publish --source-root ."
+  }
+}
+```
 
-1. There is the directory [some-component](https://github.com/rocket-hangar/rocket-punch-gatsby-template/tree/master/src/some-component) in the `/src` directory.
-2. Let's check the [.packages.yaml](https://github.com/rocket-hangar/rocket-punch-gatsby-template/compare/gatsby-initialized...HEAD#diff-1ed02b3afcba1812b68ab3eb2fac55c1R1) file. Information about the `some-component` is entered.
-3. Let's check the [package.json](https://github.com/rocket-hangar/rocket-punch-gatsby-template/compare/gatsby-initialized...HEAD#diff-b9cfc7f2cdf78a7f4b91a753d10865a2R14) file. `pack` and `publish` are added to the `scripts` section. You can build packages using the `npm run pack` command, and publish the built packages using the `npm run publish` command.
-4. Let's check the [gatsby-config.json](https://github.com/rocket-hangar/rocket-punch-gatsby-template/compare/gatsby-initialized...HEAD#diff-b9e136416b90437fa1dac910280b45fcR10) file. You can see that `gatsby-plugin-typescript` has been added to use TypeScript.
-5. Let's check the [tsconfig.json](https://github.com/rocket-hangar/rocket-punch-gatsby-template/compare/gatsby-initialized...HEAD#diff-e5e546dd2eb0351f813d63d1b39dbc48R2) file. You can see that `"baseUrl": "src"` has been added. You need to add that configuration to import directories with absolute paths like `import {} from 'some-component'`.
-6. Let's check the [gatsby-node.json](https://github.com/rocket-hangar/rocket-punch-gatsby-template/compare/gatsby-initialized...HEAD#diff-fda05457e393bada716f508859bfc604R1) file. The `gatsby-plugin-typescript` uses `babel-preset-typescript`, absolute path import will not work even if `"baseUrl": "src"` is added in the `tsconfig.json` file. So you need to set the `alias` or `resolve` of Webpack. (There are Gatsby plugin like the [gatsby-plugin-root-import](https://www.gatsbyjs.com/plugins/gatsby-plugin-root-import/), but in my case, it didn't work.)
+## 4. Create a sample package
 
-[https://github.com/rocket-hangar/rocket-punch-gatsby-template/compare/gatsby-initialized...HEAD](https://github.com/rocket-hangar/rocket-punch-gatsby-template/compare/gatsby-initialized...HEAD)
+```tsx
+// sample-component/index.tsx
+// `sample-component` is your package name
+import React from 'react';
 
-You can check what needs to be added in the initial project created by the `gatsby create` command through "Comparing Changes" above.
+interface Props {
+  label: string;
+}
 
-<img src="https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/doc-assets/use-this-template.png" width="400" style="max-width: 400px"/>
+export function Hi({ label }: Props) {
+  return (
+    <span role="img" aria-label={label}>
+      👋
+    </span>
+  );
+}
+```
 
-You can also create a project right away by clicking the "Use this template" button. (However, it is not recommended to use the template because the template of `gatsby create` can be updated.)
+## 5. Create the `.packages.yaml`
 
-</p>
-</details>
+```yaml
+# listing your component `sample-component` 
+sample-component:
+  version: 1.1.0
+  module: esm
+```
 
-# More detailed usage
+## 6. Build and publish
+
+```sh
+yarn run pack # or npx rocket-punch build
+yarn run publish # or npx rocket-punch publish 
+```
+
+## 7. Import your package to your App by absolute path
+
+```diff
+import Link from 'next/link'
+import { Hi } from 'sample-component';
+import Layout from '../components/Layout'
+
+const IndexPage = () => (
+  <Layout title="Home | Next.js + TypeScript Example">
+-    <h1>Hello Next.js 👋</h1>
++    <h1>Hello Next.js <Hi label="Hello Next.js"/></h1>
+    <p>
+      <Link href="/about">
+        <a>About</a>
+      </Link>
+    </p>
+  </Layout>
+)
+
+export default IndexPage
+```
+
+# How to use `rocket-punch` on a `gatsby` project
+
+<https://github.com/rocket-hangar/rocket-punch-templates/tree/master/examples/gatsby>
+
+## 1. Create a project and install `rocket-punch`
+
+```sh
+gatsby new my-project https://github.com/gatsbyjs/gatsby-starter-hello-world
+
+cd my-project
+
+npm install rocket-punch --save-dev # install rocket-punch
+```
+
+## 2. Create `jsconfig.json`
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": "src"
+  }
+}
+```
+
+## 3. Edit `package.json`
+
+Add scripts
+
+```json
+{
+  "scripts": {
+    "pack": "rocket-punch build",
+    "publish": "rocket-punch publish"
+  }  
+}
+```
+
+## 4. Create a sample package
+
+```jsx
+// src/sample-component/index.jsx
+// `sample-component` is your package name
+import React from 'react';
+
+export function SampleComponent({text}) {
+  return (
+    <div>👋 {text}</div>
+  );
+}
+```
+
+## 5. Create the `.packages.yaml`
+
+```yaml
+# listing your component `sample-component` 
+sample-component:
+  version: 1.1.0
+  module: esm
+```
+
+## 6. Build and publish
+
+```sh
+npm run pack # or npx rocket-punch build
+npm run publish # or npx rocket-punch publish 
+```
+
+## 7. Import your package to your App by absolute path
+
+Add `gatsy-node.js`
+
+```js
+const path = require('path');
+
+exports.onCreateWebpackConfig = ({ actions }) => {
+  actions.setWebpackConfig({
+    resolve: {
+      modules: [path.resolve(__dirname, "src"), "node_modules"],
+    },
+  })
+}
+```
+
+Edit `src/pages/index.js`
+
+```diff
+// src/pages/index.js
+import React from "react"
++import { SampleComponent } from 'sample-component';
+
+export default function Home() {
+-  return <div>Hello world!</div>
++  return <div><SampleComponent text="Hello world!"/></div>
+}
+```
+
+# More repositories for reference
+
+- <https://github.com/rocket-hangar/rocket-punch-templates>
+- <https://github.com/rocket-hangar/rocket-scripts/tree/master/source>
+- <https://github.com/rocket-hangar/generate-github-directory/tree/master/source>
+
+# API
 
 ## Command Line Tools
 
@@ -246,7 +445,3 @@ some-package:
 Entering the `compilerOptions` item will be used in the TypeScript compile process of individual packages to be built.
 
 However, some items in the `compilerOptions` you enter may be overridden during Rocket-punch's build process. More details can be found in the [getCompilerOptions.ts](https://github.com/rocket-hangar/rocket-punch/blob/master/src/rocket-punch/rule/getCompilerOptions.ts) file.
-
-# Advanced strategy
-
-- [Test packages made by rocket-punch on isolated environemnts like monorepo](https://github.com/rocket-hangar/rocket-punch-workspace-example)
