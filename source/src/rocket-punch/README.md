@@ -445,3 +445,10 @@ some-package:
 Entering the `compilerOptions` item will be used in the TypeScript compile process of individual packages to be built.
 
 However, some items in the `compilerOptions` you enter may be overridden during Rocket-punch's build process. More details can be found in the [getCompilerOptions.ts](https://github.com/rocket-hangar/rocket-punch/blob/master/src/rocket-punch/rule/getCompilerOptions.ts) file.
+
+# Related Projects
+
+- <https://github.com/rocket-hangar/rocket-punch>
+- <https://github.com/rocket-hangar/rocket-scripts>
+- <https://github.com/rocket-hangar/handbook>
+- <https://github.com/rocket-hangar/generate-github-directory>
