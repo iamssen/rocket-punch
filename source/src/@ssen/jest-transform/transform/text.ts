@@ -5,7 +5,7 @@ function getCacheKey(fileData: BinaryLike, filePath: string, configString: strin
 }
 
 function process(sourceText: string): string {
-  return `module.exports = '${sourceText}'`;
+  return `module.exports = ${JSON.stringify(sourceText)}`;
 }
 
 export = {
