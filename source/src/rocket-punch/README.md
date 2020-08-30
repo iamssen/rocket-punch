@@ -77,23 +77,21 @@ Add scripts
 ```tsx
 // src/sample-component/index.tsx
 // `sample-component` is your package name
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from "react";
 
 export interface SampleComponentProps {
   children: ReactNode;
 }
 
-export function SampleComponent({children}: SampleComponentProps) {
-  return (
-    <p>{children}</p>
-  );
+export function SampleComponent({ children }: SampleComponentProps) {
+  return <p>{children}</p>;
 }
 ```
 
 ## 5. Create the `.packages.yaml`
 
 ```yaml
-# listing your component `sample-component` 
+# listing your component `sample-component`
 sample-component:
   version: 1.1.0
   module: esm
@@ -103,7 +101,7 @@ sample-component:
 
 ```sh
 yarn run pack # or npx rocket-punch build
-yarn run publish # or npx rocket-punch publish 
+yarn run publish # or npx rocket-punch publish
 ```
 
 ## 7. Import your package to your App by absolute path
@@ -185,7 +183,7 @@ Add scripts
 ```tsx
 // sample-component/index.tsx
 // `sample-component` is your package name
-import React from 'react';
+import React from "react";
 
 interface Props {
   label: string;
@@ -203,7 +201,7 @@ export function Hi({ label }: Props) {
 ## 5. Create the `.packages.yaml`
 
 ```yaml
-# listing your component `sample-component` 
+# listing your component `sample-component`
 sample-component:
   version: 1.1.0
   module: esm
@@ -213,7 +211,7 @@ sample-component:
 
 ```sh
 yarn run pack # or npx rocket-punch build
-yarn run publish # or npx rocket-punch publish 
+yarn run publish # or npx rocket-punch publish
 ```
 
 ## 7. Import your package to your App by absolute path
@@ -271,7 +269,7 @@ Add scripts
   "scripts": {
     "pack": "rocket-punch build",
     "publish": "rocket-punch publish"
-  }  
+  }
 }
 ```
 
@@ -280,19 +278,17 @@ Add scripts
 ```jsx
 // src/sample-component/index.jsx
 // `sample-component` is your package name
-import React from 'react';
+import React from "react";
 
-export function SampleComponent({text}) {
-  return (
-    <div>👋 {text}</div>
-  );
+export function SampleComponent({ text }) {
+  return <div>👋 {text}</div>;
 }
 ```
 
 ## 5. Create the `.packages.yaml`
 
 ```yaml
-# listing your component `sample-component` 
+# listing your component `sample-component`
 sample-component:
   version: 1.1.0
   module: esm
@@ -302,7 +298,7 @@ sample-component:
 
 ```sh
 npm run pack # or npx rocket-punch build
-npm run publish # or npx rocket-punch publish 
+npm run publish # or npx rocket-punch publish
 ```
 
 ## 7. Import your package to your App by absolute path
@@ -310,15 +306,15 @@ npm run publish # or npx rocket-punch publish
 Add `gatsy-node.js`
 
 ```js
-const path = require('path');
+const path = require("path");
 
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
     resolve: {
       modules: [path.resolve(__dirname, "src"), "node_modules"],
     },
-  })
-}
+  });
+};
 ```
 
 Edit `src/pages/index.js`
