@@ -17,10 +17,16 @@ interface Configuration {
   rootDir: string;
 }
 
-export const createImportPathRewriteCompilerHost = ({ src, rootDir }: Configuration) => (
+export const createImportPathRewriteCompilerHost = ({
+  src,
+  rootDir,
+}: Configuration) => (
   options: ts.CompilerOptions,
   setParentNodes?: boolean,
-  compilerHost: ts.CompilerHost = ts.createCompilerHost(options, setParentNodes),
+  compilerHost: ts.CompilerHost = ts.createCompilerHost(
+    options,
+    setParentNodes,
+  ),
 ): ts.CompilerHost => {
   // wrap getSourceFile
   function getSourceFile(
@@ -42,7 +48,11 @@ export const createImportPathRewriteCompilerHost = ({ src, rootDir }: Configurat
         // for example, "/project/root/src/<package>/file.ts" starts with "/project/root/src/<package>"
         fileName.replace(/\\/g, '/').indexOf(rootDir.replace(/\\/g, '/')) > -1
         ? // transform import paths in import, import(), require() and require.resolve() files
-          ts.transform(sourceFile, [importPathRewrite({ src, fileName })], options).transformed[0]
+          ts.transform(
+            sourceFile,
+            [importPathRewrite({ src, fileName })],
+            options,
+          ).transformed[0]
         : sourceFile
       : undefined;
   }

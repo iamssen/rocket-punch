@@ -25,10 +25,16 @@ export async function selectPublishOptions({
   publishOptions,
   skipSelection,
 }: Params): Promise<AvailablePublishOption[]> {
-  const availablePublishOptions: (PublishOption & VersionInfo)[] = Array.from(publishOptions.values())
-    .map((publishOption) => ({ ...publishOption, ...getVersions(publishOption) }))
+  const availablePublishOptions: (PublishOption & VersionInfo)[] = Array.from(
+    publishOptions.values(),
+  )
+    .map((publishOption) => ({
+      ...publishOption,
+      ...getVersions(publishOption),
+    }))
     .filter(
-      ({ currentVersion, remoteVersion }) => !remoteVersion || semver.gt(currentVersion, remoteVersion),
+      ({ currentVersion, remoteVersion }) =>
+        !remoteVersion || semver.gt(currentVersion, remoteVersion),
     );
 
   if (availablePublishOptions.length === 0) {
@@ -40,21 +46,24 @@ export async function selectPublishOptions({
       type: 'multiselect',
       name: 'publishOptions',
       message: 'Select packages to publish',
-      choices: availablePublishOptions.map(({ name, tag, currentVersion, remoteVersion }) => {
-        return {
-          title: remoteVersion
-            ? `${name}@${tag} (${remoteVersion} → ${currentVersion})`
-            : `${name}@${tag} (→ ${currentVersion})`,
-          value: name,
-          disabled: remoteVersion && semver.lte(currentVersion, remoteVersion),
-        };
-      }),
+      choices: availablePublishOptions.map(
+        ({ name, tag, currentVersion, remoteVersion }) => {
+          return {
+            title: remoteVersion
+              ? `${name}@${tag} (${remoteVersion} → ${currentVersion})`
+              : `${name}@${tag} (→ ${currentVersion})`,
+            value: name,
+            disabled:
+              remoteVersion && semver.lte(currentVersion, remoteVersion),
+          };
+        },
+      ),
     });
 
     const filter: Set<string> = new Set(answer.publishOptions);
 
-    return Array.from(availablePublishOptions.values()).filter((publishOption) =>
-      filter.has(publishOption.name),
-    );
+    return Array.from(
+      availablePublishOptions.values(),
+    ).filter((publishOption) => filter.has(publishOption.name));
   }
 }

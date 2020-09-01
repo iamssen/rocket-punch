@@ -69,16 +69,20 @@ export function getPackagesOrder({ packageJsonContents }: Params): string[] {
         dependenciesSet.add(dependencyName);
 
         // find dependencyName on the packageJsonContents
-        const childPackageJson: PackageJson | undefined = packageJsonContents.find(
+        const childPackageJson:
+          | PackageJson
+          | undefined = packageJsonContents.find(
           ({ name }) => dependencyName === name,
         );
 
         // if childPackageJson is exists search childPackageJson's dependencies
         if (childPackageJson && childPackageJson.dependencies) {
-          searchNestedDependencies(ownerName, childPackageJson.dependencies, dependenciesSet, [
-            ...parents,
-            dependencyName,
-          ]);
+          searchNestedDependencies(
+            ownerName,
+            childPackageJson.dependencies,
+            dependenciesSet,
+            [...parents, dependencyName],
+          );
         }
       }
     }
@@ -87,15 +91,21 @@ export function getPackagesOrder({ packageJsonContents }: Params): string[] {
   }
 
   // FIXME avoid Node.js 10 sort error
-  const array: PackageJsonSet[] = packageJsonContents.map<PackageJsonSet>((packageJson) => {
-    if (!packageJson.name) throw new Error(`Undefined "name" field on ${packageJson}`);
-    return {
-      name: packageJson.name,
-      dependencies: searchNestedDependencies(packageJson.name, packageJson.dependencies, new Set(), [
-        packageJson.name,
-      ]),
-    };
-  });
+  const array: PackageJsonSet[] = packageJsonContents.map<PackageJsonSet>(
+    (packageJson) => {
+      if (!packageJson.name)
+        throw new Error(`Undefined "name" field on ${packageJson}`);
+      return {
+        name: packageJson.name,
+        dependencies: searchNestedDependencies(
+          packageJson.name,
+          packageJson.dependencies,
+          new Set(),
+          [packageJson.name],
+        ),
+      };
+    },
+  );
 
   return sort(array).map(({ name }) => name);
 }

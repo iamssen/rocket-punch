@@ -13,7 +13,10 @@ import { PackageJson } from 'type-fest';
 describe('collectDependencies()', () => {
   test('should get all dependencies from typescript sources', async () => {
     // Arrange : create temporary fixture
-    const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/ts');
+    const rootDir: string = path.join(
+      process.cwd(),
+      'test/fixtures/collect-dependencies/ts',
+    );
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
     // Arrange : create test data
@@ -26,7 +29,10 @@ describe('collectDependencies()', () => {
         },
       ],
     ]);
-    const externalPackages: PackageJson.Dependency = require(path.join(rootDir, 'package.json')).dependencies;
+    const externalPackages: PackageJson.Dependency = require(path.join(
+      rootDir,
+      'package.json',
+    )).dependencies;
 
     // Act
     const dependencies: PackageJson.Dependency = await collectDependencies({
@@ -49,11 +55,17 @@ describe('collectDependencies()', () => {
 
   test('should work with default config', async () => {
     // Arrange : create temporary fixture
-    const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/ts');
+    const rootDir: string = path.join(
+      process.cwd(),
+      'test/fixtures/collect-dependencies/ts',
+    );
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
     // Arrange : create test data
-    const internalPackages: Map<string, PackageInfo> = new Map<string, PackageInfo>([
+    const internalPackages: Map<string, PackageInfo> = new Map<
+      string,
+      PackageInfo
+    >([
       [
         '@ssen/tmp-directory',
         {
@@ -62,7 +74,10 @@ describe('collectDependencies()', () => {
         },
       ],
     ]);
-    const externalPackages: PackageJson.Dependency = require(path.join(rootDir, 'package.json')).dependencies;
+    const externalPackages: PackageJson.Dependency = require(path.join(
+      rootDir,
+      'package.json',
+    )).dependencies;
 
     // Act
     const dependencies: PackageJson.Dependency = await collectDependencies({
@@ -84,11 +99,17 @@ describe('collectDependencies()', () => {
 
   test('should get all dependencies from javascript sources', async () => {
     // Arrange : create temporary fixture
-    const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/js');
+    const rootDir: string = path.join(
+      process.cwd(),
+      'test/fixtures/collect-dependencies/js',
+    );
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
     // Arrange : create test data
-    const internalPackages: Map<string, PackageInfo> = new Map<string, PackageInfo>([
+    const internalPackages: Map<string, PackageInfo> = new Map<
+      string,
+      PackageInfo
+    >([
       [
         '@ssen/tmp-directory',
         {
@@ -97,7 +118,10 @@ describe('collectDependencies()', () => {
         },
       ],
     ]);
-    const externalPackages: PackageJson.Dependency = require(path.join(rootDir, 'package.json')).dependencies;
+    const externalPackages: PackageJson.Dependency = require(path.join(
+      rootDir,
+      'package.json',
+    )).dependencies;
 
     // Act
     const dependencies: PackageJson.Dependency = await collectDependencies({
@@ -120,11 +144,17 @@ describe('collectDependencies()', () => {
 
   test('should get all dependencies without self name', async () => {
     // Arrange : create temporary fixture
-    const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/self-name');
+    const rootDir: string = path.join(
+      process.cwd(),
+      'test/fixtures/collect-dependencies/self-name',
+    );
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
     // Arrange : create test data
-    const internalPackages: Map<string, PackageInfo> = new Map<string, PackageInfo>([
+    const internalPackages: Map<string, PackageInfo> = new Map<
+      string,
+      PackageInfo
+    >([
       [
         '@ssen/tmp-directory',
         {
@@ -140,7 +170,10 @@ describe('collectDependencies()', () => {
         },
       ],
     ]);
-    const externalPackages: PackageJson.Dependency = require(path.join(rootDir, 'package.json')).dependencies;
+    const externalPackages: PackageJson.Dependency = require(path.join(
+      rootDir,
+      'package.json',
+    )).dependencies;
     const selfNames: Set<string> = new Set<string>(['imports']);
 
     // Act
@@ -168,12 +201,21 @@ describe('collectDependencies()', () => {
 
   test('should can not get unspecified internal dependency', async () => {
     // Arrange : create temporary fixture
-    const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/ts');
+    const rootDir: string = path.join(
+      process.cwd(),
+      'test/fixtures/collect-dependencies/ts',
+    );
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
     // Arrange : create test data
-    const internalPackages: Map<string, PackageInfo> = new Map<string, PackageInfo>();
-    const externalPackages: PackageJson.Dependency = require(path.join(rootDir, 'package.json')).dependencies;
+    const internalPackages: Map<string, PackageInfo> = new Map<
+      string,
+      PackageInfo
+    >();
+    const externalPackages: PackageJson.Dependency = require(path.join(
+      rootDir,
+      'package.json',
+    )).dependencies;
     const checkUndefinedPackage: 'pass' | 'error' = 'pass';
 
     // Act
@@ -192,12 +234,21 @@ describe('collectDependencies()', () => {
 
   test('should throw error with unspecified internal dependency', async () => {
     // Arrange : create temporary fixture
-    const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/ts');
+    const rootDir: string = path.join(
+      process.cwd(),
+      'test/fixtures/collect-dependencies/ts',
+    );
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
     // Arrange : create test data
-    const internalPackages: Map<string, PackageInfo> = new Map<string, PackageInfo>();
-    const externalPackages: PackageJson.Dependency = require(path.join(rootDir, 'package.json')).dependencies;
+    const internalPackages: Map<string, PackageInfo> = new Map<
+      string,
+      PackageInfo
+    >();
+    const externalPackages: PackageJson.Dependency = require(path.join(
+      rootDir,
+      'package.json',
+    )).dependencies;
     const checkUndefinedPackage: 'pass' | 'error' = 'error';
 
     // Act
@@ -217,11 +268,17 @@ describe('collectDependencies()', () => {
 
   test('should fix import paths', async () => {
     // Arrange : create temporary fixture
-    const rootDir: string = path.join(process.cwd(), 'test/fixtures/collect-dependencies/fix-import-path');
+    const rootDir: string = path.join(
+      process.cwd(),
+      'test/fixtures/collect-dependencies/fix-import-path',
+    );
     expect(fs.statSync(rootDir).isDirectory()).toBeTruthy();
 
     // Arrange : create test data
-    const internalPackages: Map<string, PackageInfo> = new Map<string, PackageInfo>(
+    const internalPackages: Map<string, PackageInfo> = new Map<
+      string,
+      PackageInfo
+    >(
       ['b', 'c', 'd', 'e'].map((name) => [
         name,
         {
@@ -231,7 +288,13 @@ describe('collectDependencies()', () => {
       ]),
     );
     const externalPackages: PackageJson.Dependency = {};
-    const fixImportPath = ({ importPath, filePath }: { importPath: string; filePath: string }) => {
+    const fixImportPath = ({
+      importPath,
+      filePath,
+    }: {
+      importPath: string;
+      filePath: string;
+    }) => {
       return rewriteSrcPath({
         rootDir,
         importPath,

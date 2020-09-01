@@ -11,17 +11,28 @@ export async function buildMessageHandler(message: BuildMessages) {
     case 'tsc':
       for (const diagnostic of message.diagnostics) {
         if (diagnostic.file && diagnostic.start) {
-          const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
-          const message: string = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+          const {
+            line,
+            character,
+          } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+          const message: string = ts.flattenDiagnosticMessageText(
+            diagnostic.messageText,
+            '\n',
+          );
           console.log(
             chalk.yellow(
-              `TS${diagnostic.code} : ${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`,
+              `TS${diagnostic.code} : ${diagnostic.file.fileName} (${
+                line + 1
+              },${character + 1}): ${message}`,
             ),
           );
         } else {
           console.log(
             chalk.yellow(
-              `TS${diagnostic.code} : ${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`,
+              `TS${diagnostic.code} : ${ts.flattenDiagnosticMessageText(
+                diagnostic.messageText,
+                '\n',
+              )}`,
             ),
           );
         }
@@ -33,7 +44,9 @@ export async function buildMessageHandler(message: BuildMessages) {
       break;
     case 'success':
       console.log(
-        chalk.blueBright(`👍 ${message.packageName}@${message.packageJson.version} → ${message.outDir}`),
+        chalk.blueBright(
+          `👍 ${message.packageName}@${message.packageJson.version} → ${message.outDir}`,
+        ),
       );
       console.log('');
       break;

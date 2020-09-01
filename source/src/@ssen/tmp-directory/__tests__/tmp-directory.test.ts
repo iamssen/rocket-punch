@@ -14,7 +14,10 @@ describe('tmp-directory', () => {
 
   test('should get a copied tmp directory', async () => {
     // Arrange
-    const source: string = path.join(process.cwd(), 'test/fixtures/rocket-punch/basic');
+    const source: string = path.join(
+      process.cwd(),
+      'test/fixtures/rocket-punch/basic',
+    );
     expect(fs.statSync(source).isDirectory()).toBeTruthy();
 
     // Act

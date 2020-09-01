@@ -7,9 +7,9 @@ export const hello: number = 3;
 
 ```js
 // main
-import { requireTypescript } from "@ssen/require-typescript";
+import { requireTypescript } from '@ssen/require-typescript';
 
-const { hello } = requireTypescript < { hello: number } > "./hello.ts";
+const { hello } = requireTypescript < { hello: number } > './hello.ts';
 console.assert(hello === 3);
 ```
 
@@ -20,121 +20,124 @@ console.assert(hello === 3);
 [\_\_tests\_\_/requireTypescript.test.ts](__tests__/requireTypescript.test.ts)
 
 ```ts
-import path from "path";
-import { requireTypescript } from "@ssen/require-typescript";
-import process from "process";
+import path from 'path';
+import { requireTypescript } from '@ssen/require-typescript';
+import process from 'process';
 
-describe("requireTypescript", () => {
-  test.each(["basic", "js"])("should get exports from %s", (dir: string) => {
+describe('requireTypescript', () => {
+  test.each(['basic', 'js'])('should get exports from %s', (dir: string) => {
     const { hello } = requireTypescript<{ hello: number }>(
-      path.join(process.cwd(), `test/fixtures/require-typescript/${dir}/hello`)
+      path.join(process.cwd(), `test/fixtures/require-typescript/${dir}/hello`),
     );
     expect(hello).toBe(1);
 
     const { hello2 } = requireTypescript<{ hello2: number }>(
       path.join(
         process.cwd(),
-        `test/fixtures/require-typescript/${dir}/with-import`
-      )
+        `test/fixtures/require-typescript/${dir}/with-import`,
+      ),
     );
     expect(hello2).toBe(2);
 
     const { hello3 } = requireTypescript<{ hello3: number }>(
       path.join(
         process.cwd(),
-        `test/fixtures/require-typescript/${dir}/with-module`
-      )
+        `test/fixtures/require-typescript/${dir}/with-module`,
+      ),
     );
     expect(hello3).toBe(1);
 
     const { default: func } = requireTypescript<{
       default: (a: number, b: number) => number;
     }>(
-      path.join(process.cwd(), `test/fixtures/require-typescript/${dir}/func`)
+      path.join(process.cwd(), `test/fixtures/require-typescript/${dir}/func`),
     );
     expect(func(1, 2)).toBe(3);
 
     const { some } = requireTypescript<{ some: string }>(
       path.join(
         process.cwd(),
-        `test/fixtures/require-typescript/${dir}/dirname`
-      )
+        `test/fixtures/require-typescript/${dir}/dirname`,
+      ),
     );
     expect(some).toBe(
       path.join(
         path.join(
           process.cwd(),
-          `test/fixtures/require-typescript/${dir}/hello`
-        )
-      )
+          `test/fixtures/require-typescript/${dir}/hello`,
+        ),
+      ),
     );
   });
 
-  test("should get exports with index file", () => {
+  test('should get exports with index file', () => {
     const { hello } = requireTypescript<{ hello: number }>(
-      path.join(process.cwd(), "test/fixtures/require-typescript/index/hello")
+      path.join(process.cwd(), 'test/fixtures/require-typescript/index/hello'),
     );
     expect(hello).toBe(1);
   });
 
-  test("should get typescript exports", () => {
+  test('should get typescript exports', () => {
     const { hello } = requireTypescript<{ hello: number }>(
       path.join(
         process.cwd(),
-        "test/fixtures/require-typescript/basic/hello.ts"
-      )
+        'test/fixtures/require-typescript/basic/hello.ts',
+      ),
     );
     expect(hello).toBe(1);
 
     const { hello2 } = requireTypescript<{ hello2: number }>(
       path.join(
         process.cwd(),
-        "test/fixtures/require-typescript/basic/with-import.ts"
-      )
+        'test/fixtures/require-typescript/basic/with-import.ts',
+      ),
     );
     expect(hello2).toBe(2);
 
     const { hello3 } = requireTypescript<{ hello3: number }>(
       path.join(
         process.cwd(),
-        "test/fixtures/require-typescript/basic/with-module.ts"
-      )
+        'test/fixtures/require-typescript/basic/with-module.ts',
+      ),
     );
     expect(hello3).toBe(1);
 
     const { default: func } = requireTypescript<{
       default: (a: number, b: number) => number;
     }>(
-      path.join(process.cwd(), "test/fixtures/require-typescript/basic/func.ts")
+      path.join(
+        process.cwd(),
+        'test/fixtures/require-typescript/basic/func.ts',
+      ),
     );
     expect(func(1, 2)).toBe(3);
   });
 
-  test("should get javascript exports", () => {
+  test('should get javascript exports', () => {
     const { hello } = requireTypescript<{ hello: number }>(
-      path.join(process.cwd(), "test/fixtures/require-typescript/js/hello.js")
+      path.join(process.cwd(), 'test/fixtures/require-typescript/js/hello.js'),
     );
     expect(hello).toBe(1);
 
     const { hello2 } = requireTypescript<{ hello2: number }>(
       path.join(
         process.cwd(),
-        "test/fixtures/require-typescript/js/with-import.js"
-      )
+        'test/fixtures/require-typescript/js/with-import.js',
+      ),
     );
     expect(hello2).toBe(2);
 
     const { hello3 } = requireTypescript<{ hello3: number }>(
       path.join(
         process.cwd(),
-        "test/fixtures/require-typescript/js/with-module.js"
-      )
+        'test/fixtures/require-typescript/js/with-module.js',
+      ),
     );
     expect(hello3).toBe(1);
 
     const { default: func } = requireTypescript<{
       default: (a: number, b: number) => number;
-    }>(path.join(process.cwd(), "test/fixtures/require-typescript/js/func.js"));
+    }>(path.join(process.cwd(), 'test/fixtures/require-typescript/js/func.js'));
     expect(func(1, 2)).toBe(3);
   });
 });

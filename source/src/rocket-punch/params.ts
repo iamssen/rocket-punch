@@ -134,7 +134,9 @@ export interface BuildParams extends CommonParams {
   /**
    * [advanced] you can transform the packageJson before emit
    */
-  transformPackageJson?: (packageName: string) => (computedPackageJson: PackageJson) => PackageJson;
+  transformPackageJson?: (
+    packageName: string,
+  ) => (computedPackageJson: PackageJson) => PackageJson;
 
   /**
    * [advanced] you can transform the compilerOptions of typescript compiler before emit
@@ -148,17 +150,23 @@ export interface BuildParams extends CommonParams {
    */
   transformCompilerHost?: (
     packageName: string,
-  ) => (compilerOptions: ts.CompilerOptions, compilerHost: ts.CompilerHost) => ts.CompilerHost;
+  ) => (
+    compilerOptions: ts.CompilerOptions,
+    compilerHost: ts.CompilerHost,
+  ) => ts.CompilerHost;
 
   /**
    * [advanced] you can set transformers on typescript compiler's emit
    */
-  emitCustomTransformers?: (packageName: string) => () => ts.CustomTransformers | undefined;
+  emitCustomTransformers?: (
+    packageName: string,
+  ) => () => ts.CustomTransformers | undefined;
 
   onMessage?: (message: BuildMessages) => Promise<void>;
 }
 
-export interface PublishParams extends Pick<CommonParams, 'cwd' | 'entry' | 'dist' | 'sourceRoot'> {
+export interface PublishParams
+  extends Pick<CommonParams, 'cwd' | 'entry' | 'dist' | 'sourceRoot'> {
   /**
    * if you set this value to true rocket-punch will publish every packages without request to you for selection.
    *
@@ -190,10 +198,12 @@ export interface PublishParams extends Pick<CommonParams, 'cwd' | 'entry' | 'dis
   onMessage?: (message: PublishMessages) => Promise<void>;
 }
 
-export interface ViewParams extends Pick<CommonParams, 'cwd' | 'entry' | 'sourceRoot'> {
+export interface ViewParams
+  extends Pick<CommonParams, 'cwd' | 'entry' | 'sourceRoot'> {
   onMessage?: (message: ViewMessages) => Promise<void>;
 }
 
-export interface DoctorParams extends Pick<CommonParams, 'cwd' | 'entry' | 'tsconfig' | 'sourceRoot'> {
+export interface DoctorParams
+  extends Pick<CommonParams, 'cwd' | 'entry' | 'tsconfig' | 'sourceRoot'> {
   onMessage?: (message: DoctorMessages) => Promise<void>;
 }

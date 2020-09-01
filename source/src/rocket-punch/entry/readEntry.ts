@@ -8,7 +8,9 @@ interface Params {
   cwd: string;
 }
 
-export function readEntry({ cwd }: Params): Record<string, string | PackageConfig> {
+export function readEntry({
+  cwd,
+}: Params): Record<string, string | PackageConfig> {
   const source: string = fs.readFileSync(path.join(cwd, packagesFileName), {
     encoding: 'utf8',
   });

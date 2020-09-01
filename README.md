@@ -77,7 +77,7 @@ Add scripts
 ```tsx
 // src/sample-component/index.tsx
 // `sample-component` is your package name
-import React, { ReactNode } from "react";
+import React, { ReactNode } from 'react';
 
 export interface SampleComponentProps {
   children: ReactNode;
@@ -183,7 +183,7 @@ Add scripts
 ```tsx
 // sample-component/index.tsx
 // `sample-component` is your package name
-import React from "react";
+import React from 'react';
 
 interface Props {
   label: string;
@@ -278,7 +278,7 @@ Add scripts
 ```jsx
 // src/sample-component/index.jsx
 // `sample-component` is your package name
-import React from "react";
+import React from 'react';
 
 export function SampleComponent({ text }) {
   return <div>👋 {text}</div>;
@@ -306,12 +306,12 @@ npm run publish # or npx rocket-punch publish
 Add `gatsy-node.js`
 
 ```js
-const path = require("path");
+const path = require('path');
 
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
     resolve: {
-      modules: [path.resolve(__dirname, "src"), "node_modules"],
+      modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     },
   });
 };

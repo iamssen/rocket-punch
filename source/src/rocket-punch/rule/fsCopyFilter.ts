@@ -1,7 +1,9 @@
 import { targetExtensions } from '@ssen/extended-compiler-host';
 import fs from 'fs-extra';
 
-const bundleExtensions: RegExp = new RegExp(`.(${targetExtensions.join('|')})$`);
+const bundleExtensions: RegExp = new RegExp(
+  `.(${targetExtensions.join('|')})$`,
+);
 
 // if the file bundled by like `import text from './some.txt'`
 // it does not copy

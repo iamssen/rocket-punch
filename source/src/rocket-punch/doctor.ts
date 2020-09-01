@@ -14,10 +14,16 @@ export async function doctor({
   tsconfig = 'tsconfig.json',
   onMessage = doctorMessageHandler,
 }: DoctorParams) {
-  const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, sourceRoot, entry });
+  const internalPackages: Map<string, PackageInfo> = await readPackages({
+    cwd,
+    sourceRoot,
+    entry,
+  });
 
   const depcheckResult = await depcheck(cwd, {
-    ignoreMatches: [...Array.from(internalPackages.values()).map(({ name }) => name)],
+    ignoreMatches: [
+      ...Array.from(internalPackages.values()).map(({ name }) => name),
+    ],
   });
 
   await onMessage({

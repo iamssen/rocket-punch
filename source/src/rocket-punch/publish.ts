@@ -1,5 +1,9 @@
 import { flatPackageName } from '@ssen/flat-package-name';
-import { AvailablePublishOption, getPublishOptions, selectPublishOptions } from '@ssen/publish-packages';
+import {
+  AvailablePublishOption,
+  getPublishOptions,
+  selectPublishOptions,
+} from '@ssen/publish-packages';
 import path from 'path';
 import process from 'process';
 import { readPackages } from './entry/readPackages';
@@ -31,13 +35,17 @@ export async function publish({
     registry,
   });
 
-  const selectedPublishOptions: AvailablePublishOption[] = await selectPublishOptions({
-    publishOptions,
-    skipSelection,
-  });
+  const selectedPublishOptions: AvailablePublishOption[] = await selectPublishOptions(
+    {
+      publishOptions,
+      skipSelection,
+    },
+  );
 
   for (const publishOption of selectedPublishOptions) {
-    const packageInfo: PackageInfo | undefined = packages.get(publishOption.name);
+    const packageInfo: PackageInfo | undefined = packages.get(
+      publishOption.name,
+    );
 
     if (!packageInfo) {
       throw new Error(`Undefined packageInfo "${publishOption.name}"`);
@@ -59,8 +67,14 @@ export async function publish({
 
     const command: string =
       process.platform === 'win32'
-        ? `cd "${path.join(dist, flatPackageName(publishOption.name))}" && npm publish ${p.join(' ')}`
-        : `cd "${path.join(dist, flatPackageName(publishOption.name))}"; npm publish ${p.join(' ')};`;
+        ? `cd "${path.join(
+            dist,
+            flatPackageName(publishOption.name),
+          )}" && npm publish ${p.join(' ')}`
+        : `cd "${path.join(
+            dist,
+            flatPackageName(publishOption.name),
+          )}"; npm publish ${p.join(' ')};`;
 
     await onMessage({
       type: 'exec',

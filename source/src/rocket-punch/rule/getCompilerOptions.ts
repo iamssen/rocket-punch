@@ -10,11 +10,17 @@ interface Params {
   packageInfo: PackageInfo;
 }
 
-export function getCompilerOptions({ searchPath, configName, packageInfo }: Params): ts.CompilerOptions {
+export function getCompilerOptions({
+  searchPath,
+  configName,
+  packageInfo,
+}: Params): ts.CompilerOptions {
   const { options: tsconfig } = fs.existsSync(path.join(searchPath, configName))
     ? readTSConfig(searchPath, configName)
     : { options: {} as ts.CompilerOptions };
-  const { options: info } = parseTSConfig(searchPath, { compilerOptions: packageInfo.compilerOptions });
+  const { options: info } = parseTSConfig(searchPath, {
+    compilerOptions: packageInfo.compilerOptions,
+  });
   const defaultValues: Partial<ts.CompilerOptions> = {
     downlevelIteration: true,
     allowSyntheticDefaultImports: true,
@@ -33,14 +39,20 @@ export function getCompilerOptions({ searchPath, configName, packageInfo }: Para
     target: ts.ScriptTarget.ES2016,
   } as const;
 
-  const computed: ts.CompilerOptions = Object.keys(defaultValues).reduce((result, name) => {
-    result[name] = info[name] ?? tsconfig[name] ?? defaultValues[name];
-    return result;
-  }, {} as ts.CompilerOptions);
+  const computed: ts.CompilerOptions = Object.keys(defaultValues).reduce(
+    (result, name) => {
+      result[name] = info[name] ?? tsconfig[name] ?? defaultValues[name];
+      return result;
+    },
+    {} as ts.CompilerOptions,
+  );
 
   return {
     ...computed,
-    module: packageInfo.module === 'esm' ? ts.ModuleKind.ES2015 : ts.ModuleKind.CommonJS,
+    module:
+      packageInfo.module === 'esm'
+        ? ts.ModuleKind.ES2015
+        : ts.ModuleKind.CommonJS,
     moduleResolution: ts.ModuleResolutionKind.NodeJs,
     skipLibCheck: true,
     sourceMap: true,

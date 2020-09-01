@@ -9,5 +9,7 @@ interface Params {
 
 export function getSharedPackageJson({ cwd }: Params): PackageJson {
   const sharedConfigFile: string = path.join(cwd, sharedPackageJsonFileName);
-  return fs.existsSync(sharedConfigFile) ? fs.readJsonSync(sharedConfigFile) : {};
+  return fs.existsSync(sharedConfigFile)
+    ? fs.readJsonSync(sharedConfigFile)
+    : {};
 }

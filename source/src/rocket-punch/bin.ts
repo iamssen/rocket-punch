@@ -26,7 +26,8 @@ const commonOptions: Options = {
   emit: {
     type: 'boolean',
     default: true,
-    describe: 'if you set this false it will only print options without run (e.g. --no-emit or --emit false)',
+    describe:
+      'if you set this false it will only print options without run (e.g. --no-emit or --emit false)',
   },
   'source-root': {
     type: 'string',
@@ -54,7 +55,8 @@ const buildOptions: Options = {
   svg: {
     type: 'string',
     choices: ['create-react-app', 'default'],
-    describe: 'svg compile type <default|create-react-app> (e.g. --svg default)',
+    describe:
+      'svg compile type <default|create-react-app> (e.g. --svg default)',
   },
 };
 
@@ -111,9 +113,18 @@ export function run() {
             ...buildOptions,
             ...commonOptions,
           })
-          .example('$0 build --out-dir /some/directory', 'Build packages to specific directory')
-          .example('$0 build --tsconfig tsconfig.build.json', 'Use another tsconfig.json file on build')
-          .example('$0 build --svg default', 'SVG transform to `import ReactComponent from "./file.svg"`'),
+          .example(
+            '$0 build --out-dir /some/directory',
+            'Build packages to specific directory',
+          )
+          .example(
+            '$0 build --tsconfig tsconfig.build.json',
+            'Use another tsconfig.json file on build',
+          )
+          .example(
+            '$0 build --svg default',
+            'SVG transform to `import ReactComponent from "./file.svg"`',
+          ),
       handler: (argv: Arguments<CommonArgs & BuildArgs>) => {
         const { emit, outDir, tsconfig, sourceRoot, svg } = readLastArgv(argv);
         const params: BuildParams = {
@@ -143,11 +154,28 @@ export function run() {
             ...commonOptions,
           })
           .example('$0 publish', 'Publish packages')
-          .example('$0 publish --out-dir /some/directory', 'Publish packages from specific directory')
-          .example('$0 publish --skip-selection', 'Publish all packages without user selection (e.g. CI)')
-          .example('$0 publish --skip-selection --tag e2e --registry http://localhost:4873', 'E2E test'),
+          .example(
+            '$0 publish --out-dir /some/directory',
+            'Publish packages from specific directory',
+          )
+          .example(
+            '$0 publish --skip-selection',
+            'Publish all packages without user selection (e.g. CI)',
+          )
+          .example(
+            '$0 publish --skip-selection --tag e2e --registry http://localhost:4873',
+            'E2E test',
+          ),
       handler: (argv: Arguments<CommonArgs & PublishArgs>) => {
-        const { registry, outDir, sourceRoot, emit, access, skipSelection, tag } = readLastArgv(argv);
+        const {
+          registry,
+          outDir,
+          sourceRoot,
+          emit,
+          access,
+          skipSelection,
+          tag,
+        } = readLastArgv(argv);
         const params: PublishParams = {
           cwd,
           dist: toAbsolutePath(outDir),
@@ -155,7 +183,8 @@ export function run() {
           skipSelection,
           sourceRoot,
           tag,
-          access: access === 'public' || access === 'private' ? access : undefined,
+          access:
+            access === 'public' || access === 'private' ? access : undefined,
           registry,
           onMessage: publishMessageHandler,
         };
@@ -170,7 +199,10 @@ export function run() {
     .command({
       command: 'view',
       describe: 'View packages information',
-      builder: (yargs) => yargs.options({ ...commonOptions }).example('$0 view', 'View packages information'),
+      builder: (yargs) =>
+        yargs
+          .options({ ...commonOptions })
+          .example('$0 view', 'View packages information'),
       handler: (argv: Arguments<CommonArgs>) => {
         const { emit, sourceRoot } = readLastArgv(argv);
         const params: ViewParams = {

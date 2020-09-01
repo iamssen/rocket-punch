@@ -7,7 +7,9 @@ export async function publishMessageHandler(message: PublishMessages) {
     case 'exec':
       console.log(chalk.bold(message.command));
       console.log('');
-      const { stderr, stdout } = await exec(message.command, { encoding: 'utf8' });
+      const { stderr, stdout } = await exec(message.command, {
+        encoding: 'utf8',
+      });
       console.log(stdout);
       console.error(chalk.grey(stderr));
       break;

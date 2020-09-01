@@ -1,4 +1,8 @@
-import { collectDependencies, collectScripts, getPackagesOrder } from '@ssen/collect-dependencies';
+import {
+  collectDependencies,
+  collectScripts,
+  getPackagesOrder,
+} from '@ssen/collect-dependencies';
 import { createExtendedCompilerHost } from '@ssen/extended-compiler-host';
 import { flatPackageName } from '@ssen/flat-package-name';
 import { createImportPathRewriteCompilerHost } from '@ssen/import-path-rewrite-compiler-host';
@@ -44,15 +48,24 @@ export async function build({
   // rule
   // collect information based on directory rules
   // ---------------------------------------------
-  const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, sourceRoot, entry });
-  const externalPackages: PackageJson.Dependency = await getRootDependencies({ cwd });
+  const internalPackages: Map<string, PackageInfo> = await readPackages({
+    cwd,
+    sourceRoot,
+    entry,
+  });
+  const externalPackages: PackageJson.Dependency = await getRootDependencies({
+    cwd,
+  });
   const sharedConfig: PackageJson = await getSharedPackageJson({ cwd });
 
   // ---------------------------------------------
   // entry
   // create build options based on rule output
   // ---------------------------------------------
-  const dependenciesMap: Map<string, PackageJson.Dependency> = new Map<string, PackageJson.Dependency>();
+  const dependenciesMap: Map<string, PackageJson.Dependency> = new Map<
+    string,
+    PackageJson.Dependency
+  >();
 
   // collect dependencies each package
   for (const packageName of internalPackages.keys()) {
@@ -75,11 +88,16 @@ export async function build({
     dependenciesMap.set(packageName, imports);
   }
 
-  const packageJsonMap: Map<string, PackageJson> = new Map<string, PackageJson>();
+  const packageJsonMap: Map<string, PackageJson> = new Map<
+    string,
+    PackageJson
+  >();
 
   // compute package.json contents each package
   for (const [packageName, packageInfo] of internalPackages) {
-    const dependencies: PackageJson.Dependency | undefined = dependenciesMap.get(packageName);
+    const dependencies:
+      | PackageJson.Dependency
+      | undefined = dependenciesMap.get(packageName);
 
     if (!dependencies) {
       throw new Error(`undefiend dependencies of ${packageName}`);
@@ -120,7 +138,9 @@ export async function build({
   // build each packages
   // ================================================================
   for (const packageName of order) {
-    const packageInfo: PackageInfo | undefined = internalPackages.get(packageName);
+    const packageInfo: PackageInfo | undefined = internalPackages.get(
+      packageName,
+    );
 
     if (!packageInfo) {
       throw new Error(`Undefined packageInfo of ${packageName}`);
@@ -128,7 +148,9 @@ export async function build({
 
     const sourceDir: string = path.resolve(cwd, sourceRoot, packageName);
     const outDir: string = path.resolve(dist, flatPackageName(packageName));
-    const packageJson: PackageJson | undefined = packageJsonMap.get(packageName);
+    const packageJson: PackageJson | undefined = packageJsonMap.get(
+      packageName,
+    );
 
     if (!packageJson) {
       throw new Error(`undefined packagejson content!`);
@@ -195,11 +217,15 @@ export async function build({
         : computedCompilerOptions;
 
     // create compilerHost
-    const extendedHost: ts.CompilerHost = createExtendedCompilerHost(compilerOptions);
-    const pathRewriteHost: ts.CompilerHost = createImportPathRewriteCompilerHost({
-      src: path.resolve(cwd, sourceRoot),
-      rootDir: sourceDir,
-    })(compilerOptions, undefined, extendedHost);
+    const extendedHost: ts.CompilerHost = createExtendedCompilerHost(
+      compilerOptions,
+    );
+    const pathRewriteHost: ts.CompilerHost = createImportPathRewriteCompilerHost(
+      {
+        src: path.resolve(cwd, sourceRoot),
+        rootDir: sourceDir,
+      },
+    )(compilerOptions, undefined, extendedHost);
 
     // transform compilerHost if user set the transformCompilerHost() function
     const host: ts.CompilerHost =
@@ -207,7 +233,10 @@ export async function build({
         ? transformCompilerHost(packageName)(compilerOptions, pathRewriteHost)
         : pathRewriteHost;
 
-    const files: string[] = host.readDirectory!(sourceDir, ...readDirectoryPatterns);
+    const files: string[] = host.readDirectory!(
+      sourceDir,
+      ...readDirectoryPatterns,
+    );
 
     const program: ts.Program = ts.createProgram(files, compilerOptions, host);
 
@@ -217,10 +246,14 @@ export async function build({
       undefined,
       undefined,
       undefined,
-      typeof emitCustomTransformers === 'function' ? emitCustomTransformers(packageName)() : undefined,
+      typeof emitCustomTransformers === 'function'
+        ? emitCustomTransformers(packageName)()
+        : undefined,
     );
 
-    const diagnostics: ts.Diagnostic[] = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
+    const diagnostics: ts.Diagnostic[] = ts
+      .getPreEmitDiagnostics(program)
+      .concat(emitResult.diagnostics);
 
     await onMessage({
       type: 'tsc',
@@ -243,7 +276,10 @@ export async function build({
     // ---------------------------------------------
     // create package.json
     // ---------------------------------------------
-    await fs.writeJson(path.resolve(outDir, 'package.json'), packageJson, { encoding: 'utf8', spaces: 2 });
+    await fs.writeJson(path.resolve(outDir, 'package.json'), packageJson, {
+      encoding: 'utf8',
+      spaces: 2,
+    });
 
     await onMessage({
       type: 'package-json',

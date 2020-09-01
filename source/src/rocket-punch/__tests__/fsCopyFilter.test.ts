@@ -19,11 +19,17 @@ describe('fsPackagesCopyFilter()', () => {
     'public/__xxx__/a/b/c.png',
   ])('should ignore file pattern %s', (pattern: string) => {
     expect(
-      fsCopyFilter(path.join('/Users/foo/bar', pattern), path.join('/Users/foo/bar/dist', pattern)),
+      fsCopyFilter(
+        path.join('/Users/foo/bar', pattern),
+        path.join('/Users/foo/bar/dist', pattern),
+      ),
     ).toBeFalsy();
 
     expect(
-      fsCopyFilter(path.win32.join('C:/foo/bar', pattern), path.win32.join('C:/foo/bar/dist', pattern)),
+      fsCopyFilter(
+        path.win32.join('C:/foo/bar', pattern),
+        path.win32.join('C:/foo/bar/dist', pattern),
+      ),
     ).toBeFalsy();
   });
 
@@ -44,11 +50,17 @@ describe('fsPackagesCopyFilter()', () => {
     'a/bin/trism.js',
   ])('should pass file pattern %s', (pattern: string) => {
     expect(
-      fsCopyFilter(path.join('/Users/foo/bar', pattern), path.join('/Users/foo/bar/dist', pattern)),
+      fsCopyFilter(
+        path.join('/Users/foo/bar', pattern),
+        path.join('/Users/foo/bar/dist', pattern),
+      ),
     ).toBeTruthy();
 
     expect(
-      fsCopyFilter(path.win32.join('C:/foo/bar', pattern), path.win32.join('C:/foo/bar/dist', pattern)),
+      fsCopyFilter(
+        path.win32.join('C:/foo/bar', pattern),
+        path.win32.join('C:/foo/bar/dist', pattern),
+      ),
     ).toBeTruthy();
   });
 });

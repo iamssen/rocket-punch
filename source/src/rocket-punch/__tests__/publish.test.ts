@@ -46,11 +46,17 @@ describe('publish()', () => {
     });
 
     // Assert
-    expect(messages[0].command).toContain(`cd "${path.join(dist, flatPackageName('@ssen-temp/a'))}"`);
+    expect(messages[0].command).toContain(
+      `cd "${path.join(dist, flatPackageName('@ssen-temp/a'))}"`,
+    );
     expect(messages[0].command).toContain(`npm publish --tag latest`);
-    expect(messages[1].command).toContain(`cd "${path.join(dist, flatPackageName('@ssen-temp/b'))}"`);
+    expect(messages[1].command).toContain(
+      `cd "${path.join(dist, flatPackageName('@ssen-temp/b'))}"`,
+    );
     expect(messages[1].command).toContain(`npm publish --tag latest`);
-    expect(messages[2].command).toContain(`cd "${path.join(dist, flatPackageName('@ssen-temp/c'))}"`);
+    expect(messages[2].command).toContain(
+      `cd "${path.join(dist, flatPackageName('@ssen-temp/c'))}"`,
+    );
     expect(messages[2].command).toContain(`npm publish --tag latest`);
   });
 
@@ -101,12 +107,22 @@ describe('publish()', () => {
     });
 
     // Assert
-    expect(messages[0].command).toContain(`cd "${path.join(dist, flatPackageName('@ssen-temp/a'))}"`);
+    expect(messages[0].command).toContain(
+      `cd "${path.join(dist, flatPackageName('@ssen-temp/a'))}"`,
+    );
     expect(messages[0].command).toContain(`npm publish --tag latest`);
-    expect(messages[1].command).toContain(`cd "${path.join(dist, flatPackageName('@ssen-temp/b'))}"`);
-    expect(messages[1].command).toContain(`npm publish --tag latest --access public`);
-    expect(messages[2].command).toContain(`cd "${path.join(dist, flatPackageName('@ssen-temp/c'))}"`);
-    expect(messages[2].command).toContain(`npm publish --tag latest --registry "http://localhost:9876"`);
+    expect(messages[1].command).toContain(
+      `cd "${path.join(dist, flatPackageName('@ssen-temp/b'))}"`,
+    );
+    expect(messages[1].command).toContain(
+      `npm publish --tag latest --access public`,
+    );
+    expect(messages[2].command).toContain(
+      `cd "${path.join(dist, flatPackageName('@ssen-temp/c'))}"`,
+    );
+    expect(messages[2].command).toContain(
+      `npm publish --tag latest --registry "http://localhost:9876"`,
+    );
   });
 
   test('should force overwrite the package info by command line parameters', async () => {
@@ -159,15 +175,21 @@ describe('publish()', () => {
     });
 
     // Assert
-    expect(messages[0].command).toContain(`cd "${path.join(dist, flatPackageName('@ssen-temp/a'))}"`);
+    expect(messages[0].command).toContain(
+      `cd "${path.join(dist, flatPackageName('@ssen-temp/a'))}"`,
+    );
     expect(messages[0].command).toContain(
       `npm publish --tag canary --access private --registry "http://127.0.0.1"`,
     );
-    expect(messages[1].command).toContain(`cd "${path.join(dist, flatPackageName('@ssen-temp/b'))}"`);
+    expect(messages[1].command).toContain(
+      `cd "${path.join(dist, flatPackageName('@ssen-temp/b'))}"`,
+    );
     expect(messages[1].command).toContain(
       `npm publish --tag canary --access private --registry "http://127.0.0.1"`,
     );
-    expect(messages[2].command).toContain(`cd "${path.join(dist, flatPackageName('@ssen-temp/c'))}"`);
+    expect(messages[2].command).toContain(
+      `cd "${path.join(dist, flatPackageName('@ssen-temp/c'))}"`,
+    );
     expect(messages[2].command).toContain(
       `npm publish --tag canary --access private --registry "http://127.0.0.1"`,
     );

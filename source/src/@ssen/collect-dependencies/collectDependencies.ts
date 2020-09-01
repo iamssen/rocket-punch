@@ -5,7 +5,11 @@ import { PackageInfo } from './types';
 
 const nodeAPIList: Set<string> = new Set<string>(builtinModules);
 
-export const collectTypeScript: { extensions: string[]; excludes: string[]; includes: string[] } = {
+export const collectTypeScript: {
+  extensions: string[];
+  excludes: string[];
+  includes: string[];
+} = {
   extensions: ['.ts', '.tsx'],
   excludes: [
     // exclude tests
@@ -23,7 +27,11 @@ export const collectTypeScript: { extensions: string[]; excludes: string[]; incl
   includes: ['**/*'],
 };
 
-export const collectScripts: { extensions: string[]; excludes: string[]; includes: string[] } = {
+export const collectScripts: {
+  extensions: string[];
+  excludes: string[];
+  includes: string[];
+} = {
   extensions: ['.js', '.jsx', '.ts', '.tsx'],
   excludes: [
     // exclude tests
@@ -81,7 +89,12 @@ export async function collectDependencies({
 
   const host: ts.CompilerHost = ts.createCompilerHost(compilerOptions);
 
-  const files: string[] = host.readDirectory!(rootDir, extensions, excludes, includes);
+  const files: string[] = host.readDirectory!(
+    rootDir,
+    extensions,
+    excludes,
+    includes,
+  );
 
   const program: ts.Program = ts.createProgram(files, compilerOptions, host);
 
@@ -115,7 +128,8 @@ export async function collectDependencies({
         node.expression.kind === ts.SyntaxKind.ImportKeyword &&
         ts.isStringLiteralLike(node.arguments[0])
       ) {
-        const importPath: string = (node.arguments[0] as ts.StringLiteralLike).text;
+        const importPath: string = (node.arguments[0] as ts.StringLiteralLike)
+          .text;
         importPaths.add(
           typeof fixImportPath === 'function'
             ? fixImportPath({
@@ -134,7 +148,8 @@ export async function collectDependencies({
         node.expression.name.escapedText === 'resolve' &&
         ts.isStringLiteralLike(node.arguments[0])
       ) {
-        const importPath: string = (node.arguments[0] as ts.StringLiteralLike).text;
+        const importPath: string = (node.arguments[0] as ts.StringLiteralLike)
+          .text;
         importPaths.add(
           typeof fixImportPath === 'function'
             ? fixImportPath({
@@ -151,7 +166,8 @@ export async function collectDependencies({
         node.expression.escapedText === 'require' &&
         ts.isStringLiteralLike(node.arguments[0])
       ) {
-        const importPath: string = (node.arguments[0] as ts.StringLiteralLike).text;
+        const importPath: string = (node.arguments[0] as ts.StringLiteralLike)
+          .text;
         importPaths.add(
           typeof fixImportPath === 'function'
             ? fixImportPath({
@@ -181,14 +197,18 @@ export async function collectDependencies({
       !/^\./.test(packageName) &&
       !nodeAPIList.has(packageName)
     ) {
-      const internalPackage: PackageInfo | undefined = internalPackages.get(packageName);
+      const internalPackage: PackageInfo | undefined = internalPackages.get(
+        packageName,
+      );
 
       if (internalPackage) {
         imports[packageName] = `^${internalPackage.version}`;
       } else if (externalPackages[packageName]) {
         imports[packageName] = externalPackages[packageName];
       } else if (checkUndefinedPackage === 'error') {
-        throw new Error(`Undefined package "${packageName}" from "${importPath}"`);
+        throw new Error(
+          `Undefined package "${packageName}" from "${importPath}"`,
+        );
       }
     }
   }

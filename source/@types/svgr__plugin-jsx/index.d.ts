@@ -3,7 +3,11 @@ declare module '@svgr/plugin-jsx' {
   const fn: (
     svgCode: string,
     config: PluginOptions,
-    state: { filePath?: string; componentName?: string; [babelPluginOptions: string]: unknown },
+    state: {
+      filePath?: string;
+      componentName?: string;
+      [babelPluginOptions: string]: unknown;
+    },
   ) => string;
   export = fn;
 }

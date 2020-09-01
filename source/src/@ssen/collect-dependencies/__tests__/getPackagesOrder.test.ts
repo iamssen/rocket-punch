@@ -4,7 +4,10 @@ import { getPackagesOrder } from '../getPackagesOrder';
 describe('getPackagesOrder()', () => {
   test('should get the ordered names array', () => {
     // Arrange : get test condition and test result from function args
-    function test(packageJsonContents: PackageJson[], matchOrderedNames: string[]) {
+    function test(
+      packageJsonContents: PackageJson[],
+      matchOrderedNames: string[],
+    ) {
       // Act
       const orderedNames: string[] = getPackagesOrder({ packageJsonContents });
 
@@ -17,10 +20,14 @@ describe('getPackagesOrder()', () => {
       orderedNames.reverse().forEach((a: string, i: number) => {
         // sorted.slice(0, i) does not have a
         for (const b of orderedNames.slice(0, i)) {
-          const aFile: PackageJson | undefined = packageJsonContents.find(({ name }) => name === a);
+          const aFile: PackageJson | undefined = packageJsonContents.find(
+            ({ name }) => name === a,
+          );
           expect(aFile).not.toBeUndefined();
           if (aFile) {
-            expect(Object.keys(aFile.dependencies || {})).not.toEqual(expect.arrayContaining([b]));
+            expect(Object.keys(aFile.dependencies || {})).not.toEqual(
+              expect.arrayContaining([b]),
+            );
           }
         }
       });
@@ -140,7 +147,13 @@ describe('getPackagesOrder()', () => {
       // test-module3 { @ssen/test-module1 }
       // @ssen/test-module2 { test-module3 }
       // does not have any reason to order - use-react-intl
-      ['@ssen/test-module1', 'router-store', 'test-module3', '@ssen/test-module2', 'use-react-intl'],
+      [
+        '@ssen/test-module1',
+        'router-store',
+        'test-module3',
+        '@ssen/test-module2',
+        'use-react-intl',
+      ],
     );
   });
 
@@ -242,7 +255,10 @@ describe('getPackagesOrder()', () => {
     // Assert
     // there is no dependencies each other
     // so they will be ordered by names
-    expect(getPackagesOrder({ packageJsonContents })).toEqual(['@ssen/test-module1', '@ssen/test-module2']);
+    expect(getPackagesOrder({ packageJsonContents })).toEqual([
+      '@ssen/test-module1',
+      '@ssen/test-module2',
+    ]);
   });
 
   // ---------------------------------------------
@@ -255,7 +271,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@ssen/snackbar',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@ssen/snackbar',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@ssen/snackbar',
@@ -277,7 +294,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/handbook',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/handbook',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/handbook',
@@ -298,7 +316,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/heatmap',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/heatmap',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/heatmap',
@@ -316,7 +335,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/insight-draw',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/insight-draw',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/insight-draw',
@@ -334,7 +354,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/insight-ui',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/insight-ui',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/insight-ui',
@@ -348,7 +369,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/insight-viewer',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/insight-viewer',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/insight-viewer',
@@ -381,7 +403,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/is-complex-polygon',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/is-complex-polygon',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/is-complex-polygon',
@@ -400,7 +423,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/is-intersection',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/is-intersection',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/is-intersection',
@@ -433,7 +457,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/is-touch-device',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/is-touch-device',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/is-touch-device',
@@ -447,12 +472,16 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/new-window',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/new-window',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/new-window',
         version: '5.0.0-alpha.1',
-        dependencies: { react: '^16.13.1', '@handbook/source': '^2.0.0-alpha.1' },
+        dependencies: {
+          react: '^16.13.1',
+          '@handbook/source': '^2.0.0-alpha.1',
+        },
         main: 'index.js',
         typings: 'index.d.ts',
       },
@@ -461,7 +490,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/opt-components',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/opt-components',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/opt-components',
@@ -492,7 +522,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/opt-control-icons',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/opt-control-icons',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/opt-control-icons',
@@ -512,7 +543,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/opt-login-components',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/opt-login-components',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/opt-login-components',
@@ -533,7 +565,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/screenshot',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/screenshot',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/screenshot',
@@ -547,7 +580,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/timeout',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/timeout',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/timeout',
@@ -561,7 +595,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/use-control-log',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/use-control-log',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/use-control-log',
@@ -575,7 +610,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/use-dialog',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/use-dialog',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/use-dialog',
@@ -594,12 +630,16 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/use-opt-control',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/use-opt-control',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/use-opt-control',
         version: '5.0.0-alpha.1',
-        dependencies: { react: '^16.13.1', '@handbook/source': '^2.0.0-alpha.1' },
+        dependencies: {
+          react: '^16.13.1',
+          '@handbook/source': '^2.0.0-alpha.1',
+        },
         main: 'index.js',
         typings: 'index.d.ts',
       },
@@ -608,12 +648,16 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/use-reset-time',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/use-reset-time',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/use-reset-time',
         version: '5.0.0-alpha.1',
-        dependencies: { react: '^16.13.1', '@handbook/source': '^2.0.0-alpha.1' },
+        dependencies: {
+          react: '^16.13.1',
+          '@handbook/source': '^2.0.0-alpha.1',
+        },
         main: 'index.js',
         typings: 'index.d.ts',
       },
@@ -622,12 +666,16 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@lunit/use-shortcut',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@lunit/use-shortcut',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@lunit/use-shortcut',
         version: '5.0.0-alpha.1',
-        dependencies: { react: '^16.13.1', '@handbook/source': '^2.0.0-alpha.1' },
+        dependencies: {
+          react: '^16.13.1',
+          '@handbook/source': '^2.0.0-alpha.1',
+        },
         main: 'index.js',
         typings: 'index.d.ts',
       },
@@ -636,7 +684,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@handbook/code-block',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@handbook/code-block',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@handbook/code-block',
@@ -655,7 +704,8 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@handbook/components',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@handbook/components',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@handbook/components',
@@ -680,12 +730,16 @@ describe('getPackagesOrder()', () => {
         license: 'MIT',
         repository: 'github:lunit/frontend-components',
         bugs: 'https://github.com/lunit/frontend-components/issues',
-        homepage: 'https://github.com/lunit/frontend-components/tree/master/src/@handbook/source',
+        homepage:
+          'https://github.com/lunit/frontend-components/tree/master/src/@handbook/source',
         engines: { node: '>=10' },
         publishConfig: { access: 'public' },
         name: '@handbook/source',
         version: '2.0.0-alpha.1',
-        dependencies: { react: '^16.13.1', '@handbook/code-block': '^2.0.0-alpha.1' },
+        dependencies: {
+          react: '^16.13.1',
+          '@handbook/code-block': '^2.0.0-alpha.1',
+        },
         main: 'index.js',
         typings: 'index.d.ts',
       },

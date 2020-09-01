@@ -11,7 +11,11 @@ export async function view({
   entry,
   onMessage = viewMessageHandler,
 }: ViewParams) {
-  const internalPackages: Map<string, PackageInfo> = await readPackages({ cwd, sourceRoot, entry });
+  const internalPackages: Map<string, PackageInfo> = await readPackages({
+    cwd,
+    sourceRoot,
+    entry,
+  });
 
   const originMetadatas: (FullMetadata | undefined)[] = await Promise.all(
     Array.from(internalPackages.keys()).map((name) =>

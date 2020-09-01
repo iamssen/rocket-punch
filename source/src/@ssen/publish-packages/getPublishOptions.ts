@@ -5,11 +5,20 @@ import path from 'path';
 import { PackageJson } from 'type-fest';
 import { PackageInfo, PublishOption } from './types';
 
-export type GetRemotePackageJson = (params: { name: string } & Options) => Promise<PackageJson | undefined>;
+export type GetRemotePackageJson = (
+  params: { name: string } & Options,
+) => Promise<PackageJson | undefined>;
 
-const getNpmRemotePackageJson: GetRemotePackageJson = ({ name, ...options }) => {
+const getNpmRemotePackageJson: GetRemotePackageJson = ({
+  name,
+  ...options
+}) => {
   return getPackageJson(name, options)
-    .then((value) => (value && typeof value.version === 'string' ? (value as PackageJson) : undefined))
+    .then((value) =>
+      value && typeof value.version === 'string'
+        ? (value as PackageJson)
+        : undefined,
+    )
     .catch(() => undefined);
 };
 
@@ -39,7 +48,9 @@ export async function getPublishOptions({
 
   const currentPackageJsons: PackageJson[] = Array.from(packages.values())
     // PackageInfo => /path/to/dist/{name}/package.json
-    .map(({ name: packageName }) => path.join(outDir, flatPackageName(packageName), 'package.json'))
+    .map(({ name: packageName }) =>
+      path.join(outDir, flatPackageName(packageName), 'package.json'),
+    )
     // /path/to/dist/{name}/package.json => boolean
     .filter((packageJsonFile) => fs.existsSync(packageJsonFile))
     // /path/to/dist/{name}/package.json => PackageJson
@@ -47,7 +58,9 @@ export async function getPublishOptions({
     // PackageJson => boolean
     .filter(({ name }) => typeof name === 'string');
 
-  const remotePackageJsons: (PackageJson | undefined)[] = await Promise.all<PackageJson | undefined>(
+  const remotePackageJsons: (PackageJson | undefined)[] = await Promise.all<
+    PackageJson | undefined
+  >(
     currentPackageJsons.map(({ name }) => {
       if (!name) throw new Error(``);
 

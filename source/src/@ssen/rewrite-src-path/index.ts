@@ -25,7 +25,9 @@ export function rewriteSrcPath({ importPath, filePath, rootDir }: Params) {
     const dir: string = path.dirname(filePath);
     const targetFilePath: string = path.join(dir, importPath);
     const packageName: string = toPackageName(path.relative(rootDir, filePath));
-    const targetPackageName: string = toPackageName(path.relative(rootDir, targetFilePath));
+    const targetPackageName: string = toPackageName(
+      path.relative(rootDir, targetFilePath),
+    );
 
     return packageName !== targetPackageName ? targetPackageName : importPath;
   }

@@ -3,8 +3,8 @@
 Use `createCompilerHost()` instead.
 
 ```ts
-import { CompilerHost, createCompilerHost } from "typescript";
-import { createExtendedCompilerHost } from "@ssen/extended-compiler-host";
+import { CompilerHost, createCompilerHost } from 'typescript';
+import { createExtendedCompilerHost } from '@ssen/extended-compiler-host';
 
 // const compilerHost: CompilerHost = createCompilerHost(compilerOptions);
 const compilerHost: CompilerHost = createExtendedCompilerHost(compilerOptions);

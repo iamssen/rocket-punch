@@ -52,7 +52,8 @@ function createVisitor({
       node.expression.kind === ts.SyntaxKind.ImportKeyword &&
       ts.isStringLiteralLike(node.arguments[0])
     ) {
-      const importPath: string = (node.arguments[0] as ts.StringLiteralLike).text;
+      const importPath: string = (node.arguments[0] as ts.StringLiteralLike)
+        .text;
       const rewrittenImportPath: string = rewriteSrcPath({
         importPath,
         filePath: fileName || node.getSourceFile().fileName,
@@ -60,10 +61,15 @@ function createVisitor({
       });
 
       if (importPath !== rewrittenImportPath) {
-        return ts.factory.updateCallExpression(node, node.expression, node.typeArguments, [
-          ts.createStringLiteral(rewrittenImportPath),
-          ...node.arguments.slice(1),
-        ]);
+        return ts.factory.updateCallExpression(
+          node,
+          node.expression,
+          node.typeArguments,
+          [
+            ts.createStringLiteral(rewrittenImportPath),
+            ...node.arguments.slice(1),
+          ],
+        );
       }
     }
     // require.resolve('?')
@@ -75,7 +81,8 @@ function createVisitor({
       node.expression.name.escapedText === 'resolve' &&
       ts.isStringLiteralLike(node.arguments[0])
     ) {
-      const importPath: string = (node.arguments[0] as ts.StringLiteralLike).text;
+      const importPath: string = (node.arguments[0] as ts.StringLiteralLike)
+        .text;
       const rewrittenImportPath: string = rewriteSrcPath({
         importPath,
         filePath: fileName || node.getSourceFile().fileName,
@@ -83,10 +90,15 @@ function createVisitor({
       });
 
       if (importPath !== rewrittenImportPath) {
-        return ts.factory.updateCallExpression(node, node.expression, node.typeArguments, [
-          ts.createStringLiteral(rewrittenImportPath),
-          ...node.arguments.slice(1),
-        ]);
+        return ts.factory.updateCallExpression(
+          node,
+          node.expression,
+          node.typeArguments,
+          [
+            ts.createStringLiteral(rewrittenImportPath),
+            ...node.arguments.slice(1),
+          ],
+        );
       }
     }
     // require('?')
@@ -96,7 +108,8 @@ function createVisitor({
       node.expression.escapedText === 'require' &&
       ts.isStringLiteralLike(node.arguments[0])
     ) {
-      const importPath: string = (node.arguments[0] as ts.StringLiteralLike).text;
+      const importPath: string = (node.arguments[0] as ts.StringLiteralLike)
+        .text;
       const rewrittenImportPath: string = rewriteSrcPath({
         importPath,
         filePath: fileName || node.getSourceFile().fileName,
@@ -104,10 +117,15 @@ function createVisitor({
       });
 
       if (importPath !== rewrittenImportPath) {
-        return ts.factory.updateCallExpression(node, node.expression, node.typeArguments, [
-          ts.createStringLiteral(rewrittenImportPath),
-          ...node.arguments.slice(1),
-        ]);
+        return ts.factory.updateCallExpression(
+          node,
+          node.expression,
+          node.typeArguments,
+          [
+            ts.createStringLiteral(rewrittenImportPath),
+            ...node.arguments.slice(1),
+          ],
+        );
       }
     }
 
@@ -117,8 +135,10 @@ function createVisitor({
   return visitor;
 }
 
-export const importPathRewrite = (config: Configuration): ts.TransformerFactory<ts.SourceFile> => (
-  ctx: ts.TransformationContext,
-) => (node: ts.SourceFile) => {
+export const importPathRewrite = (
+  config: Configuration,
+): ts.TransformerFactory<ts.SourceFile> => (ctx: ts.TransformationContext) => (
+  node: ts.SourceFile,
+) => {
   return ts.visitNode(node, createVisitor({ ...config, ctx }));
 };

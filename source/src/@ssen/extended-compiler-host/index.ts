@@ -21,7 +21,9 @@ const imageTransformConfig: TransformConfig = {
   getSourceText: (fileName: string) => {
     const file: string = fileName.substr(0, fileName.length - 4);
     const ext: string = path.extname(file);
-    const source: string = fs.readFileSync(file, 'base64').replace(/[\r\n]+/gm, '');
+    const source: string = fs
+      .readFileSync(file, 'base64')
+      .replace(/[\r\n]+/gm, '');
     return `export default 'data:image/${ext};base64,${source}'`;
   },
 };
@@ -49,7 +51,9 @@ const transformConfigs: Record<string, TransformConfig> = {
   svg: {
     getSourceText: (fileName: string) => {
       const file: string = fileName.substr(0, fileName.length - 4);
-      const svgCode: string = fs.readFileSync(file, 'utf8').replace(/[\r\n]+/gm, '');
+      const svgCode: string = fs
+        .readFileSync(file, 'utf8')
+        .replace(/[\r\n]+/gm, '');
       const componentName: string = 'ReactComponent';
       const reactCode: string = svgToJsx(svgCode, {}, { componentName });
 
@@ -82,7 +86,10 @@ function findConfig(fileName: string): TransformConfig | undefined {
 export function createExtendedCompilerHost(
   options: ts.CompilerOptions,
   setParentNodes?: boolean,
-  compilerHost: ts.CompilerHost = ts.createCompilerHost(options, setParentNodes),
+  compilerHost: ts.CompilerHost = ts.createCompilerHost(
+    options,
+    setParentNodes,
+  ),
 ): ts.CompilerHost {
   function fileExists(fileName: string): boolean {
     const transformConfig: TransformConfig | undefined = findConfig(fileName);
@@ -108,7 +115,12 @@ export function createExtendedCompilerHost(
       );
     }
 
-    return compilerHost.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
+    return compilerHost.getSourceFile(
+      fileName,
+      languageVersion,
+      onError,
+      shouldCreateNewSourceFile,
+    );
   }
 
   return {

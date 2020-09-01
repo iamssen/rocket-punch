@@ -9,7 +9,10 @@ import { PackageJson } from 'type-fest';
 describe('getPackagesEntry()', () => {
   test('should get packages entry', async () => {
     // Arrange
-    const cwd: string = await copyTmpDirectory(process.cwd(), `test/fixtures/rocket-punch/sample`);
+    const cwd: string = await copyTmpDirectory(
+      process.cwd(),
+      `test/fixtures/rocket-punch/sample`,
+    );
 
     // Act
     const packages: Map<string, PackageInfo> = await readPackages({
@@ -17,7 +20,9 @@ describe('getPackagesEntry()', () => {
       sourceRoot: 'src',
       entry: readEntry({ cwd }),
     });
-    const externalPackages: PackageJson.Dependency = await getRootDependencies({ cwd });
+    const externalPackages: PackageJson.Dependency = await getRootDependencies({
+      cwd,
+    });
 
     // Assert
     expect(packages.get('a')?.module).toBe('commonjs');
@@ -32,7 +37,10 @@ describe('getPackagesEntry()', () => {
 
   test('should get packages entry by @group/*', async () => {
     // Arrange
-    const cwd: string = await copyTmpDirectory(process.cwd(), `test/fixtures/rocket-punch/group-entry`);
+    const cwd: string = await copyTmpDirectory(
+      process.cwd(),
+      `test/fixtures/rocket-punch/group-entry`,
+    );
 
     // Act
     const packages: Map<string, PackageInfo> = await readPackages({
@@ -40,7 +48,9 @@ describe('getPackagesEntry()', () => {
       sourceRoot: 'src',
       entry: readEntry({ cwd }),
     });
-    const externalPackages: PackageJson.Dependency = await getRootDependencies({ cwd });
+    const externalPackages: PackageJson.Dependency = await getRootDependencies({
+      cwd,
+    });
 
     // Assert
     expect(packages.get('@group/a')?.module).toBe('commonjs');
@@ -69,7 +79,9 @@ describe('getPackagesEntry()', () => {
 
     // Assert
     expect(packages.get('a')?.module).toBe('commonjs');
-    expect(packages.get('a')?.packageJson.bin).toMatchObject({ 'cli-a': './bin/test.js' });
+    expect(packages.get('a')?.packageJson.bin).toMatchObject({
+      'cli-a': './bin/test.js',
+    });
     expect(packages.get('b')?.module).toBe('commonjs');
     expect(packages.get('b')?.packageJson['test']).toBe('hello world 1');
     expect(packages.get('b')?.compilerOptions['allowJs']).toBeTruthy();

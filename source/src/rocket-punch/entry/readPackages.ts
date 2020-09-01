@@ -8,7 +8,11 @@ interface Params {
   entry: Record<string, string | PackageConfig>;
 }
 
-export async function readPackages({ cwd, sourceRoot, entry }: Params): Promise<Map<string, PackageInfo>> {
+export async function readPackages({
+  cwd,
+  sourceRoot,
+  entry,
+}: Params): Promise<Map<string, PackageInfo>> {
   const packages: Record<string, string | PackageConfig> = {};
 
   for (const name of Object.keys(entry)) {
