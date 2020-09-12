@@ -333,8 +333,8 @@ export default function Home() {
 # More repositories for reference
 
 - <https://github.com/rocket-hangar/rocket-punch-templates>
-- <https://github.com/rocket-hangar/rocket-scripts/tree/master/source>
-- <https://github.com/rocket-hangar/generate-github-directory/tree/master/source>
+- <https://github.com/rocket-hangar/rocket-scripts/tree/master/packages>
+- <https://github.com/rocket-hangar/generate-github-directory/tree/master/packages>
 
 # API
 
