@@ -83,10 +83,10 @@ describe('getPackagesEntry()', () => {
       'cli-a': './bin/test.js',
     });
     expect(packages.get('b')?.module).toBe('commonjs');
-    expect(packages.get('b')?.packageJson['test']).toBe('hello world 1');
+    expect(packages.get('b')?.packageJson.author).toBe('hello world 1');
     expect(packages.get('b')?.compilerOptions['allowJs']).toBeTruthy();
     expect(packages.get('c')?.module).toBe('commonjs');
-    expect(packages.get('c')?.packageJson['test']).toBe('hello world 2');
+    expect(packages.get('c')?.packageJson.author).toBe('hello world 2');
 
     expect(packages.has('a')).toBeTruthy();
     expect(packages.has('b')).toBeTruthy();

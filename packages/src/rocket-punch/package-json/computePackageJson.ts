@@ -15,10 +15,12 @@ export async function computePackageJson({
   sharedConfig = {},
 }: Params): Promise<PackageJson> {
   const shared: PackageJson = { ...sharedConfig };
+  const keys = Object.keys(shared) as (keyof PackageJson)[];
 
-  Object.keys(shared).forEach((key) => {
+  keys.forEach((key) => {
     const value: unknown = shared[key];
     if (typeof value === 'string') {
+      //@ts-ignore
       shared[key] = value
         .replace(/({name})/g, packageInfo.name) // {name}
         .replace(/({version})/g, packageInfo.version); // {version}

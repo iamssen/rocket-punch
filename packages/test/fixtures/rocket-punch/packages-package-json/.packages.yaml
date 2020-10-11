@@ -6,10 +6,10 @@ a:
 b:
   version: 0.1.0
   packageJson:
-    test: hello world 1
+    author: hello world 1
   compilerOptions:
     allowJs: true
 c:
   version: 0.1.0
   packageJson:
-    test: hello world 2
+    author: hello world 2
