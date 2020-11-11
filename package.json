@@ -1,4 +1,5 @@
 {
+  "name": "rocket-punch",
   "private": true,
   "author": "SSen <i@ssen.name>",
   "license": "MIT",
@@ -7,15 +8,15 @@
     "packages"
   ],
   "scripts": {
-    "build": "yarn workspace packages run build --out-dir $PWD/out/packages",
-    "publish": "yarn run test && yarn run build && yarn workspace packages run publish --out-dir $PWD/out/packages",
-    "view": "yarn workspace packages run view",
-    "doctor": "yarn workspace packages run doctor",
+    "build": "cd packages; npm run build",
+    "publish": "npm run test && npm run build && cd packages; npm run publish",
+    "view": "cd packages; npm run view",
+    "doctor": "cd packages; npm run doctor",
     "format": "prettier --write \"**/*.{js,ts,tsx}\"",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "e2e": "yarn workspace packages run e2e",
-    "test": "yarn workspace packages run test",
-    "coverage": "yarn workspace packages run coverage"
+    "e2e": "cd packages; npm run e2e",
+    "test": "cd packages; npm run test",
+    "coverage": "cd packages; npm run coverage"
   },
   "lint-staged": {
     "packages/{src,scripts,@types}/{**/*,*}.{ts,tsx}": [
