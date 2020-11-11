@@ -4,6 +4,6 @@
     "build": "rocket-punch build"
   },
   "dependencies": {
-    "react": "^16.13.1"
+    "react": "^17.0.1"
   }
 }

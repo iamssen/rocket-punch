@@ -44,7 +44,7 @@ export function requireTypescript<T>(file: string): T & ts.TranspileOutput {
 
   //@ts-ignore hidden api
   const paths: string[] = Module._nodeModulePaths(path.dirname(existsFile));
-  const parent: Module | null = module.parent;
+  const parent: Module | null | undefined = module.parent;
 
   const m: Module = new Module(existsFile, parent || undefined);
   m.filename = existsFile;

@@ -37,7 +37,7 @@ export = {
   ],
   globals: {
     'ts-jest': {
-      tsConfig: 'tsconfig.json',
+      tsconfig: 'tsconfig.json',
     },
   },
   modulePaths: ['<rootDir>/src/'],
