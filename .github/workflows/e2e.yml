@@ -28,6 +28,15 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Upgrade NPM@>=7
+        run: |
+          npm install -g npm@">=7.0.0"
+
+      - name: Version
+        run: |
+          node --version
+          npm --version
+
       - name: Get npm cache directory
         id: npm-cache
         run: |
@@ -38,11 +47,6 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-
-      - name: Version
-        run: |
-          node --version
-          npm --version
 
       - name: Install Dependencies
         run: npm install
