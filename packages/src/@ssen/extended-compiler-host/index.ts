@@ -1,6 +1,6 @@
 import svgToJsx from '@svgr/plugin-jsx';
 import fs from 'fs-extra';
-import { safeLoad } from 'js-yaml';
+import { load } from 'js-yaml';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import path from 'path';
 import ts from 'typescript';
@@ -32,7 +32,7 @@ const yamlTransformConfig: TransformConfig = {
   getSourceText: (fileName: string) => {
     const file: string = fileName.substr(0, fileName.length - 4);
     const content: string = fs.readFileSync(file, 'utf8');
-    return `export default ${JSON.stringify(safeLoad(content))}`;
+    return `export default ${JSON.stringify(load(content))}`;
   },
 };
 

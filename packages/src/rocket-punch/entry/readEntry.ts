@@ -15,8 +15,10 @@ export function readEntry({
     encoding: 'utf8',
   });
 
-  const content: object | string | undefined = yaml.safeLoad(source);
-  if (!content || typeof content === 'string') {
+  const content: object | number | string | null | undefined = yaml.load(
+    source,
+  );
+  if (!content || typeof content === 'string' || typeof content === 'number') {
     throw new Error(`yaml.safeLoad does not return an object`);
   }
 
