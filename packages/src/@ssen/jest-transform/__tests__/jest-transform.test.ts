@@ -35,11 +35,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReactComponent = void 0;
 var React = require("react");
 function ReactComponent() {
-    return React.createElement("svg", { viewBox: "0 0 214.489 17.599" },
-        React.createElement("rect", { x: 10, y: 10, width: 100, height: 100, fill: "#000000" }));
+  return React.createElement(
+    "svg",
+    { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 214.489 17.599" },
+    React.createElement("rect", {
+      x: 10,
+      y: 10,
+      width: 100,
+      height: 100,
+      fill: "#000000",
+    })
+  );
 }
 exports.ReactComponent = ReactComponent;
-exports.default = "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='214.489' height='17.599' viewBox='0 0 214.489 17.599'%3e %3crect x='10' y='10' width='100' height='100' fill='black'/%3e%3c/svg%3e";
+exports.default =
+  "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='214.489' height='17.599' viewBox='0 0 214.489 17.599'%3e %3crect x='10' y='10' width='100' height='100' fill='black'/%3e%3c/svg%3e";
 `;
 
 const text = `Hello World!`;
