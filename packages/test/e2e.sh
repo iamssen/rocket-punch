@@ -54,6 +54,10 @@ grep -q 'http address' <(tail -f "$VERDACCIO_REGISTRY_LOG"); # wating verdaccio
 
 ## LOCAL PUBLISH
 ## ==================================================----------------------------------
+for dir in "$ROOT/out/packages"/*/; do
+  echo "//localhost:$VERDACCIO_PORT/:_authToken=ANONYMOUS_TOKEN_STRING" > "$dir/.npmrc";
+done
+
 node -r ts-node/register -r tsconfig-paths/register scripts/publish.ts --skip-selection --tag e2e --registry "$LOCAL_REGISTRY_URL";
 
 # TEST
