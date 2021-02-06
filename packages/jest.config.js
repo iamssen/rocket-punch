@@ -3,7 +3,7 @@ module.exports = {
   transform: {
     '.(ts|tsx)': 'ts-jest',
   },
-  testTimeout: 50000,
+  testTimeout: 70000,
   testMatch: ['**/__test?(s)__/**/*.ts?(x)', '**/?(*.)(spec|test).ts?(x)'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
   collectCoverageFrom: [
