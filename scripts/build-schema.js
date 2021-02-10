@@ -8,7 +8,14 @@ const schema = {
   type: 'object',
   patternProperties: {
     '^[a-zA-Z@].*$': {
-      $ref: '#/definitions/packageConfig',
+      oneOf: [
+        {
+          $ref: '#/definitions/packageConfig',
+        },
+        {
+          type: 'string',
+        },
+      ],
     },
   },
   definitions: {

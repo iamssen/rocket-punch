@@ -18,9 +18,16 @@ export function readEntry({
   const content: object | number | string | null | undefined = yaml.load(
     source,
   );
+
   if (!content || typeof content === 'string' || typeof content === 'number') {
     throw new Error(`yaml.safeLoad does not return an object`);
   }
 
-  return content as Record<string, string | PackageConfig>;
+  const {
+    // ignore special keys
+    $schema,
+    ...entry
+  } = content as Record<string, string | PackageConfig>;
+
+  return entry;
 }
