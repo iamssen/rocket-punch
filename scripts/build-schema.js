@@ -7,45 +7,57 @@ const schema = {
   id:
     'https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/schema.json#',
   type: 'object',
-  properties: {
-    version: {
-      type: 'string',
-      description:
-        'Version must be parseable by node-semver (e.g. 0.1.0, 1.0.0-alpha.1...)',
-    },
-    tag: {
-      type: 'string',
-      default: 'latest',
-      description:
-        'tag (for example, `next` of `npm install react@next` when you install a package)',
-    },
-    access: {
-      type: 'string',
-      enum: ['public', 'private'],
-      description:
-        'if you set this value, it will pass to the `npm publish` command like this `npm publish --access public`',
-    },
-    registry: {
-      type: 'string',
-      description:
-        'if you set this value, it will pass to the `npm publish` command like this `npm publish --registry http://...`.',
-    },
-    module: {
-      type: 'string',
-      enum: ['commonjs', 'esm'],
-      description: 'module type',
-    },
-    compilerOptions: {
-      $ref: '#/definitions/compilerOptions',
-    },
-    packageJson: {
-      $ref: 'https://json.schemastore.org/package',
+  patternProperties: {
+    '^.*$': {
+      $ref: '#/definitions/packageConfig',
     },
   },
-  required: ['version'],
+  additionalProperties: false,
+  definitions: {
+    packageConfig: {
+      type: 'object',
+      properties: {
+        version: {
+          type: 'string',
+          description:
+            'Version must be parseable by node-semver (e.g. 0.1.0, 1.0.0-alpha.1...)',
+        },
+        tag: {
+          type: 'string',
+          default: 'latest',
+          description:
+            'tag (for example, `next` of `npm install react@next` when you install a package)',
+        },
+        access: {
+          type: 'string',
+          enum: ['public', 'private'],
+          description:
+            'if you set this value, it will pass to the `npm publish` command like this `npm publish --access public`',
+        },
+        registry: {
+          type: 'string',
+          description:
+            'if you set this value, it will pass to the `npm publish` command like this `npm publish --registry http://...`.',
+        },
+        module: {
+          type: 'string',
+          enum: ['commonjs', 'esm'],
+          description: 'module type',
+        },
+        compilerOptions: {
+          $ref: '#/definitions/compilerOptions',
+        },
+        packageJson: {
+          $ref: 'https://json.schemastore.org/package',
+        },
+      },
+      required: ['version'],
+    },
+  },
 };
 
 (async function () {
+  const res = await fetch('https://json.schemastore.org/tsconfig.json');
   const {
     definitions: {
       compilerOptionsDefinition: {
@@ -64,9 +76,7 @@ const schema = {
         },
       },
     },
-  } = await fetch('https://json.schemastore.org/tsconfig.json').then((res) =>
-    res.json(),
-  );
+  } = await res.json();
 
   fs.writeFileSync(
     path.resolve(__dirname, '../schema.json'),
@@ -78,6 +88,7 @@ const schema = {
             ...compilerOptions,
             properties,
           },
+          ...schema.definitions,
         },
       },
       null,
