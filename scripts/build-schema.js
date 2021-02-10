@@ -8,11 +8,13 @@ const schema = {
     'https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/schema.json#',
   type: 'object',
   patternProperties: {
-    '^.*$': {
+    $schema: {
+      type: 'string',
+    },
+    '^[a-zA-Z@].*$': {
       $ref: '#/definitions/packageConfig',
     },
   },
-  additionalProperties: false,
   definitions: {
     packageConfig: {
       type: 'object',
