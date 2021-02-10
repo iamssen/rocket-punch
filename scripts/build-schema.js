@@ -4,8 +4,7 @@ const fetch = require('node-fetch');
 
 const schema = {
   $schema: 'http://json-schema.org/draft-04/schema#',
-  id:
-    'https://raw.githubusercontent.com/rocket-hangar/rocket-punch/master/schema.json#',
+  id: 'https://rocket-hangar.github.io/rocket-punch/schemas/packages.json#',
   type: 'object',
   patternProperties: {
     '^[a-zA-Z@].*$': {
@@ -78,7 +77,7 @@ const schema = {
   } = await res.json();
 
   fs.writeFileSync(
-    path.resolve(__dirname, '../schema.json'),
+    path.resolve(__dirname, '../docs/schemas/packages.json'),
     JSON.stringify(
       {
         ...schema,
