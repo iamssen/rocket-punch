@@ -1,9 +1,9 @@
 '@ssen/*':
-  version: 2.4.0
+  version: 2.4.1
   tag: latest
   module: commonjs
 rocket-punch:
-  version: 2.4.0
+  version: 2.4.1
   tag: latest
   module: commonjs
   packageJson:
