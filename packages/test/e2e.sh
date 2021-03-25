@@ -76,14 +76,12 @@ function createTmpFixture() {
   cd "$TEMP" || exit 1;
   echo "TEMP=$TEMP";
   echo "PWD=$(pwd)";
-#  npm install @react-zeroconfig/cli@e2e --save-dev --registry "$LOCAL_REGISTRY_URL";
-#  npm install;
+  yarn install --registry "$LOCAL_REGISTRY_URL" > /dev/null;
 }
 
 createTmpFixture rocket-punch/basic;
-npm install;
-npm install rocket-punch@e2e --save-dev --registry "$LOCAL_REGISTRY_URL";
-npm run build;
+yarn install rocket-punch@e2e --dev --registry "$LOCAL_REGISTRY_URL" > /dev/null;
+yarn run build;
 fileExists "$TEMP/out/packages/a/index.js";
 fileExists "$TEMP/out/packages/a/index.d.ts";
 fileExists "$TEMP/out/packages/b/index.js";
@@ -92,9 +90,8 @@ fileExists "$TEMP/out/packages/c/index.js";
 fileExists "$TEMP/out/packages/c/index.d.ts";
 
 createTmpFixture rocket-punch/js;
-npm install;
-npm install rocket-punch@e2e --save-dev --registry "$LOCAL_REGISTRY_URL";
-npm run build;
+yarn install rocket-punch@e2e --dev --registry "$LOCAL_REGISTRY_URL" > /dev/null;
+yarn run build;
 fileExists "$TEMP/out/packages/a/index.js";
 fileExists "$TEMP/out/packages/a/index.d.ts";
 fileExists "$TEMP/out/packages/b/index.js";
@@ -103,9 +100,8 @@ fileExists "$TEMP/out/packages/c/index.js";
 fileExists "$TEMP/out/packages/c/index.d.ts";
 
 createTmpFixture rocket-punch/bundle;
-npm install;
-npm install rocket-punch@e2e --save-dev --registry "$LOCAL_REGISTRY_URL";
-npm run build;
+yarn install rocket-punch@e2e --dev --registry "$LOCAL_REGISTRY_URL" > /dev/null;
+yarn run build;
 fileExists "$TEMP/out/packages/a/index.js";
 fileExists "$TEMP/out/packages/a/index.d.ts";
 fileExists "$TEMP/out/packages/a/icon.svg.js";
