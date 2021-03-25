@@ -6,7 +6,6 @@
     "publish": "node -r ts-node/register -r tsconfig-paths/register scripts/publish.ts",
     "view": "node -r ts-node/register -r tsconfig-paths/register scripts/view.ts",
     "doctor": "node -r ts-node/register -r tsconfig-paths/register scripts/doctor.ts",
-    "e2e": "npm run build && bash test/e2e.sh && rimraf out",
     "test": "jest --colors",
     "coverage": "jest --coverage",
     "precommit": "lint-staged"
