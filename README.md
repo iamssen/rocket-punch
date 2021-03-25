@@ -1,6 +1,6 @@
 # 🚀 Rocket Punch! 🥊
 
-![CI](https://github.com/rocket-hangar/rocket-punch/workflows/CI/badge.svg)
+![TEST](https://github.com/rocket-hangar/rocket-punch/workflows/TEST/badge.svg)
 ![E2E](https://github.com/rocket-hangar/rocket-punch/workflows/E2E/badge.svg)
 [![codecov](https://codecov.io/gh/rocket-hangar/rocket-punch/branch/master/graph/badge.svg)](https://codecov.io/gh/rocket-hangar/rocket-punch)
 [![devDependencies Status](https://david-dm.org/rocket-hangar/rocket-punch/dev-status.svg?kill_cache=1)](https://david-dm.org/rocket-hangar/rocket-punch?type=dev)
