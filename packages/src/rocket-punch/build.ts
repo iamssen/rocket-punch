@@ -27,6 +27,7 @@ import { PackageInfo } from './types';
 export async function build({
   cwd = process.cwd(),
   sourceRoot = 'src',
+  strict = false,
   dist = path.resolve(cwd, 'out/packages'),
   tsconfig = 'tsconfig.json',
   entry,
@@ -262,7 +263,7 @@ export async function build({
       diagnostics,
     });
 
-    if (emitResult.emitSkipped) {
+    if ((strict && diagnostics.length > 0) || emitResult.emitSkipped) {
       throw new Error(`Build "${packageName}" is failed`);
     }
 

@@ -39,6 +39,7 @@ type BuildArgs = {
   outDir?: string;
   tsconfig?: string;
   svg?: string;
+  strict?: boolean;
 };
 
 const buildOptions: Options = {
@@ -57,6 +58,12 @@ const buildOptions: Options = {
     choices: ['create-react-app', 'default'],
     describe:
       'svg compile type <default|create-react-app> (e.g. --svg default)',
+  },
+  'strict': {
+    type: 'boolean',
+    default: false,
+    describe:
+      'if you set this true it will return exit 1 and stop build when there are tsc build warnings',
   },
 };
 
@@ -126,13 +133,21 @@ export function run() {
             'SVG transform to `import ReactComponent from "./file.svg"`',
           ),
       handler: (argv: Arguments<CommonArgs & BuildArgs>) => {
-        const { emit, outDir, tsconfig, sourceRoot, svg } = readLastArgv(argv);
+        const {
+          emit,
+          outDir,
+          tsconfig,
+          sourceRoot,
+          svg,
+          strict,
+        } = readLastArgv(argv);
         const params: BuildParams = {
           cwd,
           svg: svg === 'default' ? 'default' : 'create-react-app',
           dist: toAbsolutePath(outDir),
           tsconfig,
           sourceRoot,
+          strict,
           entry: readEntry({ cwd }),
           onMessage: buildMessageHandler,
         };

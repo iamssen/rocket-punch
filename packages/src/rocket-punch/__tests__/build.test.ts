@@ -336,6 +336,41 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'c/public/test.txt'))).toBeTruthy();
   });
 
+  test('should fail build by strict mode', async () => {
+    // Arrange
+    const cwd: string = await copyTmpDirectory(
+      process.cwd(),
+      'test/fixtures/rocket-punch/strict',
+    );
+    const dist: string = path.join(cwd, 'out/packages');
+
+    await exec(`npm install`, { cwd });
+
+    // Asset
+    await expect(
+      build({
+        cwd,
+        strict: true,
+        dist,
+        entry: {
+          a: {
+            version: '0.1.0',
+            tag: 'latest',
+          },
+          b: {
+            version: '0.1.0',
+            tag: 'latest',
+          },
+          c: {
+            version: '0.1.0',
+            tag: 'latest',
+          },
+        },
+        onMessage: async () => {},
+      }),
+    ).rejects.toThrowError();
+  });
+
   test('should transform package.json', async () => {
     // Arrange
     const cwd: string = await copyTmpDirectory(

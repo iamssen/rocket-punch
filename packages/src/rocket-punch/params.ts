@@ -132,6 +132,13 @@ export interface BuildParams extends CommonParams {
   svg?: 'default' | 'create-react-app';
 
   /**
+   * exit 1 when there are tsc build warnings
+   *
+   * @default false
+   */
+  strict?: boolean;
+
+  /**
    * [advanced] you can transform the packageJson before emit
    */
   transformPackageJson?: (
