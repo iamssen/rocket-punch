@@ -1,82 +1,33 @@
-import svgToJsx from '@svgr/plugin-jsx';
-import fs from 'fs-extra';
-import { load } from 'js-yaml';
-import svgToMiniDataURI from 'mini-svg-data-uri';
-import path from 'path';
+import {
+  imageTransformer,
+  plainTextTransformer,
+  svgTransformer,
+  Transformer,
+  yamlTransformer,
+} from '@ssen/transform';
 import ts from 'typescript';
 
-interface TransformConfig {
-  getSourceText: (fileName: string) => string;
-}
-
-const plainTextTransformConfig: TransformConfig = {
-  getSourceText: (fileName: string) => {
-    const file: string = fileName.substr(0, fileName.length - 4);
-    const content: string = fs.readFileSync(file, 'utf8');
-    return `export default '${content}'`;
-  },
+const transformerMap: Record<string, Transformer> = {
+  html: plainTextTransformer,
+  ejs: plainTextTransformer,
+  txt: plainTextTransformer,
+  md: plainTextTransformer,
+  yml: yamlTransformer,
+  yaml: yamlTransformer,
+  jpg: imageTransformer,
+  jpeg: imageTransformer,
+  gif: imageTransformer,
+  png: imageTransformer,
+  webp: imageTransformer,
+  svg: svgTransformer,
 };
 
-const imageTransformConfig: TransformConfig = {
-  getSourceText: (fileName: string) => {
-    const file: string = fileName.substr(0, fileName.length - 4);
-    const ext: string = path.extname(file);
-    const source: string = fs
-      .readFileSync(file, 'base64')
-      .replace(/[\r\n]+/gm, '');
-    return `export default 'data:image/${ext};base64,${source}'`;
-  },
-};
+export const targetExtensions: string[] = Object.keys(transformerMap);
 
-const yamlTransformConfig: TransformConfig = {
-  getSourceText: (fileName: string) => {
-    const file: string = fileName.substr(0, fileName.length - 4);
-    const content: string = fs.readFileSync(file, 'utf8');
-    return `export default ${JSON.stringify(load(content))}`;
-  },
-};
-
-const transformConfigs: Record<string, TransformConfig> = {
-  html: plainTextTransformConfig,
-  ejs: plainTextTransformConfig,
-  txt: plainTextTransformConfig,
-  md: plainTextTransformConfig,
-  yml: yamlTransformConfig,
-  yaml: yamlTransformConfig,
-  jpg: imageTransformConfig,
-  jpeg: imageTransformConfig,
-  gif: imageTransformConfig,
-  png: imageTransformConfig,
-  webp: imageTransformConfig,
-  svg: {
-    getSourceText: (fileName: string) => {
-      const file: string = fileName.substr(0, fileName.length - 4);
-      const svgCode: string = fs
-        .readFileSync(file, 'utf8')
-        .replace(/[\r\n]+/gm, '');
-      const componentName: string = 'ReactComponent';
-      const reactCode: string = svgToJsx(svgCode, {}, { componentName });
-
-      if (process.env.TS_SVG_EXPORT === 'default') {
-        return reactCode;
-      }
-
-      const lines: string[] = reactCode.split('\n');
-      return [
-        ...lines.slice(0, lines.length - 1),
-        `export default \`${svgToMiniDataURI(svgCode)}\`;`,
-        `export {${componentName}};`,
-      ].join('\n');
-    },
-  },
-};
-
-export const targetExtensions: string[] = Object.keys(transformConfigs);
-
-function findConfig(fileName: string): TransformConfig | undefined {
+function findConfig(fileName: string): Transformer | undefined {
   for (const ext of targetExtensions) {
     if (new RegExp(`\\.${ext}\\.tsx$`).test(fileName)) {
-      return transformConfigs[ext];
+      return transformerMap[ext];
     }
   }
 
@@ -91,21 +42,40 @@ export function createExtendedCompilerHost(
     setParentNodes,
   ),
 ): ts.CompilerHost {
+  // When user import like `import svg from './some.svg'
+  // CompilerHost searches by fileExists()
+  // /absoulte-path/some.svg.ts -> /absoulte-path/some.svg.tsx -> /absoulte-path/some.svg.d.ts
   function fileExists(fileName: string): boolean {
-    const transformConfig: TransformConfig | undefined = findConfig(fileName);
-    return !!transformConfig || compilerHost.fileExists(fileName);
+    const transformer: Transformer | undefined = findConfig(fileName);
+    return !!transformer || compilerHost.fileExists(fileName);
   }
 
+  // When fileExists() returns true
+  // CompilerHost request the source file by getSourceFile()
   function getSourceFile(
     fileName: string,
     languageVersion: ts.ScriptTarget,
     onError?: (message: string) => void,
     shouldCreateNewSourceFile?: boolean,
   ): ts.SourceFile | undefined {
-    const transformConfig: TransformConfig | undefined = findConfig(fileName);
+    const transformer: Transformer | undefined = findConfig(fileName);
 
-    if (transformConfig) {
-      const sourceText: string = transformConfig.getSourceText(fileName);
+    // if transformConfig exists this CompilerHost returns the transformed data
+    if (transformer) {
+      const option: Record<string, string> | undefined = /\.svg\.tsx$/.test(
+        fileName,
+      )
+        ? {
+            variant:
+              process.env.TS_SVG_EXPORT === 'default'
+                ? 'default'
+                : 'create-react-app',
+          }
+        : undefined;
+      const sourceText: string = transformer.getSourceText(option)(
+        // remove .tsx
+        fileName.substr(0, fileName.length - 4),
+      );
       return ts.createSourceFile(
         fileName,
         sourceText,
@@ -115,6 +85,7 @@ export function createExtendedCompilerHost(
       );
     }
 
+    // if not, pass to the original CompilerHost
     return compilerHost.getSourceFile(
       fileName,
       languageVersion,
