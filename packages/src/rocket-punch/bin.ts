@@ -23,7 +23,7 @@ type CommonArgs = {
 };
 
 const commonOptions: Options = {
-  emit: {
+  'emit': {
     type: 'boolean',
     default: true,
     describe:
@@ -47,12 +47,12 @@ const buildOptions: Options = {
     alias: 'o',
     describe: 'output directory (e.g. --out-dir out/packages)',
   },
-  tsconfig: {
+  'tsconfig': {
     type: 'string',
     alias: 't',
     describe: 'tsconfig file name (e.g. --tsconfig tsconfig.dev.json)',
   },
-  svg: {
+  'svg': {
     type: 'string',
     choices: ['create-react-app', 'default'],
     describe:
@@ -75,17 +75,17 @@ const publishOptions: Options = {
     alias: 's',
     describe: 'if true publish all packages without user selection',
   },
-  tag: {
+  'tag': {
     type: 'string',
     alias: 't',
     describe: 'npm publish --tag {tag}',
   },
-  access: {
+  'access': {
     type: 'string',
     alias: 'a',
     describe: 'npm publish --access <public|private>',
   },
-  registry: {
+  'registry': {
     type: 'string',
     alias: 'r',
     describe: 'npm publish --registry {registry}',
@@ -107,8 +107,8 @@ export function run() {
     .command({
       command: 'build',
       describe: 'Build packages',
-      builder: (yargs) =>
-        yargs
+      builder: (argv) =>
+        argv
           .options({
             ...buildOptions,
             ...commonOptions,
@@ -147,8 +147,8 @@ export function run() {
     .command({
       command: 'publish',
       describe: 'Publish packages',
-      builder: (yargs) =>
-        yargs
+      builder: (argv) =>
+        argv
           .options({
             ...publishOptions,
             ...commonOptions,
@@ -199,8 +199,8 @@ export function run() {
     .command({
       command: 'view',
       describe: 'View packages information',
-      builder: (yargs) =>
-        yargs
+      builder: (argv) =>
+        argv
           .options({ ...commonOptions })
           .example('$0 view', 'View packages information'),
       handler: (argv: Arguments<CommonArgs>) => {
@@ -222,8 +222,8 @@ export function run() {
     .command({
       command: 'doctor',
       describe: 'Check configs is validate for rocket-punch',
-      builder: (yargs) =>
-        yargs
+      builder: (argv) =>
+        argv
           .options({ ...commonOptions })
           .example('$0 doctor', 'Check configs is validate for rocket-punch'),
       handler: (argv: Arguments<CommonArgs>) => {

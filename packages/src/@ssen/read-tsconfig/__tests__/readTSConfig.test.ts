@@ -107,7 +107,7 @@ describe('readTSConfig()', () => {
     expect(() => readTSConfig(cwd)).toThrow();
   });
 
-  test('should throw error if the tsconfig has wrong syntax ', async () => {
+  test('should throw error if the tsconfig has wrong syntax', async () => {
     // Arrange
     const cwd: string = await copyTmpDirectory(
       process.cwd(),
@@ -118,7 +118,7 @@ describe('readTSConfig()', () => {
     expect(() => readTSConfig(cwd)).toThrow();
   });
 
-  test('should throw error if the tsconfig has not a compiler options ', async () => {
+  test('should throw error if the tsconfig has not a compiler options', async () => {
     // Arrange
     const cwd: string = await copyTmpDirectory(
       process.cwd(),

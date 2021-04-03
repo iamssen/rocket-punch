@@ -15,7 +15,7 @@ export async function buildMessageHandler(message: BuildMessages) {
             line,
             character,
           } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
-          const message: string = ts.flattenDiagnosticMessageText(
+          const diagnosticMessage: string = ts.flattenDiagnosticMessageText(
             diagnostic.messageText,
             '\n',
           );
@@ -23,7 +23,7 @@ export async function buildMessageHandler(message: BuildMessages) {
             chalk.yellow(
               `TS${diagnostic.code} : ${diagnostic.file.fileName} (${
                 line + 1
-              },${character + 1}): ${message}`,
+              },${character + 1}): ${diagnosticMessage}`,
             ),
           );
         } else {

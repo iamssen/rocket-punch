@@ -396,7 +396,7 @@ import { getPackagesOrder } from '../getPackagesOrder';
 describe('getPackagesOrder()', () => {
   test('should get the ordered names array', () => {
     // Arrange : get test condition and test result from function args
-    function test(
+    function testFn(
       packageJsonContents: PackageJson[],
       matchOrderedNames: string[],
     ) {
@@ -416,33 +416,31 @@ describe('getPackagesOrder()', () => {
             ({ name }) => name === a,
           );
           expect(aFile).not.toBeUndefined();
-          if (aFile) {
-            expect(Object.keys(aFile.dependencies || {})).not.toEqual(
-              expect.arrayContaining([b]),
-            );
-          }
+          expect(Object.keys(aFile?.dependencies ?? {})).not.toEqual(
+            expect.arrayContaining([b]),
+          );
         }
       });
     }
 
-    test(
+    testFn(
       [
         {
           name: '@lunit/insight-viewer',
           dependencies: {
-            react: '>=16.8.0',
+            'react': '>=16.8.0',
             'cornerstone-core': '^2.3.0',
             'cornerstone-wado-image-loader': '^2.2.3',
             'dicom-parser': '^1.8.3',
-            rxjs: '^6.5.2',
-            polylabel: '^1.0.2',
+            'rxjs': '^6.5.2',
+            'polylabel': '^1.0.2',
             'point-in-polygon': '^1.0.1',
             'styled-components': '>=4.3.2',
             '@material-ui/core': '^4.3.1',
             '@lunit/heatmap': '^1.0.0',
             '@lunit/is-complex-polygon': '^1.0.0',
             '@lunit/is-polygon-area-greater-than-area': '^1.0.0',
-            csstype: '^2.6.7',
+            'csstype': '^2.6.7',
             '@storybook/addons': '^5.2.8',
           },
         },
@@ -459,7 +457,7 @@ describe('getPackagesOrder()', () => {
       ['@lunit/heatmap', '@lunit/insight-viewer'],
     );
 
-    test(
+    testFn(
       [
         {
           name: 'a',
@@ -497,7 +495,7 @@ describe('getPackagesOrder()', () => {
       ['c', 'a', 'b', 'e', 'd'],
     );
 
-    test(
+    testFn(
       [
         {
           name: '@ssen/test-module1',
@@ -508,28 +506,28 @@ describe('getPackagesOrder()', () => {
         {
           name: '@ssen/test-module2',
           dependencies: {
-            react: '0',
+            'react': '0',
             'test-module3': '0',
           },
         },
         {
           name: 'router-store',
           dependencies: {
-            react: '0',
+            'react': '0',
             'react-router': '0',
           },
         },
         {
           name: 'test-module3',
           dependencies: {
-            react: '0',
+            'react': '0',
             '@ssen/test-module1': '0',
           },
         },
         {
           name: 'use-react-intl',
           dependencies: {
-            react: '0',
+            'react': '0',
             'react-intl': '0',
           },
         },
@@ -673,7 +671,7 @@ describe('getPackagesOrder()', () => {
           '@material-ui/core': '^4.9.13',
           '@material-ui/icons': '^4.5.1',
           '@storybook/react': '^5.3.17',
-          react: '^16.13.1',
+          'react': '^16.13.1',
           'styled-components': '^5.0.0',
           'event-target-shim': '^5.0.1',
           'react-dom': '^16.13.1',
@@ -697,7 +695,7 @@ describe('getPackagesOrder()', () => {
           '@lunit/insight-viewer': '^5.0.0-alpha.1',
           '@lunit/opt-components': '^5.0.0-alpha.1',
           '@ssen/snackbar': '^2.0.0-alpha.1',
-          react: '^16.13.1',
+          'react': '^16.13.1',
           'styled-components': '^5.0.0',
         },
         main: 'index.js',
@@ -717,7 +715,7 @@ describe('getPackagesOrder()', () => {
         dependencies: {
           '@handbook/components': '^2.0.0-alpha.1',
           '@handbook/source': '^2.0.0-alpha.1',
-          react: '^16.13.1',
+          'react': '^16.13.1',
         },
         main: 'index.js',
         typings: 'index.d.ts',
@@ -735,8 +733,8 @@ describe('getPackagesOrder()', () => {
         version: '5.0.0-alpha.1',
         dependencies: {
           '@handbook/source': '^2.0.0-alpha.1',
-          react: '^16.13.1',
-          csstype: '^2.6.10',
+          'react': '^16.13.1',
+          'csstype': '^2.6.10',
         },
         main: 'index.js',
         typings: 'index.d.ts',
@@ -770,14 +768,14 @@ describe('getPackagesOrder()', () => {
         dependencies: {
           '@handbook/components': '^2.0.0-alpha.1',
           '@handbook/source': '^2.0.0-alpha.1',
-          react: '^16.13.1',
+          'react': '^16.13.1',
           'styled-components': '^5.0.0',
-          rxjs: '^6.5.4',
+          'rxjs': '^6.5.4',
           'd3-color': '^1.4.0',
           '@material-ui/core': '^4.9.13',
           '@lunit/insight-draw': '^5.0.0-alpha.1',
           '@lunit/is-touch-device': '^5.0.0-alpha.1',
-          polylabel: '^1.0.2',
+          'polylabel': '^1.0.2',
           '@lunit/heatmap': '^5.0.0-alpha.1',
           '@lunit/use-opt-control': '^5.0.0-alpha.1',
           'd3-ease': '^1.0.6',
@@ -785,7 +783,7 @@ describe('getPackagesOrder()', () => {
           'point-in-polygon': '^1.0.1',
           '@lunit/is-complex-polygon': '^5.0.0-alpha.1',
           '@lunit/is-polygon-area-greater-than-area': '^5.0.0-alpha.1',
-          csstype: '^2.6.10',
+          'csstype': '^2.6.10',
         },
         main: 'index.js',
         typings: 'index.d.ts',
@@ -804,7 +802,7 @@ describe('getPackagesOrder()', () => {
         dependencies: {
           '@lunit/is-intersection': '^5.0.0-alpha.1',
           '@lunit/insight-viewer': '^5.0.0-alpha.1',
-          react: '^16.13.1',
+          'react': '^16.13.1',
           '@handbook/source': '^2.0.0-alpha.1',
         },
         main: 'index.js',
@@ -838,7 +836,7 @@ describe('getPackagesOrder()', () => {
         version: '5.0.0-alpha.1',
         dependencies: {
           '@lunit/insight-viewer': '^5.0.0-alpha.1',
-          react: '^16.13.1',
+          'react': '^16.13.1',
           '@handbook/source': '^2.0.0-alpha.1',
         },
         main: 'index.js',
@@ -871,7 +869,7 @@ describe('getPackagesOrder()', () => {
         name: '@lunit/new-window',
         version: '5.0.0-alpha.1',
         dependencies: {
-          react: '^16.13.1',
+          'react': '^16.13.1',
           '@handbook/source': '^2.0.0-alpha.1',
         },
         main: 'index.js',
@@ -892,19 +890,19 @@ describe('getPackagesOrder()', () => {
           '@lunit/insight-viewer': '^5.0.0-alpha.1',
           '@lunit/opt-control-icons': '^5.0.0-alpha.1',
           '@storybook/react': '^5.3.17',
-          react: '^16.13.1',
+          'react': '^16.13.1',
           'styled-components': '^5.0.0',
           '@material-ui/core': '^4.9.13',
           '@material-ui/icons': '^4.5.1',
           '@ssen/snackbar': '^2.0.0-alpha.1',
-          history: '^4.10.1',
+          'history': '^4.10.1',
           'react-router-dom': '^5.1.2',
           'use-resize-observer': '^6.0.0',
           '@lunit/is-touch-device': '^5.0.0-alpha.1',
           'resize-observer-polyfill': '^1.5.1',
           '@material-ui/styles': '^4.9.13',
           '@lunit/use-dialog': '^5.0.0-alpha.1',
-          csstype: '^2.6.10',
+          'csstype': '^2.6.10',
         },
         main: 'index.js',
         typings: 'index.d.ts',
@@ -923,7 +921,7 @@ describe('getPackagesOrder()', () => {
         dependencies: {
           '@material-ui/core': '^4.9.13',
           '@material-ui/icons': '^4.5.1',
-          react: '^16.13.1',
+          'react': '^16.13.1',
           '@handbook/source': '^2.0.0-alpha.1',
           'styled-components': '^5.0.0',
         },
@@ -945,7 +943,7 @@ describe('getPackagesOrder()', () => {
           '@lunit/insight-viewer': '^5.0.0-alpha.1',
           '@lunit/opt-components': '^5.0.0-alpha.1',
           '@storybook/react': '^5.3.17',
-          react: '^16.13.1',
+          'react': '^16.13.1',
           '@material-ui/core': '^4.9.13',
           'styled-components': '^5.0.0',
         },
@@ -963,7 +961,7 @@ describe('getPackagesOrder()', () => {
         publishConfig: { access: 'public' },
         name: '@lunit/screenshot',
         version: '5.0.0-alpha.1',
-        dependencies: { 'fs-extra': '^9.0.0', puppeteer: '^3.0.3' },
+        dependencies: { 'fs-extra': '^9.0.0', 'puppeteer': '^3.0.3' },
         main: 'index.js',
         typings: 'index.d.ts',
       },
@@ -1009,7 +1007,7 @@ describe('getPackagesOrder()', () => {
         name: '@lunit/use-dialog',
         version: '5.0.0-alpha.1',
         dependencies: {
-          react: '^16.13.1',
+          'react': '^16.13.1',
           '@handbook/source': '^2.0.0-alpha.1',
           '@lunit/opt-components': '^5.0.0-alpha.1',
           '@material-ui/core': '^4.9.13',
@@ -1029,7 +1027,7 @@ describe('getPackagesOrder()', () => {
         name: '@lunit/use-opt-control',
         version: '5.0.0-alpha.1',
         dependencies: {
-          react: '^16.13.1',
+          'react': '^16.13.1',
           '@handbook/source': '^2.0.0-alpha.1',
         },
         main: 'index.js',
@@ -1047,7 +1045,7 @@ describe('getPackagesOrder()', () => {
         name: '@lunit/use-reset-time',
         version: '5.0.0-alpha.1',
         dependencies: {
-          react: '^16.13.1',
+          'react': '^16.13.1',
           '@handbook/source': '^2.0.0-alpha.1',
         },
         main: 'index.js',
@@ -1065,7 +1063,7 @@ describe('getPackagesOrder()', () => {
         name: '@lunit/use-shortcut',
         version: '5.0.0-alpha.1',
         dependencies: {
-          react: '^16.13.1',
+          'react': '^16.13.1',
           '@handbook/source': '^2.0.0-alpha.1',
         },
         main: 'index.js',
@@ -1084,7 +1082,7 @@ describe('getPackagesOrder()', () => {
         version: '2.0.0-alpha.1',
         dependencies: {
           'prism-react-renderer': '^1.0.2',
-          react: '^16.13.1',
+          'react': '^16.13.1',
           '@mdx-js/react': '^1.6.1',
           'react-live': '^2.2.2',
         },
@@ -1108,11 +1106,11 @@ describe('getPackagesOrder()', () => {
           '@material-ui/core': '^4.9.13',
           '@material-ui/icons': '^4.5.1',
           'prism-react-renderer': '^1.0.2',
-          react: '^16.13.1',
+          'react': '^16.13.1',
           'styled-components': '^5.0.0',
           '@mdx-js/react': '^1.6.1',
           'react-router-dom': '^5.1.2',
-          slugify: '^1.4.0',
+          'slugify': '^1.4.0',
         },
         main: 'index.js',
         typings: 'index.d.ts',
@@ -1129,7 +1127,7 @@ describe('getPackagesOrder()', () => {
         name: '@handbook/source',
         version: '2.0.0-alpha.1',
         dependencies: {
-          react: '^16.13.1',
+          'react': '^16.13.1',
           '@handbook/code-block': '^2.0.0-alpha.1',
         },
         main: 'index.js',
