@@ -1,0 +1,19 @@
+{
+  "$schema": "https://rocket-hangar.github.io/rocket-punch/schemas/packages.json",
+  "@ssen/*": {
+    "version": "2.5.0",
+    "tag": "latest",
+    "module": "commonjs"
+  },
+  "rocket-punch": {
+    "version": "2.5.0",
+    "tag": "latest",
+    "module": "commonjs",
+    "packageJson": {
+      "bin": {
+        "rocket-punch": "./bin/rocket-punch.js"
+      },
+      "keywords": ["multi pakcage", "npm", "package", "typescript"]
+    }
+  }
+}
