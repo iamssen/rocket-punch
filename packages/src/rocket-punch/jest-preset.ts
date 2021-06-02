@@ -9,9 +9,8 @@ export = {
     '\\.(yaml|yml)$': require.resolve('@ssen/jest-transform/transform/yaml'),
   },
   moduleNameMapper: {
-    '\\.(bmp|jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': require.resolve(
-      '@ssen/jest-transform/mockup/file',
-    ),
+    '\\.(bmp|jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+      require.resolve('@ssen/jest-transform/mockup/file'),
     '\\.(css|less|sass|scss)$': require.resolve(
       '@ssen/jest-transform/mockup/style',
     ),

@@ -6,7 +6,7 @@
     "module": "commonjs"
   },
   "rocket-punch": {
-    "version": "2.5.1",
+    "version": "2.5.4",
     "tag": "latest",
     "module": "commonjs",
     "packageJson": {
