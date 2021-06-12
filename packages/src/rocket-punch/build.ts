@@ -1,3 +1,4 @@
+import { bundleImportRewrite } from '@ssen/bundle-import-rewrite';
 import {
   collectDependencies,
   collectScripts,
@@ -11,6 +12,7 @@ import { rewriteSrcPath } from '@ssen/rewrite-src-path';
 import fs from 'fs-extra';
 import path from 'path';
 import process from 'process';
+import { getExports } from 'rocket-punch/package-json/getExports';
 import { PackageJson } from 'type-fest';
 import ts from 'typescript';
 import { readPackages } from './entry/readPackages';
@@ -96,21 +98,19 @@ export async function build({
 
   // compute package.json contents each package
   for (const [packageName, packageInfo] of internalPackages) {
-    const dependencies:
-      | PackageJson.Dependency
-      | undefined = dependenciesMap.get(packageName);
+    const dependencies: PackageJson.Dependency | undefined =
+      dependenciesMap.get(packageName);
 
     if (!dependencies) {
       throw new Error(`undefiend dependencies of ${packageName}`);
     }
 
-    const packageDir: string = path.resolve(cwd, sourceRoot, packageName);
+    //const packageDir: string = path.resolve(cwd, sourceRoot, packageName);
 
     // compute package.json
     const computedPackageJson: PackageJson = await computePackageJson({
       packageInfo,
       sharedConfig,
-      packageDir,
       dependencies,
     });
 
@@ -139,9 +139,8 @@ export async function build({
   // build each packages
   // ================================================================
   for (const packageName of order) {
-    const packageInfo: PackageInfo | undefined = internalPackages.get(
-      packageName,
-    );
+    const packageInfo: PackageInfo | undefined =
+      internalPackages.get(packageName);
 
     if (!packageInfo) {
       throw new Error(`Undefined packageInfo of ${packageName}`);
@@ -149,9 +148,8 @@ export async function build({
 
     const sourceDir: string = path.resolve(cwd, sourceRoot, packageName);
     const outDir: string = path.resolve(dist, flatPackageName(packageName));
-    const packageJson: PackageJson | undefined = packageJsonMap.get(
-      packageName,
-    );
+    const packageJson: PackageJson | undefined =
+      packageJsonMap.get(packageName);
 
     if (!packageJson) {
       throw new Error(`undefined packagejson content!`);
@@ -190,81 +188,108 @@ export async function build({
     // ---------------------------------------------
     // tsc
     // ---------------------------------------------
-    // read compilerOptions from {cwd}/tsconfig.json
-    const userCompilerOptions: ts.CompilerOptions = getCompilerOptions({
-      searchPath: cwd,
-      configName: tsconfig,
-      packageInfo,
-    });
+    const buildTypes: ('module' | 'commonjs')[] = [];
 
-    // compute package.json with add some build information
-    const computedCompilerOptions: ts.CompilerOptions = {
-      ...userCompilerOptions,
+    if (packageInfo.exports.module) buildTypes.push('module');
+    if (packageInfo.exports.commonjs) buildTypes.push('commonjs');
 
-      baseUrl: sourceDir,
-      paths: {
-        ...userCompilerOptions.paths,
-        [packageName]: [sourceDir],
-      },
+    for (const buildType of buildTypes) {
+      const isMainBuild = buildType === packageInfo.exports.main;
 
-      rootDir: sourceDir,
-      outDir,
-    };
+      // read compilerOptions from {cwd}/tsconfig.json
+      const userCompilerOptions: ts.CompilerOptions = getCompilerOptions({
+        searchPath: cwd,
+        configName: tsconfig,
+        packageInfo,
+        buildType,
+        declaration: isMainBuild,
+      });
 
-    // transform compilerOptions if user set the transformCompilerOptions() function
-    const compilerOptions: ts.CompilerOptions =
-      typeof transformCompilerOptions === 'function'
-        ? transformCompilerOptions(packageName)(computedCompilerOptions)
-        : computedCompilerOptions;
+      // compute package.json with add some build information
+      const computedCompilerOptions: ts.CompilerOptions = {
+        ...userCompilerOptions,
 
-    // create compilerHost
-    const extendedHost: ts.CompilerHost = createExtendedCompilerHost(
-      compilerOptions,
-    );
-    const pathRewriteHost: ts.CompilerHost = createImportPathRewriteCompilerHost(
-      {
-        src: path.resolve(cwd, sourceRoot),
+        baseUrl: sourceDir,
+        paths: {
+          ...userCompilerOptions.paths,
+          [packageName]: [sourceDir],
+        },
+
         rootDir: sourceDir,
-      },
-    )(compilerOptions, undefined, extendedHost);
+        outDir: isMainBuild ? outDir : path.join(outDir, `_${buildType}`),
+        incremental: true,
+        tsBuildInfoFile: path.join(
+          dist,
+          flatPackageName(packageName) + '.tsbuildinfo',
+        ),
+      };
 
-    // transform compilerHost if user set the transformCompilerHost() function
-    const host: ts.CompilerHost =
-      typeof transformCompilerHost === 'function'
-        ? transformCompilerHost(packageName)(compilerOptions, pathRewriteHost)
-        : pathRewriteHost;
+      // transform compilerOptions if user set the transformCompilerOptions() function
+      const compilerOptions: ts.CompilerOptions =
+        typeof transformCompilerOptions === 'function'
+          ? transformCompilerOptions(packageName)(computedCompilerOptions)
+          : computedCompilerOptions;
 
-    const files: string[] = host.readDirectory!(
-      sourceDir,
-      ...readDirectoryPatterns,
-    );
+      // create compilerHost
+      const extendedHost: ts.CompilerHost =
+        createExtendedCompilerHost(compilerOptions);
 
-    const program: ts.Program = ts.createProgram(files, compilerOptions, host);
+      const pathRewriteHost: ts.CompilerHost =
+        createImportPathRewriteCompilerHost({
+          src: path.resolve(cwd, sourceRoot),
+          rootDir: sourceDir,
+        })(compilerOptions, undefined, extendedHost);
 
-    // 🔥 compile!!!!!!!!!
-    const emitResult: ts.EmitResult = program.emit(
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      typeof emitCustomTransformers === 'function'
-        ? emitCustomTransformers(packageName)()
-        : undefined,
-    );
+      // transform compilerHost if user set the transformCompilerHost() function
+      const host: ts.CompilerHost =
+        typeof transformCompilerHost === 'function'
+          ? transformCompilerHost(packageName)(compilerOptions, pathRewriteHost)
+          : pathRewriteHost;
 
-    const diagnostics: ts.Diagnostic[] = ts
-      .getPreEmitDiagnostics(program)
-      .concat(emitResult.diagnostics);
+      const files: string[] = host.readDirectory!(
+        sourceDir,
+        ...readDirectoryPatterns,
+      );
 
-    await onMessage({
-      type: 'tsc',
-      packageName,
-      compilerOptions,
-      diagnostics,
-    });
+      const program: ts.Program = ts.createProgram(
+        files,
+        compilerOptions,
+        host,
+      );
 
-    if ((strict && diagnostics.length > 0) || emitResult.emitSkipped) {
-      throw new Error(`Build "${packageName}" is failed`);
+      const customTransformers =
+        typeof emitCustomTransformers === 'function'
+          ? emitCustomTransformers(packageName)() ?? {}
+          : {};
+
+      customTransformers.after = [
+        ...(customTransformers.after ?? []),
+        bundleImportRewrite({}),
+      ];
+
+      // 🔥 compile!!!!!!!!!
+      const emitResult: ts.EmitResult = program.emit(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        customTransformers,
+      );
+
+      const diagnostics: ts.Diagnostic[] = ts
+        .getPreEmitDiagnostics(program)
+        .concat(emitResult.diagnostics);
+
+      await onMessage({
+        type: 'tsc',
+        packageName,
+        compilerOptions,
+        diagnostics,
+      });
+
+      if ((strict && diagnostics.length > 0) || emitResult.emitSkipped) {
+        throw new Error(`Build "${packageName}" is failed`);
+      }
     }
 
     // ---------------------------------------------
@@ -273,6 +298,8 @@ export async function build({
     await fs.copy(path.resolve(cwd, sourceRoot, packageName), outDir, {
       filter: fsCopyFilter,
     });
+
+    packageJson.exports = await getExports(packageInfo.exports, outDir);
 
     // ---------------------------------------------
     // create package.json

@@ -7,4 +7,18 @@ build({
   entry,
   dist: outDir,
   onMessage: buildMessageHandler,
+  transformPackageJson: () => (computedPackageJson) => {
+    if (
+      computedPackageJson.dependencies &&
+      'typescript' in computedPackageJson.dependencies
+    ) {
+      delete computedPackageJson.dependencies['typescript'];
+
+      computedPackageJson.peerDependencies = {
+        typescript: '^3.9.0 || ^4.0.0',
+      };
+    }
+
+    return computedPackageJson;
+  },
 });

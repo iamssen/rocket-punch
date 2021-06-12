@@ -8,12 +8,16 @@ interface Params {
   searchPath: string;
   configName: string;
   packageInfo: PackageInfo;
+  buildType: 'module' | 'commonjs';
+  declaration: boolean;
 }
 
 export function getCompilerOptions({
   searchPath,
   configName,
   packageInfo,
+  buildType,
+  declaration,
 }: Params): ts.CompilerOptions {
   const { options: tsconfig } = fs.existsSync(path.join(searchPath, configName))
     ? readTSConfig(searchPath, configName)
@@ -26,17 +30,14 @@ export function getCompilerOptions({
     allowSyntheticDefaultImports: true,
     esModuleInterop: true,
 
-    alwaysStrict: true,
-    strictNullChecks: true,
-    strictBindCallApply: true,
-    strictFunctionTypes: true,
-    strictPropertyInitialization: true,
+    strict: true,
+
     resolveJsonModule: true,
 
     allowJs: true,
     jsx: ts.JsxEmit.React,
 
-    target: ts.ScriptTarget.ES2016,
+    target: ts.ScriptTarget.ES2018,
   } as const;
 
   const computed: ts.CompilerOptions = Object.keys(defaultValues).reduce(
@@ -50,12 +51,10 @@ export function getCompilerOptions({
   return {
     ...computed,
     module:
-      packageInfo.module === 'esm'
-        ? ts.ModuleKind.ES2015
-        : ts.ModuleKind.CommonJS,
+      buildType === 'module' ? ts.ModuleKind.ES2020 : ts.ModuleKind.CommonJS,
     moduleResolution: ts.ModuleResolutionKind.NodeJs,
     skipLibCheck: true,
-    sourceMap: true,
-    declaration: true,
+    //inlineSourceMap: true,
+    declaration,
   };
 }

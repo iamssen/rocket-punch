@@ -652,13 +652,15 @@
           "type": "string",
           "description": "if you set this value, it will pass to the `npm publish` command like this `npm publish --registry http://...`."
         },
-        "module": {
+        "exports": {
           "type": "string",
-          "enum": [
-            "commonjs",
-            "esm"
-          ],
-          "description": "module type"
+          "items": {
+            "type": "string",
+            "enum": ["module", "commonjs"],
+            "minItems": 1,
+            "maxItems": 2
+          },
+          "description": "TODO: module build types"
         },
         "compilerOptions": {
           "$ref": "#/definitions/compilerOptions"

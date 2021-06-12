@@ -48,7 +48,16 @@ export interface PackageConfig {
    *
    * @default commonjs
    */
-  module?: 'commonjs' | 'esm'; // ?= commonjs
+  //module?: 'commonjs' | 'esm'; // ?= commonjs
+
+  /**
+   * @default ['module', 'commonjs']
+   */
+  exports?:
+    | ['module', 'commonjs']
+    | ['commonjs', 'module']
+    | ['module']
+    | ['commonjs'];
 
   /**
    * compilerOptions of tsconfig.json
@@ -73,7 +82,12 @@ export interface PackageInfo {
   name: string;
   version: string;
   tag: string;
-  module: 'commonjs' | 'esm';
+  exports: {
+    main: 'module' | 'commonjs';
+    commonjs: boolean;
+    module: boolean;
+  };
+  //module: 'commonjs' | 'esm';
   access: 'public' | 'private' | undefined;
   registry: string | undefined;
   compilerOptions: TsConfigJson.CompilerOptions;

@@ -25,7 +25,11 @@ describe('getPackagesEntry()', () => {
     });
 
     // Assert
-    expect(packages.get('a')?.module).toBe('commonjs');
+    expect(packages.get('a')?.exports).toEqual({
+      main: 'module',
+      module: true,
+      commonjs: true,
+    });
     expect(packages.get('a')?.packageJson).toEqual({});
     expect(packages.get('a')?.compilerOptions).toEqual({});
 
@@ -53,7 +57,11 @@ describe('getPackagesEntry()', () => {
     });
 
     // Assert
-    expect(packages.get('@group/a')?.module).toBe('commonjs');
+    expect(packages.get('@group/a')?.exports).toEqual({
+      main: 'module',
+      module: true,
+      commonjs: true,
+    });
     expect(packages.get('@group/a')?.packageJson).toEqual({});
     expect(packages.get('@group/a')?.compilerOptions).toEqual({});
 
@@ -78,14 +86,26 @@ describe('getPackagesEntry()', () => {
     });
 
     // Assert
-    expect(packages.get('a')?.module).toBe('commonjs');
+    expect(packages.get('a')?.exports).toEqual({
+      main: 'module',
+      module: true,
+      commonjs: true,
+    });
     expect(packages.get('a')?.packageJson.bin).toMatchObject({
       'cli-a': './bin/test.js',
     });
-    expect(packages.get('b')?.module).toBe('commonjs');
+    expect(packages.get('b')?.exports).toEqual({
+      main: 'module',
+      module: true,
+      commonjs: true,
+    });
     expect(packages.get('b')?.packageJson.author).toBe('hello world 1');
     expect(packages.get('b')?.compilerOptions['allowJs']).toBeTruthy();
-    expect(packages.get('c')?.module).toBe('commonjs');
+    expect(packages.get('c')?.exports).toEqual({
+      main: 'module',
+      module: true,
+      commonjs: true,
+    });
     expect(packages.get('c')?.packageJson.author).toBe('hello world 2');
 
     expect(packages.has('a')).toBeTruthy();

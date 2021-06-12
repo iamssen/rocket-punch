@@ -1,12 +1,8 @@
-import { exec } from '@ssen/promised';
 import { copyTmpDirectory, createTmpDirectory } from '@ssen/tmp-directory';
 import fs from 'fs-extra';
 import path from 'path';
 import process from 'process';
-import { build, PackageConfig } from 'rocket-punch';
-import { readEntry } from 'rocket-punch/entry/readEntry';
-import { readPackages } from 'rocket-punch/entry/readPackages';
-import { PackageInfo } from 'rocket-punch/types';
+import { build } from 'rocket-punch';
 
 describe('build()', () => {
   test('should succeed in basic build', async () => {
@@ -39,6 +35,9 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/_commonjs/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/_commonjs/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/_commonjs/index.js'))).toBeTruthy();
   });
 
   test.each(['minimum-config', 'minimum-config-cra', 'minimum-config-js-cra'])(
@@ -71,6 +70,15 @@ describe('build()', () => {
       expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
       expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
       expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+      expect(
+        fs.existsSync(path.join(dist, 'a/_commonjs/index.js')),
+      ).toBeTruthy();
+      expect(
+        fs.existsSync(path.join(dist, 'b/_commonjs/index.js')),
+      ).toBeTruthy();
+      expect(
+        fs.existsSync(path.join(dist, 'c/_commonjs/index.js')),
+      ).toBeTruthy();
     },
   );
 
@@ -107,64 +115,69 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/_commonjs/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/_commonjs/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/_commonjs/index.js'))).toBeTruthy();
   });
 
-  test('should build with module types', async () => {
-    // Arrange
-    const cwd: string = await copyTmpDirectory(
-      path.join(process.cwd(), 'test/fixtures/rocket-punch/module'),
-    );
+  test.todo('should build commonjs is main');
 
-    // Act
-    // read .packages.yaml
-    const packages: Record<string, string | PackageConfig> = readEntry({ cwd });
-    const entry: Map<string, PackageInfo> = await readPackages({
-      cwd,
-      sourceRoot: 'src',
-      entry: packages,
-    });
-
-    // Assert
-    // check module property of package
-    expect(entry.get('a')?.module).toBe('commonjs');
-    expect(entry.get('b')?.module).toBe('commonjs');
-    expect(entry.get('c')?.module).toBe('esm');
-
-    // Arrange
-    const dist: string = await createTmpDirectory();
-
-    // Act
-    await build({
-      cwd,
-      dist,
-      entry: packages,
-      onMessage: async () => {},
-    });
-
-    // Assert
-    // check exists build output files
-    expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
-
-    // Assert
-    // check source code is made in commonjs
-    expect(
-      /exports.a/g.test(fs.readFileSync(path.join(dist, 'a/index.js'), 'utf8')),
-    ).toBeTruthy();
-    expect(
-      /exports.b/g.test(fs.readFileSync(path.join(dist, 'b/index.js'), 'utf8')),
-    ).toBeTruthy();
-    // check source code is made in esm
-    expect(
-      /export function c/g.test(
-        fs.readFileSync(path.join(dist, 'c/index.js'), 'utf8'),
-      ),
-    ).toBeTruthy();
-  });
+  //test('should build with module types', async () => {
+  //  // Arrange
+  //  const cwd: string = await copyTmpDirectory(
+  //    path.join(process.cwd(), 'test/fixtures/rocket-punch/module'),
+  //  );
+  //
+  //  // Act
+  //  // read .packages.yaml
+  //  const packages: Record<string, string | PackageConfig> = readEntry({ cwd });
+  //  const entry: Map<string, PackageInfo> = await readPackages({
+  //    cwd,
+  //    sourceRoot: 'src',
+  //    entry: packages,
+  //  });
+  //
+  //  // Assert
+  //  // check module property of package
+  //  expect(entry.get('a')?.module).toBe('commonjs');
+  //  expect(entry.get('b')?.module).toBe('commonjs');
+  //  expect(entry.get('c')?.module).toBe('esm');
+  //
+  //  // Arrange
+  //  const dist: string = await createTmpDirectory();
+  //
+  //  // Act
+  //  await build({
+  //    cwd,
+  //    dist,
+  //    entry: packages,
+  //    onMessage: async () => {},
+  //  });
+  //
+  //  // Assert
+  //  // check exists build output files
+  //  expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
+  //  expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
+  //  expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
+  //  expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
+  //  expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
+  //  expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+  //
+  //  // Assert
+  //  // check source code is made in commonjs
+  //  expect(
+  //    /exports.a/g.test(fs.readFileSync(path.join(dist, 'a/index.js'), 'utf8')),
+  //  ).toBeTruthy();
+  //  expect(
+  //    /exports.b/g.test(fs.readFileSync(path.join(dist, 'b/index.js'), 'utf8')),
+  //  ).toBeTruthy();
+  //  // check source code is made in esm
+  //  expect(
+  //    /export function c/g.test(
+  //      fs.readFileSync(path.join(dist, 'c/index.js'), 'utf8'),
+  //    ),
+  //  ).toBeTruthy();
+  //});
 
   test('should local-paths build normally', async () => {
     // Arrange
@@ -196,6 +209,10 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'b/x/y/z.d.ts'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/_commonjs/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/_commonjs/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/_commonjs/x/y/z.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/_commonjs/index.js'))).toBeTruthy();
   });
 
   test('should js build normally', async () => {
@@ -226,6 +243,9 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/_commonjs/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/_commonjs/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/_commonjs/index.js'))).toBeTruthy();
   });
 
   test('should bundle build normally', async () => {
@@ -235,7 +255,7 @@ describe('build()', () => {
     );
     const dist: string = await createTmpDirectory();
 
-    await exec(`npm install`, { cwd });
+    //await exec(`npm install`, { cwd });
     //await exec(`open ${cwd}`);
     //await exec(`open ${dist}`);
 
@@ -262,6 +282,11 @@ describe('build()', () => {
     expect(
       fs.existsSync(path.join(dist, 'a/icon-not-bundle.svg')),
     ).toBeTruthy();
+    expect(
+      fs.existsSync(path.join(dist, 'a/_commonjs/icon.svg.js')),
+    ).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/_commonjs/index.js'))).toBeTruthy();
+
     expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'b/test.txt'))).toBeFalsy();
@@ -270,6 +295,11 @@ describe('build()', () => {
     expect(
       fs.existsSync(path.join(dist, 'b/test-not-bundle.txt')),
     ).toBeTruthy();
+    expect(
+      fs.existsSync(path.join(dist, 'b/_commonjs/test.txt.js')),
+    ).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/_commonjs/index.js'))).toBeTruthy();
+
     expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/image.jpg'))).toBeFalsy();
@@ -284,6 +314,13 @@ describe('build()', () => {
     expect(
       fs.existsSync(path.join(dist, 'c/data-not-bundle.yaml')),
     ).toBeTruthy();
+    expect(
+      fs.existsSync(path.join(dist, 'c/_commonjs/image.jpg.js')),
+    ).toBeTruthy();
+    expect(
+      fs.existsSync(path.join(dist, 'c/_commonjs/data.yaml.js')),
+    ).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/_commonjs/index.js'))).toBeTruthy();
   });
 
   test('should build sample directory', async () => {
@@ -294,7 +331,7 @@ describe('build()', () => {
     );
     const dist: string = path.join(cwd, 'out/packages');
 
-    await exec(`npm install`, { cwd });
+    //await exec(`npm install`, { cwd });
     //await exec(`open ${cwd}`);
 
     // Act
@@ -334,6 +371,10 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/package.json'))).toBeTruthy();
     expect(fs.existsSync(path.join(dist, 'c/public/test.txt'))).toBeTruthy();
+
+    expect(fs.existsSync(path.join(dist, 'a/_commonjs/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/_commonjs/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/_commonjs/index.js'))).toBeTruthy();
   });
 
   test('should fail build by strict mode', async () => {
@@ -344,7 +385,7 @@ describe('build()', () => {
     );
     const dist: string = path.join(cwd, 'out/packages');
 
-    await exec(`npm install`, { cwd });
+    //await exec(`npm install`, { cwd });
 
     // Asset
     await expect(
@@ -379,7 +420,7 @@ describe('build()', () => {
     );
     const dist: string = path.join(cwd, 'out/packages');
 
-    await exec(`npm install`, { cwd });
+    //await exec(`npm install`, { cwd });
     //await exec(`open ${cwd}`);
 
     // Act
@@ -433,8 +474,8 @@ describe('build()', () => {
     // Assert
     // b/package.json has "hello" field
     // that package.json transformed by .package.ts file
-    expect(
-      fs.readJsonSync(path.join(dist, 'b/package.json')).keywords,
-    ).toEqual(['hello']);
+    expect(fs.readJsonSync(path.join(dist, 'b/package.json')).keywords).toEqual(
+      ['hello'],
+    );
   });
 });

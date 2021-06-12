@@ -45,18 +45,44 @@ export async function readPackages({
         name,
         version: versionOrInfo,
         tag: 'latest',
-        module: 'esm',
+        //module: 'esm',
+        exports: {
+          main: 'module',
+          module: true,
+          commonjs: true,
+        },
         access: undefined,
         registry: undefined,
         compilerOptions: {},
         packageJson: {},
       });
     } else {
+      const exports = versionOrInfo.exports ?? ['module', 'commonjs'];
+
+      const commonjsExists = Array.from(exports).includes('commonjs');
+
+      const moduleExists = Array.from(exports).includes('module');
+
+      if (!commonjsExists && !moduleExists) {
+        throw new Error(`there are no exports! ${versionOrInfo.exports}`);
+      }
+
+      const main = exports[0];
+
+      if (!main) {
+        throw new Error(`can't resolve main`);
+      }
+
       map.set(name, {
         name,
         version: versionOrInfo.version,
         tag: versionOrInfo.tag ?? 'latest',
-        module: versionOrInfo.module === 'esm' ? 'esm' : 'commonjs',
+        //module: versionOrInfo.module === 'esm' ? 'esm' : 'commonjs',
+        exports: {
+          main,
+          module: moduleExists,
+          commonjs: commonjsExists,
+        },
         access: versionOrInfo.access,
         registry: versionOrInfo.registry,
         compilerOptions: versionOrInfo.compilerOptions ?? {},

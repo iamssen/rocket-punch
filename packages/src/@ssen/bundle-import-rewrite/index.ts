@@ -1,26 +1,10 @@
-import { rewriteSrcPath } from '@ssen/rewrite-src-path';
+import { rewriteBundleImport } from '@ssen/rewrite-bundle-import';
 import ts from 'typescript';
 
-interface Configuration {
-  /**
-   * source root
-   *
-   * /project/root/src
-   */
-  src: string;
-
-  /**
-   * file path
-   *
-   * /project/root/src/path/file.ts
-   */
-  fileName?: string;
-}
+interface Configuration {}
 
 function createVisitor({
-  src,
   ctx,
-  fileName,
 }: Configuration & { ctx: ts.TransformationContext }): ts.Visitor {
   const visitor: ts.Visitor = (node: ts.Node): ts.Node => {
     // import from '?'
@@ -30,10 +14,8 @@ function createVisitor({
       node.moduleSpecifier.text
     ) {
       const importPath: string = node.moduleSpecifier.text;
-      const rewrittenImportPath: string = rewriteSrcPath({
+      const rewrittenImportPath: string = rewriteBundleImport({
         importPath,
-        filePath: fileName || node.getSourceFile().fileName,
-        rootDir: src,
       });
 
       if (importPath !== rewrittenImportPath) {
@@ -54,10 +36,8 @@ function createVisitor({
     ) {
       const importPath: string = (node.arguments[0] as ts.StringLiteralLike)
         .text;
-      const rewrittenImportPath: string = rewriteSrcPath({
+      const rewrittenImportPath: string = rewriteBundleImport({
         importPath,
-        filePath: fileName || node.getSourceFile().fileName,
-        rootDir: src,
       });
 
       if (importPath !== rewrittenImportPath) {
@@ -83,10 +63,8 @@ function createVisitor({
     ) {
       const importPath: string = (node.arguments[0] as ts.StringLiteralLike)
         .text;
-      const rewrittenImportPath: string = rewriteSrcPath({
+      const rewrittenImportPath: string = rewriteBundleImport({
         importPath,
-        filePath: fileName || node.getSourceFile().fileName,
-        rootDir: src,
       });
 
       if (importPath !== rewrittenImportPath) {
@@ -110,10 +88,8 @@ function createVisitor({
     ) {
       const importPath: string = (node.arguments[0] as ts.StringLiteralLike)
         .text;
-      const rewrittenImportPath: string = rewriteSrcPath({
+      const rewrittenImportPath: string = rewriteBundleImport({
         importPath,
-        filePath: fileName || node.getSourceFile().fileName,
-        rootDir: src,
       });
 
       if (importPath !== rewrittenImportPath) {
@@ -135,7 +111,7 @@ function createVisitor({
   return visitor;
 }
 
-export const importPathRewrite =
+export const bundleImportRewrite =
   (config: Configuration): ts.TransformerFactory<ts.SourceFile> =>
   (ctx: ts.TransformationContext) =>
   (node: ts.SourceFile) => {
