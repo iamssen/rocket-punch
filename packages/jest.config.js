@@ -13,6 +13,8 @@ module.exports = {
     '!**/bin/**',
     '!src/rocket-punch/message-handlers/**',
     '!src/rocket-punch/bin.ts',
+    '!src/@ssen/jest-transform/mockup/**',
+    '!src/@ssen/jest-transform/setup/**',
   ],
   globals: {
     'ts-jest': {

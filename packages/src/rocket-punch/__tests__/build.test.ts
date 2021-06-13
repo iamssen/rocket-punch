@@ -2,7 +2,9 @@ import { copyTmpDirectory, createTmpDirectory } from '@ssen/tmp-directory';
 import fs from 'fs-extra';
 import path from 'path';
 import process from 'process';
-import { build } from 'rocket-punch';
+import { build, PackageConfig, PackageInfo } from 'rocket-punch';
+import { readEntry } from 'rocket-punch/entry/readEntry';
+import { readPackages } from 'rocket-punch/entry/readPackages';
 
 describe('build()', () => {
   test('should succeed in basic build', async () => {
@@ -120,64 +122,81 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'c/_commonjs/index.js'))).toBeTruthy();
   });
 
-  test.todo('should build commonjs is main');
+  test('should build with exports', async () => {
+    // Arrange
+    const cwd: string = await copyTmpDirectory(
+      path.join(process.cwd(), 'test/fixtures/rocket-punch/exports'),
+    );
 
-  //test('should build with module types', async () => {
-  //  // Arrange
-  //  const cwd: string = await copyTmpDirectory(
-  //    path.join(process.cwd(), 'test/fixtures/rocket-punch/module'),
-  //  );
-  //
-  //  // Act
-  //  // read .packages.yaml
-  //  const packages: Record<string, string | PackageConfig> = readEntry({ cwd });
-  //  const entry: Map<string, PackageInfo> = await readPackages({
-  //    cwd,
-  //    sourceRoot: 'src',
-  //    entry: packages,
-  //  });
-  //
-  //  // Assert
-  //  // check module property of package
-  //  expect(entry.get('a')?.module).toBe('commonjs');
-  //  expect(entry.get('b')?.module).toBe('commonjs');
-  //  expect(entry.get('c')?.module).toBe('esm');
-  //
-  //  // Arrange
-  //  const dist: string = await createTmpDirectory();
-  //
-  //  // Act
-  //  await build({
-  //    cwd,
-  //    dist,
-  //    entry: packages,
-  //    onMessage: async () => {},
-  //  });
-  //
-  //  // Assert
-  //  // check exists build output files
-  //  expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
-  //  expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
-  //  expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
-  //  expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
-  //  expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
-  //  expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
-  //
-  //  // Assert
-  //  // check source code is made in commonjs
-  //  expect(
-  //    /exports.a/g.test(fs.readFileSync(path.join(dist, 'a/index.js'), 'utf8')),
-  //  ).toBeTruthy();
-  //  expect(
-  //    /exports.b/g.test(fs.readFileSync(path.join(dist, 'b/index.js'), 'utf8')),
-  //  ).toBeTruthy();
-  //  // check source code is made in esm
-  //  expect(
-  //    /export function c/g.test(
-  //      fs.readFileSync(path.join(dist, 'c/index.js'), 'utf8'),
-  //    ),
-  //  ).toBeTruthy();
-  //});
+    // Act
+    // read .packages.yaml
+    const packages: Record<string, string | PackageConfig> = readEntry({ cwd });
+    const entry: Map<string, PackageInfo> = await readPackages({
+      cwd,
+      sourceRoot: 'src',
+      entry: packages,
+    });
+
+    // Assert
+    // check module property of package
+    expect(entry.get('a')?.exports).toEqual({
+      main: 'commonjs',
+      commonjs: true,
+      module: true,
+    });
+    expect(entry.get('b')?.exports).toEqual({
+      main: 'commonjs',
+      commonjs: true,
+      module: false,
+    });
+    expect(entry.get('c')?.exports).toEqual({
+      main: 'module',
+      commonjs: false,
+      module: true,
+    });
+
+    // Arrange
+    const dist: string = await createTmpDirectory();
+
+    // Act
+    await build({
+      cwd,
+      dist,
+      entry: packages,
+      onMessage: async () => {},
+    });
+
+    // Assert
+    // check exists build output files
+    expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/_module/index.js'))).toBeTruthy();
+
+    expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'b/_commonjs'))).toBeFalsy();
+    expect(fs.existsSync(path.join(dist, 'b/_module'))).toBeFalsy();
+
+    expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'c/_commonjs'))).toBeFalsy();
+    expect(fs.existsSync(path.join(dist, 'c/_module'))).toBeFalsy();
+
+    // Assert
+    // check source code is made in commonjs
+    expect(
+      /exports.a/g.test(fs.readFileSync(path.join(dist, 'a/index.js'), 'utf8')),
+    ).toBeTruthy();
+    expect(
+      /exports.b/g.test(fs.readFileSync(path.join(dist, 'b/index.js'), 'utf8')),
+    ).toBeTruthy();
+    // check source code is made in esm
+    expect(
+      /export function c/g.test(
+        fs.readFileSync(path.join(dist, 'c/index.js'), 'utf8'),
+      ),
+    ).toBeTruthy();
+  });
 
   test('should local-paths build normally', async () => {
     // Arrange

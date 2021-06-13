@@ -1,0 +1,9 @@
+a:
+  version: 0.1.0
+  exports: ['commonjs', 'module']
+b:
+  version: 0.1.0
+  exports: ['commonjs']
+c:
+  version: 0.1.0
+  exports: ['module']
