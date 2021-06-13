@@ -44,10 +44,17 @@ const schema = {
           description:
             'if you set this value, it will pass to the `npm publish` command like this `npm publish --registry http://...`.',
         },
-        module: {
+        exports: {
           type: 'string',
-          enum: ['commonjs', 'esm'],
-          description: 'module type',
+          items: {
+            type: 'string',
+            enum: ['module', 'commonjs'],
+            minItems: 1,
+            maxItems: 2,
+          },
+          default: ['module', 'commonjs'],
+          description:
+            'You can declare when you want to change the module type to build. Default is [module, commonjs].',
         },
         compilerOptions: {
           $ref: '#/definitions/compilerOptions',
