@@ -54,6 +54,7 @@ export function getCompilerOptions({
       buildType === 'module' ? ts.ModuleKind.ES2020 : ts.ModuleKind.CommonJS,
     moduleResolution: ts.ModuleResolutionKind.NodeJs,
     skipLibCheck: true,
+    inlineSources: true,
     inlineSourceMap: true,
     declaration,
   };
