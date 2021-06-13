@@ -47,7 +47,9 @@ interface Params {
   packageJsonContents: PackageJson[];
 }
 
-export function getPackagesOrder({ packageJsonContents }: Params): string[] {
+export function getPackagesOrder({
+  packageJsonContents,
+}: Params): PackageJsonSet[] {
   function searchNestedDependencies(
     ownerName: string,
     dependencies: PackageJson.Dependency | undefined,
@@ -69,11 +71,8 @@ export function getPackagesOrder({ packageJsonContents }: Params): string[] {
         dependenciesSet.add(dependencyName);
 
         // find dependencyName on the packageJsonContents
-        const childPackageJson:
-          | PackageJson
-          | undefined = packageJsonContents.find(
-          ({ name }) => dependencyName === name,
-        );
+        const childPackageJson: PackageJson | undefined =
+          packageJsonContents.find(({ name }) => dependencyName === name);
 
         // if childPackageJson is exists search childPackageJson's dependencies
         if (childPackageJson && childPackageJson.dependencies) {
@@ -107,5 +106,5 @@ export function getPackagesOrder({ packageJsonContents }: Params): string[] {
     },
   );
 
-  return sort(array).map(({ name }) => name);
+  return sort(array);
 }

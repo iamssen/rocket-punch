@@ -40,6 +40,7 @@ type BuildArgs = {
   tsconfig?: string;
   svg?: string;
   strict?: boolean;
+  showPackagesOrder?: boolean;
 };
 
 const buildOptions: Options = {
@@ -47,6 +48,11 @@ const buildOptions: Options = {
     type: 'string',
     alias: 'o',
     describe: 'output directory (e.g. --out-dir out/packages)',
+  },
+  'show-packages-order': {
+    type: 'boolean',
+    default: false,
+    describe: 'debug packages order',
   },
   'tsconfig': {
     type: 'string',
@@ -140,11 +146,13 @@ export function run() {
           sourceRoot,
           svg,
           strict,
+          showPackagesOrder,
         } = readLastArgv(argv);
         const params: BuildParams = {
           cwd,
           svg: svg === 'default' ? 'default' : 'create-react-app',
           dist: toAbsolutePath(outDir),
+          showPackagesOrder: showPackagesOrder === true,
           tsconfig,
           sourceRoot,
           strict,

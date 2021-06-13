@@ -139,6 +139,13 @@ export interface BuildParams extends CommonParams {
   strict?: boolean;
 
   /**
+   * debug - build order
+   *
+   * @default false
+   */
+  showPackagesOrder?: boolean;
+
+  /**
    * [advanced] you can transform the packageJson before emit
    */
   transformPackageJson?: (

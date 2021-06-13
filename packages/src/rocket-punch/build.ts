@@ -30,6 +30,7 @@ export async function build({
   cwd = process.cwd(),
   sourceRoot = 'src',
   strict = false,
+  showPackagesOrder = false,
   dist = path.resolve(cwd, 'out/packages'),
   tsconfig = 'tsconfig.json',
   entry,
@@ -125,9 +126,17 @@ export async function build({
 
   // get package build order
   // it will sort depends on packages dependency relationship
-  const order: string[] = await getPackagesOrder({
+  const packagesOrder = await getPackagesOrder({
     packageJsonContents: Array.from(packageJsonMap.values()),
   });
+
+  const order: string[] = packagesOrder.map(({ name }) => name);
+
+  if (showPackagesOrder) {
+    console.log('== packages order =======================================');
+    console.log('packages order:', order.join(', '));
+    console.log(JSON.stringify(Array.from(packageJsonMap.values()), null, 2));
+  }
 
   // ---------------------------------------------
   // run
