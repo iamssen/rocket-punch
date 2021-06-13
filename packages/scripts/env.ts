@@ -3,7 +3,7 @@ import path from 'path';
 import { readEntry } from 'rocket-punch/entry/readEntry';
 import yargs from 'yargs';
 
-const argv = yargs.argv;
+const argv = yargs.argv as unknown as Record<string, string>;
 
 export const sourceDir: string = path.dirname(__dirname);
 export const entry = readEntry({ cwd: sourceDir });
