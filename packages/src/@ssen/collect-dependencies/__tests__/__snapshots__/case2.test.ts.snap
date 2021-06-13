@@ -5,11 +5,15 @@ Array [
   Object {
     "dependencies": Set {
       "@material-ui/core",
+      "react",
     },
     "name": "@anchor-protocol/icons",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+      "styled-components",
+    },
     "name": "@anchor-protocol/token-icons",
   },
   Object {
@@ -23,99 +27,111 @@ Array [
     "name": "@terra-dev/is-zero",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react-query",
+    },
     "name": "@terra-dev/patch-react-query-focus-refetching",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+    },
     "name": "@terra-dev/sendinblue",
   },
   Object {
     "dependencies": Set {
       "event-target-shim",
+      "react",
+      "react-dom",
+      "styled-components",
     },
     "name": "@terra-dev/snackbar",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+    },
     "name": "@terra-dev/use-array-pagination",
   },
   Object {
-    "dependencies": Set {},
-    "name": "@terra-dev/use-browser-inactive",
-  },
-  Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+    },
     "name": "@terra-dev/use-cloudflare-analytics",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+    },
     "name": "@terra-dev/use-element-intersection",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+      "react-router-dom",
+    },
     "name": "@terra-dev/use-google-analytics",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+    },
     "name": "@terra-dev/use-local-storage",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+    },
     "name": "@terra-dev/use-map",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+    },
     "name": "@terra-dev/use-resolve-last",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+      "react-router-dom",
+    },
     "name": "@terra-dev/use-router-scroll-restoration",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+    },
     "name": "@terra-dev/use-string-bytes-length",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+    },
     "name": "@terra-dev/use-interval",
   },
   Object {
     "dependencies": Set {
       "@terra-dev/use-interval",
+      "react",
     },
     "name": "@terra-dev/use-time-end",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+    },
+    "name": "@terra-dev/use-browser-inactive",
+  },
+  Object {
+    "dependencies": Set {
+      "react",
+    },
     "name": "@terra-dev/use-longtime-no-see",
   },
   Object {
     "dependencies": Set {
-      "@terra-money/terra.js",
-    },
-    "name": "@terra-dev/wallet-types",
-  },
-  Object {
-    "dependencies": Set {
-      "@terra-dev/wallet-types",
-      "@terra-money/terra.js",
-    },
-    "name": "@terra-money/webapp-fns",
-  },
-  Object {
-    "dependencies": Set {
-      "@terra-dev/use-longtime-no-see",
-      "@terra-money/webapp-fns",
-      "@terra-dev/wallet-types",
-      "@terra-money/terra.js",
-      "fast-deep-equal",
-    },
-    "name": "@terra-money/webapp-provider",
-  },
-  Object {
-    "dependencies": Set {
       "mobile-detect",
+      "react",
     },
     "name": "@terra-dev/is-mobile",
   },
@@ -123,8 +139,11 @@ Array [
     "dependencies": Set {
       "@terra-dev/is-mobile",
       "mobile-detect",
+      "react",
       "@walletconnect/types",
       "qrcode.react",
+      "react-dom",
+      "styled-components",
     },
     "name": "@terra-dev/walletconnect-qrcode-modal",
   },
@@ -132,9 +151,12 @@ Array [
     "dependencies": Set {
       "@terra-dev/is-mobile",
       "mobile-detect",
+      "react",
       "@terra-dev/walletconnect-qrcode-modal",
       "@walletconnect/types",
       "qrcode.react",
+      "react-dom",
+      "styled-components",
       "@terra-money/terra.js",
       "@walletconnect/core",
       "@walletconnect/iso-crypto",
@@ -143,6 +165,12 @@ Array [
       "ws",
     },
     "name": "@terra-dev/walletconnect",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-money/terra.js",
+    },
+    "name": "@terra-dev/wallet-types",
   },
   Object {
     "dependencies": Set {
@@ -156,6 +184,9 @@ Array [
       "@terra-dev/readonly-wallet",
       "@terra-money/terra.js",
       "@terra-dev/wallet-types",
+      "react",
+      "react-dom",
+      "styled-components",
     },
     "name": "@terra-dev/readonly-wallet-modal",
   },
@@ -195,6 +226,9 @@ Array [
       "rxjs",
       "@terra-dev/readonly-wallet",
       "@terra-dev/readonly-wallet-modal",
+      "react",
+      "react-dom",
+      "styled-components",
       "@terra-dev/walletconnect",
       "@terra-dev/is-mobile",
       "@terra-dev/walletconnect-qrcode-modal",
@@ -207,11 +241,57 @@ Array [
       "@terra-dev/web-extension",
       "fast-deep-equal",
       "@terra-dev/use-interval",
+      "react-router-dom",
     },
     "name": "@terra-money/wallet-provider",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "@terra-dev/wallet-types",
+      "@terra-money/terra.js",
+    },
+    "name": "@terra-money/webapp-fns",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/use-longtime-no-see",
+      "@terra-money/webapp-fns",
+      "@terra-dev/wallet-types",
+      "@terra-money/terra.js",
+      "fast-deep-equal",
+      "react",
+      "react-query",
+      "@terra-money/wallet-provider",
+      "@terra-dev/chrome-extension",
+      "@terra-dev/is-desktop-chrome",
+      "@terra-dev/mathwallet",
+      "bowser",
+      "mobile-detect",
+      "rxjs",
+      "@terra-dev/readonly-wallet",
+      "@terra-dev/readonly-wallet-modal",
+      "react-dom",
+      "styled-components",
+      "@terra-dev/walletconnect",
+      "@terra-dev/is-mobile",
+      "@terra-dev/walletconnect-qrcode-modal",
+      "@walletconnect/types",
+      "qrcode.react",
+      "@walletconnect/core",
+      "@walletconnect/iso-crypto",
+      "@walletconnect/utils",
+      "ws",
+      "@terra-dev/web-extension",
+      "@terra-dev/use-interval",
+      "react-router-dom",
+      "@terra-dev/use-browser-inactive",
+    },
+    "name": "@terra-money/webapp-provider",
+  },
+  Object {
+    "dependencies": Set {
+      "react",
+    },
     "name": "@terra-dev/use-form",
   },
   Object {
@@ -246,6 +326,7 @@ Array [
       "d3-timer",
       "@anchor-protocol/types",
       "numeral",
+      "react",
     },
     "name": "@anchor-protocol/notation",
   },
@@ -259,6 +340,7 @@ Array [
       "d3-ease",
       "d3-timer",
       "numeral",
+      "react",
       "@terra-dev/big-math",
       "@terra-money/webapp-fns",
       "@terra-dev/wallet-types",
@@ -266,6 +348,7 @@ Array [
       "@rx-stream/pipe",
       "rxjs",
       "@terra-dev/tx-helpers",
+      "react-query",
     },
     "name": "@anchor-protocol/webapp-fns",
   },
@@ -283,21 +366,53 @@ Array [
       "d3-ease",
       "d3-timer",
       "numeral",
+      "react",
       "@terra-dev/big-math",
       "@rx-stream/pipe",
       "rxjs",
       "@terra-dev/tx-helpers",
+      "react-query",
       "@terra-dev/use-form",
       "@rx-stream/react",
+      "@terra-money/wallet-provider",
+      "@terra-dev/chrome-extension",
+      "@terra-dev/is-desktop-chrome",
+      "@terra-dev/mathwallet",
+      "bowser",
+      "mobile-detect",
+      "@terra-dev/readonly-wallet",
+      "@terra-dev/readonly-wallet-modal",
+      "react-dom",
+      "styled-components",
+      "@terra-dev/walletconnect",
+      "@terra-dev/is-mobile",
+      "@terra-dev/walletconnect-qrcode-modal",
+      "@walletconnect/types",
+      "qrcode.react",
+      "@walletconnect/core",
+      "@walletconnect/iso-crypto",
+      "@walletconnect/utils",
+      "ws",
+      "@terra-dev/web-extension",
+      "fast-deep-equal",
+      "@terra-dev/use-interval",
+      "react-router-dom",
+      "@terra-money/webapp-provider",
+      "@terra-dev/use-longtime-no-see",
+      "@terra-dev/use-browser-inactive",
     },
     "name": "@anchor-protocol/webapp-provider",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+    },
     "name": "@terra-dev/use-dialog",
   },
   Object {
-    "dependencies": Set {},
+    "dependencies": Set {
+      "react",
+    },
     "name": "@terra-dev/use-restricted-input",
   },
   Object {
@@ -326,6 +441,8 @@ Array [
       "@terra-dev/use-restricted-input",
       "downshift",
       "@terra-dev/use-dialog",
+      "react",
+      "styled-components",
     },
     "name": "@terra-dev/neumorphism-ui",
   },
@@ -346,6 +463,8 @@ Array [
       "@terra-dev/use-restricted-input",
       "downshift",
       "@terra-dev/use-dialog",
+      "react",
+      "styled-components",
       "@anchor-protocol/notation",
       "@terra-dev/big-interpolate",
       "big.js",

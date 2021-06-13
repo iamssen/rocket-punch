@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "build": "yarn workspace packages run build",
-    "publish": "yarn run test && yarn run build && yarn workspace packages run publish",
+    "publish": "yarn workspace packages run publish",
+    "release": "yarn workspace packages run release",
     "view": "yarn workspace packages run view",
     "doctor": "yarn workspace packages run doctor",
     "format": "prettier --write \"**/*.{js,ts,tsx}\"",

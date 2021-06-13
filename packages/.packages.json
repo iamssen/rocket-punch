@@ -1,12 +1,12 @@
 {
   "$schema": "https://rocket-hangar.github.io/rocket-punch/schemas/packages.json",
   "@ssen/*": {
-    "version": "3.0.0-alpha.3",
+    "version": "3.0.0-alpha.7",
     "tag": "canary",
     "module": "commonjs"
   },
   "rocket-punch": {
-    "version": "3.0.0-alpha.4",
+    "version": "3.0.0-alpha.7",
     "tag": "canary",
     "module": "commonjs",
     "packageJson": {

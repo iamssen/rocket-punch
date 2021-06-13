@@ -10,6 +10,24 @@ interface Params {
   packageJsonContents: PackageJson[];
 }
 
+function allDependencies(
+  packageJson: PackageJson,
+): PackageJson.Dependency | undefined {
+  if (
+    !packageJson.dependencies &&
+    !packageJson.peerDependencies &&
+    !packageJson.optionalDependencies
+  ) {
+    return undefined;
+  }
+
+  return {
+    ...packageJson.dependencies,
+    ...packageJson.peerDependencies,
+    ...packageJson.optionalDependencies,
+  };
+}
+
 export function getPackagesOrder({
   packageJsonContents,
 }: Params): PackageJsonSet[] {
@@ -40,7 +58,7 @@ export function getPackagesOrder({
         if (childPackageJson && childPackageJson.dependencies) {
           searchNestedDependencies(
             ownerName,
-            childPackageJson.dependencies,
+            allDependencies(childPackageJson),
             dependenciesSet,
             [...parents, dependencyName],
           );
@@ -61,7 +79,7 @@ export function getPackagesOrder({
         name: packageJson.name,
         dependencies: searchNestedDependencies(
           packageJson.name,
-          packageJson.dependencies,
+          allDependencies(packageJson),
           new Set(),
           [packageJson.name],
         ),

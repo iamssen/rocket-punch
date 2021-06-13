@@ -133,9 +133,14 @@ export async function build({
   const order: string[] = packagesOrder.map(({ name }) => name);
 
   if (showPackagesOrder) {
-    console.log('== packages order =======================================');
     console.log('packages order:', order.join(', '));
-    console.log(JSON.stringify(Array.from(packageJsonMap.values()), null, 2));
+    await fs.writeFile(
+      path.join(dist, 'packageJsonMap.json'),
+      JSON.stringify(Array.from(packageJsonMap.values()), null, 2),
+    );
+    console.log(
+      `packageJson files saved in "${path.join(dist, 'packageJsonMap.json')}"`,
+    );
   }
 
   // ---------------------------------------------

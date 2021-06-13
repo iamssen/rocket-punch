@@ -4,6 +4,7 @@
   "scripts": {
     "build": "node -r ts-node/register -r tsconfig-paths/register scripts/build.ts",
     "publish": "node -r ts-node/register -r tsconfig-paths/register scripts/publish.ts",
+    "release": "yarn run test && yarn run build && yarn run publish",
     "view": "node -r ts-node/register -r tsconfig-paths/register scripts/view.ts",
     "doctor": "node -r ts-node/register -r tsconfig-paths/register scripts/doctor.ts",
     "test": "jest --colors",
