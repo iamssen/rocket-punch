@@ -96,12 +96,12 @@ describe('getPackagesOrder()', () => {
         },
       ],
       // Assert
+      // e
       // c
       // a { c }
       // b { a, c }
-      // e
       // d { e, b: { a, c } }
-      ['c', 'a', 'b', 'e', 'd'],
+      ['e', 'c', 'a', 'b', 'd'],
     );
 
     testFn(
@@ -147,11 +147,11 @@ describe('getPackagesOrder()', () => {
       // @ssen/test-module2 { test-module3 }
       // does not have any reason to order - use-react-intl
       [
-        '@ssen/test-module1',
         'router-store',
+        'use-react-intl',
+        '@ssen/test-module1',
         'test-module3',
         '@ssen/test-module2',
-        'use-react-intl',
       ],
     );
   });

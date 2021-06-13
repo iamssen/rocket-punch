@@ -1,46 +1,9 @@
+import toposort from 'toposort';
 import { PackageJson } from 'type-fest';
 
 interface PackageJsonSet {
   name: string;
   dependencies: Set<string>;
-}
-
-function compare(a: PackageJsonSet, b: PackageJsonSet): number {
-  const aIsHigher: number = 1;
-  const bIsHigher: number = -1;
-
-  const aHasB: boolean = a.dependencies.has(b.name);
-  const bHasA: boolean = b.dependencies.has(a.name);
-
-  if (!aHasB && !bHasA) {
-    return a.name > b.name ? aIsHigher : bIsHigher;
-  }
-
-  // FIXME useless interdependent check. the circularly dependencies already checked in searchNestedDependencies()
-  //if (aHasB && bHasA) {
-  //  throw new Error(
-  //    `"${a.name}" dependent "${b.name}" and "${b.name}" dependent "${a.name}". packages can't be interdependent.`,
-  //  );
-  //}
-
-  return aHasB ? aIsHigher : bIsHigher;
-}
-
-function sort(array: PackageJsonSet[]): PackageJsonSet[] {
-  if (array.length < 2) {
-    return array;
-  }
-  const chosenIndex: number = array.length - 1;
-  const chosen: PackageJsonSet = array[chosenIndex];
-  const a: PackageJsonSet[] = [];
-  const b: PackageJsonSet[] = [];
-  for (let i: number = 0; i < chosenIndex; i++) {
-    const temp: PackageJsonSet = array[i];
-
-    compare(temp, chosen) < 0 ? a.push(temp) : b.push(temp);
-  }
-
-  return [...sort(a), chosen, ...sort(b)];
 }
 
 interface Params {
@@ -61,10 +24,9 @@ export function getPackagesOrder({
 
       for (const dependencyName of dependencyNames) {
         if (dependencyName === ownerName) {
+          const parentsNames = parents.join(' < ');
           throw new Error(
-            `package.json files have circularly referenced dependencies : "${ownerName}" in "${parents.join(
-              ' < ',
-            )} < ${dependencyName}"`,
+            `package.json files have circularly referenced dependencies : "${ownerName}" in "${parentsNames} < ${dependencyName}"`,
           );
         }
 
@@ -89,12 +51,13 @@ export function getPackagesOrder({
     return dependenciesSet;
   }
 
-  // FIXME avoid Node.js 10 sort error
-  const array: PackageJsonSet[] = packageJsonContents.map<PackageJsonSet>(
-    (packageJson) => {
-      if (!packageJson.name)
+  const packagesMap: Map<string, PackageJsonSet> = packageJsonContents.reduce(
+    (map, packageJson) => {
+      if (!packageJson.name) {
         throw new Error(`Undefined "name" field on ${packageJson}`);
-      return {
+      }
+
+      map.set(packageJson.name, {
         name: packageJson.name,
         dependencies: searchNestedDependencies(
           packageJson.name,
@@ -102,9 +65,31 @@ export function getPackagesOrder({
           new Set(),
           [packageJson.name],
         ),
-      };
+      });
+
+      return map;
     },
+    new Map<string, PackageJsonSet>(),
   );
 
-  return sort(array);
+  const edges: [string, string][] = [];
+
+  for (const [name, { dependencies }] of packagesMap) {
+    for (const dep of dependencies) {
+      if (packagesMap.has(dep)) {
+        edges.push([name, dep]);
+      }
+    }
+  }
+
+  const sorted = toposort(edges).reverse();
+
+  return [
+    ...Array.from(packagesMap.values()).filter(
+      ({ name }) => !sorted.includes(name),
+    ),
+    ...sorted.map((name) => {
+      return packagesMap.get(name)!;
+    }),
+  ];
 }

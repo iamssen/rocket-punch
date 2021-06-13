@@ -1,0 +1,361 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getPackagesOrder() anchor failed 1`] = `
+Array [
+  Object {
+    "dependencies": Set {
+      "@material-ui/core",
+    },
+    "name": "@anchor-protocol/icons",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@anchor-protocol/token-icons",
+  },
+  Object {
+    "dependencies": Set {
+      "fastdom",
+    },
+    "name": "@terra-dev/audit-fastdom",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/is-zero",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/patch-react-query-focus-refetching",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/sendinblue",
+  },
+  Object {
+    "dependencies": Set {
+      "event-target-shim",
+    },
+    "name": "@terra-dev/snackbar",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-array-pagination",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-browser-inactive",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-cloudflare-analytics",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-element-intersection",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-google-analytics",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-local-storage",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-map",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-resolve-last",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-router-scroll-restoration",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-string-bytes-length",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-interval",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/use-interval",
+    },
+    "name": "@terra-dev/use-time-end",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-longtime-no-see",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-money/terra.js",
+    },
+    "name": "@terra-dev/wallet-types",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/wallet-types",
+      "@terra-money/terra.js",
+    },
+    "name": "@terra-money/webapp-fns",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/use-longtime-no-see",
+      "@terra-money/webapp-fns",
+      "@terra-dev/wallet-types",
+      "@terra-money/terra.js",
+      "fast-deep-equal",
+    },
+    "name": "@terra-money/webapp-provider",
+  },
+  Object {
+    "dependencies": Set {
+      "mobile-detect",
+    },
+    "name": "@terra-dev/is-mobile",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/is-mobile",
+      "mobile-detect",
+      "@walletconnect/types",
+      "qrcode.react",
+    },
+    "name": "@terra-dev/walletconnect-qrcode-modal",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/is-mobile",
+      "mobile-detect",
+      "@terra-dev/walletconnect-qrcode-modal",
+      "@walletconnect/types",
+      "qrcode.react",
+      "@terra-money/terra.js",
+      "@walletconnect/core",
+      "@walletconnect/iso-crypto",
+      "@walletconnect/utils",
+      "rxjs",
+      "ws",
+    },
+    "name": "@terra-dev/walletconnect",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-money/terra.js",
+      "@terra-dev/wallet-types",
+    },
+    "name": "@terra-dev/readonly-wallet",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/readonly-wallet",
+      "@terra-money/terra.js",
+      "@terra-dev/wallet-types",
+    },
+    "name": "@terra-dev/readonly-wallet-modal",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/mathwallet",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/mathwallet",
+      "bowser",
+      "mobile-detect",
+    },
+    "name": "@terra-dev/is-desktop-chrome",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/is-desktop-chrome",
+      "@terra-dev/mathwallet",
+      "bowser",
+      "mobile-detect",
+      "@terra-dev/wallet-types",
+      "@terra-money/terra.js",
+      "rxjs",
+    },
+    "name": "@terra-dev/chrome-extension",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/chrome-extension",
+      "@terra-dev/is-desktop-chrome",
+      "@terra-dev/mathwallet",
+      "bowser",
+      "mobile-detect",
+      "@terra-dev/wallet-types",
+      "@terra-money/terra.js",
+      "rxjs",
+      "@terra-dev/readonly-wallet",
+      "@terra-dev/readonly-wallet-modal",
+      "@terra-dev/walletconnect",
+      "@terra-dev/is-mobile",
+      "@terra-dev/walletconnect-qrcode-modal",
+      "@walletconnect/types",
+      "qrcode.react",
+      "@walletconnect/core",
+      "@walletconnect/iso-crypto",
+      "@walletconnect/utils",
+      "ws",
+      "@terra-dev/web-extension",
+      "fast-deep-equal",
+      "@terra-dev/use-interval",
+    },
+    "name": "@terra-money/wallet-provider",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-form",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/wallet-types",
+      "@terra-money/terra.js",
+    },
+    "name": "@terra-dev/tx-helpers",
+  },
+  Object {
+    "dependencies": Set {
+      "big.js",
+    },
+    "name": "@terra-dev/big-math",
+  },
+  Object {
+    "dependencies": Set {
+      "big.js",
+      "d3-ease",
+    },
+    "name": "@terra-dev/big-interpolate",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@anchor-protocol/types",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/big-interpolate",
+      "big.js",
+      "d3-ease",
+      "d3-timer",
+      "@anchor-protocol/types",
+      "numeral",
+    },
+    "name": "@anchor-protocol/notation",
+  },
+  Object {
+    "dependencies": Set {
+      "@anchor-protocol/anchor.js",
+      "@anchor-protocol/types",
+      "big.js",
+      "@anchor-protocol/notation",
+      "@terra-dev/big-interpolate",
+      "d3-ease",
+      "d3-timer",
+      "numeral",
+      "@terra-dev/big-math",
+      "@terra-money/webapp-fns",
+      "@terra-dev/wallet-types",
+      "@terra-money/terra.js",
+      "@rx-stream/pipe",
+      "rxjs",
+      "@terra-dev/tx-helpers",
+    },
+    "name": "@anchor-protocol/webapp-fns",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-money/webapp-fns",
+      "@terra-dev/wallet-types",
+      "@terra-money/terra.js",
+      "@anchor-protocol/anchor.js",
+      "@anchor-protocol/types",
+      "@anchor-protocol/webapp-fns",
+      "big.js",
+      "@anchor-protocol/notation",
+      "@terra-dev/big-interpolate",
+      "d3-ease",
+      "d3-timer",
+      "numeral",
+      "@terra-dev/big-math",
+      "@rx-stream/pipe",
+      "rxjs",
+      "@terra-dev/tx-helpers",
+      "@terra-dev/use-form",
+      "@rx-stream/react",
+    },
+    "name": "@anchor-protocol/webapp-provider",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-dialog",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/use-restricted-input",
+  },
+  Object {
+    "dependencies": Set {},
+    "name": "@terra-dev/is-touch-device",
+  },
+  Object {
+    "dependencies": Set {
+      "color",
+    },
+    "name": "@terra-dev/styled-neumorphism",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/styled-neumorphism",
+      "color",
+      "@material-ui/core",
+      "d3-ease",
+      "d3-interpolate",
+      "d3-selection",
+      "d3-timer",
+      "use-resize-observer",
+      "resize-observer-polyfill",
+      "@material-ui/icons",
+      "@terra-dev/is-touch-device",
+      "@terra-dev/use-restricted-input",
+      "downshift",
+      "@terra-dev/use-dialog",
+    },
+    "name": "@terra-dev/neumorphism-ui",
+  },
+  Object {
+    "dependencies": Set {
+      "@terra-dev/neumorphism-ui",
+      "@terra-dev/styled-neumorphism",
+      "color",
+      "@material-ui/core",
+      "d3-ease",
+      "d3-interpolate",
+      "d3-selection",
+      "d3-timer",
+      "use-resize-observer",
+      "resize-observer-polyfill",
+      "@material-ui/icons",
+      "@terra-dev/is-touch-device",
+      "@terra-dev/use-restricted-input",
+      "downshift",
+      "@terra-dev/use-dialog",
+      "@anchor-protocol/notation",
+      "@terra-dev/big-interpolate",
+      "big.js",
+      "@anchor-protocol/types",
+      "numeral",
+      "d3-scale",
+      "d3-shape",
+      "date-fns",
+    },
+    "name": "@anchor-protocol/webapp-charts",
+  },
+]
+`;
