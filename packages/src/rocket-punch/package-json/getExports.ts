@@ -48,6 +48,15 @@ export async function getExports(
       node: `${commonjsDirectory}/${file}`,
       default: `${moduleDirectory}/${file}`,
     };
+
+    if (/\/index$/.test(key)) {
+      entryExports[key.replace(/\/index$/, '')] = {
+        import: `${moduleDirectory}/${file}`,
+        require: `${commonjsDirectory}/${file}`,
+        node: `${commonjsDirectory}/${file}`,
+        default: `${moduleDirectory}/${file}`,
+      };
+    }
   }
 
   return {
