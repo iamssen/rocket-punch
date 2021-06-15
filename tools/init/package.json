@@ -13,9 +13,7 @@
     "cache": "~/.npm",
     "access": "public"
   },
-  "bin": {
-    "rocket-punch-init": "./bin/rocket-punch-init.js"
-  },
+  "bin": "./bin/rocket-punch-init.js",
   "dependencies": {
     "package-json": "^6.5.0"
   }
