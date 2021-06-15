@@ -6,7 +6,7 @@
     "module": "commonjs"
   },
   "rocket-punch": {
-    "version": "3.0.0-alpha.8",
+    "version": "3.0.0-alpha.9",
     "tag": "canary",
     "module": "commonjs",
     "packageJson": {

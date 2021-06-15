@@ -1,0 +1,22 @@
+{
+  "name": "rocket-punch-init",
+  "version": "0.1.1",
+  "author": "SSen <i@ssen.name>",
+  "license": "MIT",
+  "repository": "github:rocket-hangar/rocket-punch",
+  "bugs": "https://github.com/rocket-hangar/rocket-punch/issues",
+  "homepage": "https://github.com/rocket-hangar/rocket-punch/tree/master/tools/init",
+  "engines": {
+    "node": ">=12"
+  },
+  "publishConfig": {
+    "cache": "~/.npm",
+    "access": "public"
+  },
+  "bin": {
+    "rocket-punch-init": "./bin/rocket-punch-init.js"
+  },
+  "dependencies": {
+    "package-json": "^6.5.0"
+  }
+}

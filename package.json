@@ -4,7 +4,8 @@
   "license": "MIT",
   "repository": "github:rocket-hangar/rocket-punch",
   "workspaces": [
-    "packages"
+    "packages",
+    "tools/*"
   ],
   "scripts": {
     "build": "yarn workspace packages run build",
