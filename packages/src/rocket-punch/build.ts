@@ -226,7 +226,8 @@ export async function build({
         baseUrl: sourceDir,
         paths: {
           ...userCompilerOptions.paths,
-          [packageName]: [sourceDir],
+          [packageName]: ['.'],
+          [packageName + '/*']: ['./*'],
         },
 
         rootDir: sourceDir,

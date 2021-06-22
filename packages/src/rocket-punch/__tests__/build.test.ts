@@ -122,6 +122,42 @@ describe('build()', () => {
     expect(fs.existsSync(path.join(dist, 'c/_commonjs/index.js'))).toBeTruthy();
   });
 
+  test('should not print warnings on current package name import', async () => {
+    // Arrange
+    const cwd: string = await copyTmpDirectory(
+      path.join(
+        process.cwd(),
+        'test/fixtures/rocket-punch/current-package-name-import',
+      ),
+    );
+    const dist: string = await createTmpDirectory();
+
+    // Act
+    // build {cwd} to {dist}
+    await build({
+      cwd,
+      dist,
+      entry: {
+        a: { version: '0.1.0' },
+      },
+      onMessage: async (message) => {
+        if (message.type === 'tsc') {
+          //eslint-disable-next-line jest/no-conditional-expect
+          expect(message.diagnostics.length).toBe(0);
+        }
+      },
+    });
+
+    // Assert
+    // check exists build output files
+    expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/_commonjs/index.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/b/c.js'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/b/c.d.ts'))).toBeTruthy();
+    expect(fs.existsSync(path.join(dist, 'a/_commonjs/b/c.js'))).toBeTruthy();
+  });
+
   test('should build with exports', async () => {
     // Arrange
     const cwd: string = await copyTmpDirectory(
