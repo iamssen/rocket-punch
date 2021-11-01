@@ -30,11 +30,11 @@
     "@handbook/markdown-source-import": "^1.1.0",
     "@ssen/eslint-config": "^2.0.1",
     "@ssen/prettier-config": "^2.0.1",
-    "@types/eslint": "^7.2.13",
-    "@types/prettier": "^2.3.0",
-    "eslint": "^7.28.0",
-    "husky": "^6.0.0",
-    "lint-staged": "^11.0.0",
-    "prettier": "^2.3.1"
+    "@types/eslint": "^7.28.2",
+    "@types/prettier": "^2.4.1",
+    "eslint": "^7.32.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^11.2.6",
+    "prettier": "^2.4.1"
   }
 }

@@ -23,9 +23,7 @@ export function readEntry({
       },
     );
 
-    const content: object | number | string | null | undefined = yaml.load(
-      source,
-    );
+    const content = yaml.load(source);
 
     if (
       !content ||
@@ -35,7 +33,7 @@ export function readEntry({
       throw new Error(`yaml.safeLoad does not return an object`);
     }
 
-    packages = content;
+    packages = content as object;
   }
 
   if (!packages) {

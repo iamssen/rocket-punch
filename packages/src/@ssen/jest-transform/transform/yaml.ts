@@ -14,9 +14,7 @@ function getCacheKey(
 }
 
 function process(sourceText: string): string {
-  const result: object | number | string | null | undefined = yaml.load(
-    sourceText,
-  );
+  const result = yaml.load(sourceText);
   const json: string = JSON.stringify(result, undefined, '\t');
   return `module.exports = ${json}`;
 }

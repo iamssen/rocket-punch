@@ -16,7 +16,7 @@ export interface Transformer {
 export const plainTextTransformer: Transformer = {
   getSourceText: () => (file: string) => {
     const content: string = fs.readFileSync(file, 'utf8');
-    return `export default '${content}'`;
+    return `export default ${JSON.stringify(content)}`;
   },
 };
 
