@@ -2,6 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import process from 'process';
 import { copyTmpDirectory, createTmpDirectory } from '../';
+import { describe, test, expect } from 'vitest';
 
 describe('tmp-directory', () => {
   test('should get a created tmp directory', async () => {

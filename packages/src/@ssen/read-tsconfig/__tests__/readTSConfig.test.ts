@@ -3,6 +3,7 @@ import { copyTmpDirectory } from '@ssen/tmp-directory';
 import path from 'path';
 import process from 'process';
 import ts from 'typescript';
+import { describe, test, expect } from 'vitest';
 
 describe('readTSConfig()', () => {
   test('should read tsconfig without errors', async () => {

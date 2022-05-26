@@ -8,7 +8,7 @@ import {
   collectScripts,
   PackageInfo,
 } from '@ssen/collect-dependencies';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
 
 const dependencies: PackageJson.Dependency = await collectDependencies({
   rootDir: '/project/src',
@@ -36,7 +36,7 @@ import {
   collectScripts,
   PackageInfo,
 } from '@ssen/collect-dependencies';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
 
 async function collectDependencies(params: {
   // source directory
@@ -67,8 +67,9 @@ async function collectDependencies(params: {
 [\_\_tests\_\_/case1.test.ts](__tests__/case1.test.ts)
 
 ```ts
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
 import { getPackagesOrder } from '../getPackagesOrder';
+import { describe, test, expect } from 'vitest';
 
 describe('getPackagesOrder()', () => {
   test('frontend-components failed', () => {
@@ -563,7 +564,8 @@ const packageJsonContents: PackageJson[] = [
 
 ```ts
 import { getPackagesOrder } from '../getPackagesOrder';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
+import { describe, test, expect } from 'vitest';
 
 describe('getPackagesOrder()', () => {
   test('anchor failed', () => {
@@ -1793,7 +1795,8 @@ import { rewriteSrcPath } from '@ssen/rewrite-src-path';
 import fs from 'fs-extra';
 import path from 'path';
 import process from 'process';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
+import { describe, test, expect } from 'vitest';
 
 describe('collectDependencies()', () => {
   test('should get all dependencies from typescript sources', async () => {
@@ -2106,8 +2109,9 @@ describe('collectDependencies()', () => {
 [\_\_tests\_\_/getPackagesOrder.test.ts](__tests__/getPackagesOrder.test.ts)
 
 ```ts
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
 import { getPackagesOrder } from '../getPackagesOrder';
+import { describe, test, expect } from 'vitest';
 
 describe('getPackagesOrder()', () => {
   test('should get the ordered names array', () => {

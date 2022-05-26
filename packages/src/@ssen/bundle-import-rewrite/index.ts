@@ -25,6 +25,7 @@ function createVisitor({
           node.modifiers,
           node.importClause,
           ts.factory.createStringLiteral(rewrittenImportPath),
+          node.assertClause,
         );
       }
     }

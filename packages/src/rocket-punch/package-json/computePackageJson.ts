@@ -1,4 +1,4 @@
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
 import { PackageInfo } from '../types';
 
 interface Params {

@@ -65,10 +65,15 @@
           "default": false,
           "markdownDescription": "Only output d.ts files and not JavaScript files.\n\nSee more: https://www.typescriptlang.org/tsconfig#emitDeclarationOnly"
         },
-        "incremental": {
-          "description": "Save .tsbuildinfo files to allow for incremental compilation of projects.",
+        "exactOptionalPropertyTypes": {
+          "description": "Differentiate between undefined and not present when type checking",
           "type": "boolean",
-          "markdownDescription": "Save .tsbuildinfo files to allow for incremental compilation of projects.\n\nSee more: https://www.typescriptlang.org/tsconfig#incremental"
+          "default": false,
+          "markdownDescription": "Differentiate between undefined and not present when type checking\n\nSee more: https://www.typescriptlang.org/tsconfig#exactOptionalPropertyTypes"
+        },
+        "incremental": {
+          "description": "Enable incremental compilation. Requires TypeScript version 3.4 or later.",
+          "type": "boolean"
         },
         "tsBuildInfoFile": {
           "description": "Specify the folder for .tsbuildinfo incremental compilation files.",
@@ -117,10 +122,10 @@
           "markdownDescription": "Specify the JSX Fragment reference used for fragments when targeting React JSX emit e.g. 'React.Fragment' or 'Fragment'.\n\nSee more: https://www.typescriptlang.org/tsconfig#jsxFragmentFactory"
         },
         "jsxImportSource": {
-          "description": "Specify module specifier used to import the JSX factory functions when using `jsx: react-jsx*`.`",
+          "description": "Specify module specifier used to import the JSX factory functions when using `jsx: react-jsx`.",
           "type": "string",
           "default": "react",
-          "markdownDescription": "Specify module specifier used to import the JSX factory functions when using `jsx: react-jsx*`.`\n\nSee more: https://www.typescriptlang.org/tsconfig#jsxImportSource"
+          "markdownDescription": "Specify module specifier used to import the JSX factory functions when using `jsx: react-jsx`.\n\nSee more: https://www.typescriptlang.org/tsconfig#jsxImportSource"
         },
         "listFiles": {
           "description": "Print all of the files read during the compilation.",
@@ -171,11 +176,6 @@
           "description": "Enable error reporting for expressions and declarations with an implied `any` type..",
           "type": "boolean",
           "markdownDescription": "Enable error reporting for expressions and declarations with an implied `any` type..\n\nSee more: https://www.typescriptlang.org/tsconfig#noImplicitAny"
-        },
-        "noImplicitOverride": {
-          "description": "Enable error reporting when overriding a method without using the 'override' keyword. Requires TypeScript version 4.3 or later.",
-          "type": "boolean",
-          "markdownDescription": "Enable error reporting when overriding a method without using the `override` keyword. Requires TypeScript version 4.3 or later.\n\nSee more: https://www.typescriptlang.org/tsconfig#noImplicitOverride"
         },
         "noImplicitThis": {
           "description": "Enable error reporting when `this` is given the type `any`.",
@@ -239,6 +239,12 @@
           "type": "boolean",
           "default": false,
           "markdownDescription": "Disable resolving symlinks to their realpath. This correlates to the same flag in node.\n\nSee more: https://www.typescriptlang.org/tsconfig#preserveSymlinks"
+        },
+        "preserveValueImports": {
+          "description": "Preserve unused imported values in the JavaScript output that would otherwise be removed",
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Preserve unused imported values in the JavaScript output that would otherwise be removed\n\nSee more: https://www.typescriptlang.org/tsconfig#preserveValueImports"
         },
         "preserveWatchOutput": {
           "description": "Disable wiping the console in watch mode",
@@ -307,44 +313,57 @@
                 "ES2019",
                 "ES2020",
                 "ES2021",
+                "ES2022",
                 "ESNext"
               ]
             },
             {
-              "pattern": "^([Ee][Ss]([356]|(20(1[56789]|2[01]))|[Nn][Ee][Xx][Tt]))$"
+              "pattern": "^([Ee][Ss]([356]|(20(1[56789]|2[012]))|[Nn][Ee][Xx][Tt]))$"
             }
           ],
           "markdownDescription": "Set the JavaScript language version for emitted JavaScript and include compatible library declarations.\n\nSee more: https://www.typescriptlang.org/tsconfig#target"
+        },
+        "useUnknownInCatchVariables": {
+          "description": "Default catch clause variables as `unknown` instead of `any`.",
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Default catch clause variables as `unknown` instead of `any`.\n\nSee more: https://www.typescriptlang.org/tsconfig#useUnknownInCatchVariables"
         },
         "watch": {
           "description": "Watch input files.",
           "type": "boolean"
         },
         "fallbackPolling": {
-          "description": "Specify what approach the watcher should use if the system runs out of native file watchers.",
+          "description": "Specify the polling strategy to use when the system runs out of or doesn't support native file watchers. Requires TypeScript version 3.8 or later.",
           "enum": [
             "fixedPollingInterval",
             "priorityPollingInterval",
-            "dynamicPriorityPolling"
+            "dynamicPriorityPolling",
+            "fixedInterval",
+            "priorityInterval",
+            "dynamicPriority",
+            "fixedChunkSize"
           ]
         },
         "watchDirectory": {
-          "description": "Specify how directories are watched on systems that lack recursive file-watching functionality.",
+          "description": "Specify the strategy for watching directories under systems that lack recursive file-watching functionality. Requires TypeScript version 3.8 or later.",
           "enum": [
             "useFsEvents",
             "fixedPollingInterval",
-            "dynamicPriorityPolling"
+            "dynamicPriorityPolling",
+            "fixedChunkSizePolling"
           ],
           "default": "useFsEvents"
         },
         "watchFile": {
-          "description": "Specify how the TypeScript watch mode works.",
+          "description": "Specify the strategy for watching individual files. Requires TypeScript version 3.8 or later.",
           "enum": [
             "fixedPollingInterval",
             "priorityPollingInterval",
             "dynamicPriorityPolling",
             "useFsEvents",
-            "useFsEventsOnParentDirectory"
+            "useFsEventsOnParentDirectory",
+            "fixedChunkSizePolling"
           ],
           "default": "useFsEvents"
         },
@@ -379,6 +398,12 @@
           "type": "boolean",
           "default": false,
           "markdownDescription": "Enable error reporting for fallthrough cases in switch statements.\n\nSee more: https://www.typescriptlang.org/tsconfig#noFallthroughCasesInSwitch"
+        },
+        "noImplicitOverride": {
+          "description": "Ensure overriding members in derived classes are marked with an override modifier.",
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Ensure overriding members in derived classes are marked with an override modifier.\n\nSee more: https://www.typescriptlang.org/tsconfig#noImplicitOverride"
         },
         "allowUnreachableCode": {
           "description": "Disable error reporting for unreachable code.",
@@ -457,10 +482,9 @@
           "markdownDescription": "Specify type package names to be included without being referenced in a source file.\n\nSee more: https://www.typescriptlang.org/tsconfig#types"
         },
         "traceResolution": {
-          "description": "Log paths used during the `moduleResolution` process.",
+          "description": "Enable tracing of the name resolution process. Requires TypeScript version 2.0 or later.",
           "type": "boolean",
-          "default": false,
-          "markdownDescription": "Log paths used during the `moduleResolution` process.\n\nSee more: https://www.typescriptlang.org/tsconfig#traceResolution"
+          "default": false
         },
         "allowJs": {
           "description": "Allow JavaScript files to be a part of your program. Use the `checkJS` option to get errors from these files.",
@@ -554,7 +578,23 @@
                   "DOM.Iterable",
                   "ScriptHost",
                   "WebWorker",
-                  "WebWorker.ImportScripts"
+                  "WebWorker.ImportScripts",
+                  "Webworker.Iterable",
+                  "ES7",
+                  "ES2021",
+                  "ES2020.SharedMemory",
+                  "ES2020.Intl",
+                  "ES2021.Promise",
+                  "ES2021.String",
+                  "ES2021.WeakRef",
+                  "ESNext.WeakRef",
+                  "es2021.intl",
+                  "ES2022",
+                  "ES2022.Array",
+                  "ES2022.Error",
+                  "ES2022.Intl",
+                  "ES2022.Object",
+                  "ES2022.String"
                 ]
               },
               {
@@ -579,7 +619,13 @@
                 "pattern": "^[Ee][Ss]2020(\\.([Bb][Ii][Gg][Ii][Nn][Tt]|[Pp][Rr][Oo][Mm][Ii][Ss][Ee]|[Ss][Tt][Rr][Ii][Nn][Gg]|[Ss][Yy][Mm][Bb][Oo][Ll].[Ww][Ee][Ll][Ll][Kk][Nn][Oo][Ww][Nn]))?$"
               },
               {
-                "pattern": "^[Ee][Ss][Nn][Ee][Xx][Tt](\\.([Aa][Rr][Rr][Aa][Yy]|[Aa][Ss][Yy][Nn][Cc][Ii][Tt][Ee][Rr][Aa][Bb][Ll][Ee]|[Bb][Ii][Gg][Ii][Nn][Tt]|[Ii][Nn][Tt][Ll]|[Ss][Yy][Mm][Bb][Oo][Ll]))?$"
+                "pattern": "^[Ee][Ss]2021(\\.([Ii][Nn][Tt][Ll]|[Pp][Rr][Oo][Mm][Ii][Ss][Ee]|[Ss][Tt][Rr][Ii][Nn][Gg]|[Ww][Ee][Aa][Kk][Rr][Ee][Ff]))?$"
+              },
+              {
+                "pattern": "^[Ee][Ss]2022(\\.([Aa][Rr][Rr][Aa][Yy]|[Ee][Rr][Rr][Oo][Rr]|[Ii][Nn][Tt][Ll]|[Oo][Bb][Jj][Ee][Cc][Tt]|[Ss][Tt][Rr][Ii][Nn][Gg]))?$"
+              },
+              {
+                "pattern": "^[Ee][Ss][Nn][Ee][Xx][Tt](\\.([Aa][Rr][Rr][Aa][Yy]|[Aa][Ss][Yy][Nn][Cc][Ii][Tt][Ee][Rr][Aa][Bb][Ll][Ee]|[Bb][Ii][Gg][Ii][Nn][Tt]|[Ii][Nn][Tt][Ll]|[Pp][Rr][Oo][Mm][Ii][Ss][Ee]|[Ss][Tt][Rr][Ii][Nn][Gg]|[Ss][Yy][Mm][Bb][Oo][Ll]|[Ww][Ee][Aa][Kk][Rr][Ee][Ff]))?$"
               },
               {
                 "pattern": "^[Dd][Oo][Mm](\\.[Ii][Tt][Ee][Rr][Aa][Bb][Ll][Ee])?$"
@@ -699,9 +745,8 @@
           "markdownDescription": "Enable importing .json files\n\nSee more: https://www.typescriptlang.org/tsconfig#resolveJsonModule"
         },
         "assumeChangesOnlyAffectDirectDependencies": {
-          "description": "Have recompiles in projects that use `incremental` and `watch` mode assume that changes within a file will only affect files directly depending on it.",
-          "type": "boolean",
-          "markdownDescription": "Have recompiles in projects that use `incremental` and `watch` mode assume that changes within a file will only affect files directly depending on it.\n\nSee more: https://www.typescriptlang.org/tsconfig#assumeChangesOnlyAffectDirectDependencies"
+          "description": "Have recompiles in '--incremental' and '--watch' assume that changes within a file will only affect files directly depending on it. Requires TypeScript version 3.8 or later.",
+          "type": "boolean"
         },
         "extendedDiagnostics": {
           "description": "Output more detailed compiler performance information after building.",

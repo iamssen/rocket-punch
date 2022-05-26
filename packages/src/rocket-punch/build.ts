@@ -6,13 +6,12 @@ import {
 } from '@ssen/collect-dependencies';
 import { createExtendedCompilerHost } from '@ssen/extended-compiler-host';
 import { flatPackageName } from '@ssen/flat-package-name';
-import { createImportPathRewriteCompilerHost } from '@ssen/import-path-rewrite-compiler-host';
 import { rimraf } from '@ssen/promised';
 import { rewriteSrcPath } from '@ssen/rewrite-src-path';
 import fs from 'fs-extra';
 import path from 'path';
 import process from 'process';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
 import ts from 'typescript';
 import { readPackages } from './entry/readPackages';
 import { buildMessageHandler } from './message-handlers/build';
@@ -249,17 +248,11 @@ export async function build({
       const extendedHost: ts.CompilerHost =
         createExtendedCompilerHost(compilerOptions);
 
-      const pathRewriteHost: ts.CompilerHost =
-        createImportPathRewriteCompilerHost({
-          src: path.resolve(cwd, sourceRoot),
-          rootDir: sourceDir,
-        })(compilerOptions, undefined, extendedHost);
-
       // transform compilerHost if user set the transformCompilerHost() function
       const host: ts.CompilerHost =
         typeof transformCompilerHost === 'function'
-          ? transformCompilerHost(packageName)(compilerOptions, pathRewriteHost)
-          : pathRewriteHost;
+          ? transformCompilerHost(packageName)(compilerOptions, extendedHost)
+          : extendedHost;
 
       const files: string[] = host.readDirectory!(
         sourceDir,

@@ -10,6 +10,7 @@ Flat package name rule.
 
 ```ts
 import { flatPackageName } from '@ssen/flat-package-name';
+import { describe, expect, test } from 'vitest';
 
 describe('flatPackageName()', () => {
   test('should flat package names', () => {

@@ -1,5 +1,5 @@
 import toposort from 'toposort';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
 
 interface PackageJsonSet {
   name: string;

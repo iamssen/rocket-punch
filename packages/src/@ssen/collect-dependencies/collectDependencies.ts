@@ -1,5 +1,5 @@
 import { builtinModules } from 'module';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
 import ts from 'typescript';
 import { PackageInfo } from './types';
 

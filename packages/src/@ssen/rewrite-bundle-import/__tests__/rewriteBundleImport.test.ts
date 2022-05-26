@@ -1,4 +1,5 @@
 import { rewriteBundleImport } from '@ssen/rewrite-bundle-import';
+import { describe, test, expect } from 'vitest';
 
 describe('rewriteBundleImport()', () => {
   test('should rewrite import paths', () => {

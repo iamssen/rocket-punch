@@ -3,6 +3,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import process from 'process';
 import ts from 'typescript';
+import { describe, expect, test } from 'vitest';
 import { createExtendedCompilerHost } from '../';
 
 describe('createExtendedCompilerHost', () => {

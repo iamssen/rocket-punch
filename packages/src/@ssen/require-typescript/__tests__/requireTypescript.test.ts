@@ -1,6 +1,7 @@
 import path from 'path';
 import { requireTypescript } from '@ssen/require-typescript';
 import process from 'process';
+import { describe, test, expect } from 'vitest';
 
 describe('requireTypescript', () => {
   test.each(['basic', 'js'])('should get exports from %s', (dir: string) => {

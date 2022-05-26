@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
 import { sharedPackageJsonFileName } from '../rule/fileNames';
 
 interface Params {

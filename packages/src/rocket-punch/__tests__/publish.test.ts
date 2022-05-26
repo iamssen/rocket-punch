@@ -3,6 +3,7 @@ import { copyTmpDirectory, createTmpDirectory } from '@ssen/tmp-directory';
 import path from 'path';
 import process from 'process';
 import { build, PackageConfig, publish, PublishMessages } from 'rocket-punch';
+import { describe, test, expect } from 'vitest';
 
 describe('publish()', () => {
   test('should get exec commands', async () => {

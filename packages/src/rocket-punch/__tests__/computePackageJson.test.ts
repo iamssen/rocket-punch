@@ -1,3 +1,5 @@
+import { describe, test } from 'vitest';
+
 describe('computePackageJson()', () => {
   test.todo('should get computed package.json');
   test.todo(

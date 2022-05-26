@@ -1,7 +1,8 @@
 import path from 'path';
 import process from 'process';
 import { getRootDependencies } from 'rocket-punch/package-json/getRootDependencies';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
+import { describe, test, expect } from 'vitest';
 
 describe('getRootDependencies()', () => {
   test('should get root dependencies', async () => {

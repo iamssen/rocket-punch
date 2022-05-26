@@ -1,5 +1,6 @@
 import { getPackagesOrder } from '../getPackagesOrder';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
+import { describe, test, expect } from 'vitest';
 
 describe('getPackagesOrder()', () => {
   test('anchor failed', () => {

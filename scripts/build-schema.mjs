@@ -1,7 +1,3 @@
-const fs = require('fs-extra');
-const path = require('path');
-const fetch = require('node-fetch');
-
 const schema = {
   $schema: 'http://json-schema.org/draft-04/schema#',
   id: 'https://rocket-hangar.github.io/rocket-punch/schemas/packages.json#',
@@ -68,43 +64,41 @@ const schema = {
   },
 };
 
-(async function () {
-  const res = await fetch('https://json.schemastore.org/tsconfig.json');
-  const {
-    definitions: {
-      compilerOptionsDefinition: {
-        properties: {
-          compilerOptions: {
-            properties: {
-              module,
-              moduleResolution,
-              skipLibCheck,
-              sourceMap,
-              declaration,
-              ...properties
-            },
-            ...compilerOptions
+const res = await fetch('https://json.schemastore.org/tsconfig.json');
+const {
+  definitions: {
+    compilerOptionsDefinition: {
+      properties: {
+        compilerOptions: {
+          properties: {
+            module,
+            moduleResolution,
+            skipLibCheck,
+            sourceMap,
+            declaration,
+            ...properties
           },
+          ...compilerOptions
         },
       },
     },
-  } = await res.json();
+  },
+} = await res.json();
 
-  fs.writeFileSync(
-    path.resolve(__dirname, '../docs/schemas/packages.json'),
-    JSON.stringify(
-      {
-        ...schema,
-        definitions: {
-          compilerOptions: {
-            ...compilerOptions,
-            properties,
-          },
-          ...schema.definitions,
+fs.writeFileSync(
+  path.resolve(__dirname, '../docs/schemas/packages.json'),
+  JSON.stringify(
+    {
+      ...schema,
+      definitions: {
+        compilerOptions: {
+          ...compilerOptions,
+          properties,
         },
+        ...schema.definitions,
       },
-      null,
-      2,
-    ),
-  );
-})();
+    },
+    null,
+    2,
+  ),
+);

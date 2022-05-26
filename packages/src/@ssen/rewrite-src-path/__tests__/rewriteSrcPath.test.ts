@@ -1,5 +1,6 @@
 import { rewriteSrcPath } from '@ssen/rewrite-src-path';
 import path from 'path';
+import { describe, test, expect } from 'vitest';
 
 describe('rewritePath()', () => {
   test('should rewrite paths', () => {

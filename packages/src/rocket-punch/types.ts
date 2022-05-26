@@ -1,4 +1,4 @@
-import { LiteralUnion, PackageJson, TsConfigJson } from 'type-fest';
+import type { LiteralUnion, PackageJson, TsConfigJson } from 'type-fest';
 
 export interface PackageConfig {
   /**

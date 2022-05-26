@@ -5,6 +5,7 @@ import process from 'process';
 import { build, PackageConfig, PackageInfo } from 'rocket-punch';
 import { readEntry } from 'rocket-punch/entry/readEntry';
 import { readPackages } from 'rocket-punch/entry/readPackages';
+import { describe, test, expect } from 'vitest';
 
 describe('build()', () => {
   test('should succeed in basic build', async () => {
@@ -84,44 +85,6 @@ describe('build()', () => {
     },
   );
 
-  test('should transform import paths', async () => {
-    // Arrange
-    const cwd: string = await copyTmpDirectory(
-      path.join(
-        process.cwd(),
-        'test/fixtures/rocket-punch/import-path-rewrite',
-      ),
-    );
-    const dist: string = await createTmpDirectory();
-
-    //await exec(`open ${dist}`);
-
-    // Act
-    // build {cwd} to {dist}
-    await build({
-      cwd,
-      dist,
-      entry: {
-        a: { version: '0.1.0' },
-        b: { version: '0.1.0' },
-        c: { version: '0.1.0' },
-      },
-      onMessage: async () => {},
-    });
-
-    // Assert
-    // check exists build output files
-    expect(fs.existsSync(path.join(dist, 'a/index.js'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'a/index.d.ts'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'b/index.js'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'b/index.d.ts'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'c/index.js'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'c/index.d.ts'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'a/_commonjs/index.js'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'b/_commonjs/index.js'))).toBeTruthy();
-    expect(fs.existsSync(path.join(dist, 'c/_commonjs/index.js'))).toBeTruthy();
-  });
-
   test('should not print warnings on current package name import', async () => {
     // Arrange
     const cwd: string = await copyTmpDirectory(
@@ -142,7 +105,6 @@ describe('build()', () => {
       },
       onMessage: async (message) => {
         if (message.type === 'tsc') {
-          //eslint-disable-next-line jest/no-conditional-expect
           expect(message.diagnostics.length).toBe(0);
         }
       },

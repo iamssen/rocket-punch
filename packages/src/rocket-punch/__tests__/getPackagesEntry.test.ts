@@ -4,7 +4,8 @@ import { PackageInfo } from 'rocket-punch';
 import { readEntry } from 'rocket-punch/entry/readEntry';
 import { readPackages } from 'rocket-punch/entry/readPackages';
 import { getRootDependencies } from 'rocket-punch/package-json/getRootDependencies';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
+import { describe, test, expect } from 'vitest';
 
 describe('getPackagesEntry()', () => {
   test('should get packages entry', async () => {

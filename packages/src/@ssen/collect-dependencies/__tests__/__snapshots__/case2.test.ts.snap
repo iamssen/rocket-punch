@@ -1,44 +1,44 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`getPackagesOrder() anchor failed 1`] = `
-Array [
-  Object {
+exports[`getPackagesOrder() > anchor failed 1`] = `
+[
+  {
     "dependencies": Set {
       "@material-ui/core",
       "react",
     },
     "name": "@anchor-protocol/icons",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
       "styled-components",
     },
     "name": "@anchor-protocol/token-icons",
   },
-  Object {
+  {
     "dependencies": Set {
       "fastdom",
     },
     "name": "@terra-dev/audit-fastdom",
   },
-  Object {
+  {
     "dependencies": Set {},
     "name": "@terra-dev/is-zero",
   },
-  Object {
+  {
     "dependencies": Set {
       "react-query",
     },
     "name": "@terra-dev/patch-react-query-focus-refetching",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/sendinblue",
   },
-  Object {
+  {
     "dependencies": Set {
       "event-target-shim",
       "react",
@@ -47,95 +47,95 @@ Array [
     },
     "name": "@terra-dev/snackbar",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/use-array-pagination",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/use-cloudflare-analytics",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/use-element-intersection",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
       "react-router-dom",
     },
     "name": "@terra-dev/use-google-analytics",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/use-local-storage",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/use-map",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/use-resolve-last",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
       "react-router-dom",
     },
     "name": "@terra-dev/use-router-scroll-restoration",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/use-string-bytes-length",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/use-interval",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-dev/use-interval",
       "react",
     },
     "name": "@terra-dev/use-time-end",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/use-browser-inactive",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/use-longtime-no-see",
   },
-  Object {
+  {
     "dependencies": Set {
       "mobile-detect",
       "react",
     },
     "name": "@terra-dev/is-mobile",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-dev/is-mobile",
       "mobile-detect",
@@ -147,7 +147,7 @@ Array [
     },
     "name": "@terra-dev/walletconnect-qrcode-modal",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-dev/is-mobile",
       "mobile-detect",
@@ -166,20 +166,20 @@ Array [
     },
     "name": "@terra-dev/walletconnect",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-money/terra.js",
     },
     "name": "@terra-dev/wallet-types",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-money/terra.js",
       "@terra-dev/wallet-types",
     },
     "name": "@terra-dev/readonly-wallet",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-dev/readonly-wallet",
       "@terra-money/terra.js",
@@ -190,11 +190,11 @@ Array [
     },
     "name": "@terra-dev/readonly-wallet-modal",
   },
-  Object {
+  {
     "dependencies": Set {},
     "name": "@terra-dev/mathwallet",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-dev/mathwallet",
       "bowser",
@@ -202,7 +202,7 @@ Array [
     },
     "name": "@terra-dev/is-desktop-chrome",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-dev/is-desktop-chrome",
       "@terra-dev/mathwallet",
@@ -214,7 +214,7 @@ Array [
     },
     "name": "@terra-dev/chrome-extension",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-dev/chrome-extension",
       "@terra-dev/is-desktop-chrome",
@@ -245,14 +245,14 @@ Array [
     },
     "name": "@terra-money/wallet-provider",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-dev/wallet-types",
       "@terra-money/terra.js",
     },
     "name": "@terra-money/webapp-fns",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-dev/use-longtime-no-see",
       "@terra-money/webapp-fns",
@@ -288,37 +288,37 @@ Array [
     },
     "name": "@terra-money/webapp-provider",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/use-form",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-dev/wallet-types",
       "@terra-money/terra.js",
     },
     "name": "@terra-dev/tx-helpers",
   },
-  Object {
+  {
     "dependencies": Set {
       "big.js",
     },
     "name": "@terra-dev/big-math",
   },
-  Object {
+  {
     "dependencies": Set {
       "big.js",
       "d3-ease",
     },
     "name": "@terra-dev/big-interpolate",
   },
-  Object {
+  {
     "dependencies": Set {},
     "name": "@anchor-protocol/types",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-dev/big-interpolate",
       "big.js",
@@ -330,7 +330,7 @@ Array [
     },
     "name": "@anchor-protocol/notation",
   },
-  Object {
+  {
     "dependencies": Set {
       "@anchor-protocol/anchor.js",
       "@anchor-protocol/types",
@@ -352,7 +352,7 @@ Array [
     },
     "name": "@anchor-protocol/webapp-fns",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-money/webapp-fns",
       "@terra-dev/wallet-types",
@@ -403,29 +403,29 @@ Array [
     },
     "name": "@anchor-protocol/webapp-provider",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/use-dialog",
   },
-  Object {
+  {
     "dependencies": Set {
       "react",
     },
     "name": "@terra-dev/use-restricted-input",
   },
-  Object {
+  {
     "dependencies": Set {},
     "name": "@terra-dev/is-touch-device",
   },
-  Object {
+  {
     "dependencies": Set {
       "color",
     },
     "name": "@terra-dev/styled-neumorphism",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-dev/styled-neumorphism",
       "color",
@@ -446,7 +446,7 @@ Array [
     },
     "name": "@terra-dev/neumorphism-ui",
   },
-  Object {
+  {
     "dependencies": Set {
       "@terra-dev/neumorphism-ui",
       "@terra-dev/styled-neumorphism",

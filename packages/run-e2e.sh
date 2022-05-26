@@ -1,3 +1,3 @@
 yarn run build;
-bash test/e2e.sh;
+yarn run zx test/e2e.mjs;
 rm -rf out;

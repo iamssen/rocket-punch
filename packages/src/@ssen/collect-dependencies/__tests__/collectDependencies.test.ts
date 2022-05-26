@@ -8,7 +8,8 @@ import { rewriteSrcPath } from '@ssen/rewrite-src-path';
 import fs from 'fs-extra';
 import path from 'path';
 import process from 'process';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
+import { describe, test, expect } from 'vitest';
 
 describe('collectDependencies()', () => {
   test('should get all dependencies from typescript sources', async () => {

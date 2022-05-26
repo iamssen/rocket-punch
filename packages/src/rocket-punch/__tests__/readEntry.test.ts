@@ -3,6 +3,7 @@ import path from 'path';
 import process from 'process';
 import { readEntry } from 'rocket-punch/entry/readEntry';
 import { PackageConfig } from 'rocket-punch/types';
+import { describe, test, expect } from 'vitest';
 
 describe('readEntry()', () => {
   test('should ignore $schema property', async () => {

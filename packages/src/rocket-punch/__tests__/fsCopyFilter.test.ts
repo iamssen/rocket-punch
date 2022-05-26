@@ -1,5 +1,6 @@
 import path from 'path';
 import { fsCopyFilter } from 'rocket-punch/rule/fsCopyFilter';
+import { describe, test, expect } from 'vitest';
 
 describe('fsPackagesCopyFilter()', () => {
   test.each([

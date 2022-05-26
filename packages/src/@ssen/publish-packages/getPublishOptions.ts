@@ -2,7 +2,7 @@ import { flatPackageName } from '@ssen/flat-package-name';
 import fs from 'fs-extra';
 import getPackageJson, { Options } from 'package-json';
 import path from 'path';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
 import { PackageInfo, PublishOption } from './types';
 
 export type GetRemotePackageJson = (

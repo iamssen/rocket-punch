@@ -1,7 +1,7 @@
 import { AvailablePublishOption } from '@ssen/publish-packages';
 import { Results } from 'depcheck';
 import { FullMetadata } from 'package-json';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
 import ts from 'typescript';
 import { PackageConfig, PackageInfo } from './types';
 

@@ -1,4 +1,5 @@
 import { readLast, readLastArgv } from '@ssen/read-last-argv/index';
+import { describe, test, expect } from 'vitest';
 
 describe('read-last-argv', () => {
   test('should get last value', () => {

@@ -1,3 +1,5 @@
+import { describe, test } from 'vitest';
+
 describe('getSharedPackageJson()', () => {
   test.todo(
     'should get blank package.json content if there is no shared package.json config',
