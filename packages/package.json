@@ -31,6 +31,7 @@
     "@types/tmp": "^0.2.3",
     "@types/toposort": "^2.0.3",
     "@types/yargs": "^17.0.10",
+    "c8": "^7.11.3",
     "chalk": "^4.1.2",
     "cross-env": "^7.0.3",
     "depcheck": "^1.4.3",
