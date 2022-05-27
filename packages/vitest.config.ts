@@ -14,7 +14,7 @@ export default defineConfig({
       '**/coverage/**',
       '**/fixtures/**',
     ],
-    testTimeout: 120000,
+    testTimeout: 240000,
   },
   esbuild: {
     target: 'node14',
