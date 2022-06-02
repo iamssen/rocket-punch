@@ -30,13 +30,13 @@
     "@handbook/markdown-source-import": "^1.1.0",
     "@ssen/prettier-config": "^2.0.1",
     "@types/eslint": "^8.4.2",
-    "@types/prettier": "^2.6.1",
+    "@types/prettier": "^2.6.3",
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-react-app": "^7.0.1",
     "husky": "^8.0.1",
-    "lint-staged": "^12.4.2",
+    "lint-staged": "^13.0.0",
     "prettier": "^2.6.2",
-    "zx": "^6.1.0"
+    "zx": "^6.2.0"
   }
 }
